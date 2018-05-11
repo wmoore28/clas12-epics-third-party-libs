@@ -1,0 +1,13 @@
+============================
+ extend  Test Log
+============================
+Testing extendible dataset with incr. allocation                       PASSED
+Testing extendible dataset with incr. allocation w/deprec. symbols     PASSED
+Testing extendible dataset with early allocation                       PASSED
+Testing extendible dataset with early allocation w/deprec. symbols     PASSED
+All extend tests passed.
+0.04user 0.03system 0:00.35elapsed 24%CPU (0avgtext+0avgdata 6484maxresident)k
+96inputs+7968outputs (1major+9232minor)pagefaults 0swaps
+
+Finished testing extend 
+============================

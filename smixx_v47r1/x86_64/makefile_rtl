@@ -1,0 +1,81 @@
+#
+#
+include makefile_common
+
+
+RANLIB = ranlib
+#EXTRALIBS =
+SDIR = ./src/rtl
+#SHAREABLE =
+#LIBFLAGS =
+
+OBJS =  $(ODIR)/smirtl.o $(ODIR)/smirtlcpp.o
+OBJSUI =  $(ODIR)/smiuirtl.o $(ODIR)/smiuirtlcpp.o
+
+CFLAGS += $(FLAGS) -I./smixx 
+
+comsrcdir = ./src/commonSource
+
+CFLAGS += -I./src/commonSource
+
+
+$(ODIR)/smixx_parstring_util.o: $(comsrcdir)/smixx_parstring_util.c
+	$(CC) -c $(CFLAGS) $< -o $@
+	
+OBJS += $(ODIR)/smixx_parstring_util.o
+OBJSUI += $(ODIR)/smixx_parstring_util.o
+
+
+ifeq ($(SHAREABLE),no)
+all:	clean $(ODIR)/libsmi.a $(ODIR)/libsmiui.a $(ODIR)/smiSendCommand \
+        $(ODIR)/smiKill
+else
+all:	clean $(ODIR)/libsmi.a $(ODIR)/libsmi.so $(ODIR)/libsmiui.a \
+	$(ODIR)/libsmiui.so $(ODIR)/smiSendCommand $(ODIR)/smiKill
+endif
+
+$(ODIR)/libsmi.a:	$(OBJS)
+	ar crv $(ODIR)/libsmi.a $(OBJS)
+	$(RANLIB) $(ODIR)/libsmi.a
+
+$(ODIR)/libsmiui.a:	$(OBJSUI)
+	ar crv $(ODIR)/libsmiui.a $(OBJSUI) 
+	$(RANLIB) $(ODIR)/libsmiui.a
+
+$(ODIR)/libsmi.so:	$(OBJS)
+	$(CXX) $(LIBFLAGS) $(OBJS) -o $(ODIR)/libsmi.so
+
+$(ODIR)/libsmiui.so:	$(OBJSUI)
+	$(CXX) $(LIBFLAGS) $(OBJSUI) -o $(ODIR)/libsmiui.so
+
+$(ODIR)/smiSendCommand: $(SDIR)/smi_send_command.c $(ODIR)/libsmiui.a
+	$(CC) $(CFLAGS) $(SDIR)/smi_send_command.c -L$(ODIR) \
+              -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) \
+              -o $(ODIR)/smiSendCommand
+	cp $(ODIR)/smiSendCommand $(ODIR)/smi_send_command
+
+$(ODIR)/smiKill: $(SDIR)/smi_kill.c $(ODIR)/libsmiui.a
+	$(CC) $(CFLAGS) $(SDIR)/smi_kill.c -L$(ODIR) \
+              -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) \
+              -o $(ODIR)/smiKill
+
+$(ODIR)/smirtl.o:  $(SDIR)/smirtl.c
+	$(CC) $(CFLAGS) -o $(ODIR)/smirtl.o -c $(SDIR)/smirtl.c
+
+$(ODIR)/smirtlcpp.o:		$(SDIR)/smirtlcpp.cxx
+	$(CXX) $(CFLAGS) -o $(ODIR)/smirtlcpp.o -c $(SDIR)/smirtlcpp.cxx
+
+$(ODIR)/smiuirtl.o:		$(SDIR)/smiuirtl.c
+	$(CC) $(CFLAGS) -o $(ODIR)/smiuirtl.o -c $(SDIR)/smiuirtl.c
+
+$(ODIR)/smiuirtlcpp.o:		$(SDIR)/smiuirtlcpp.cxx
+	$(CXX) $(CFLAGS) -o $(ODIR)/smiuirtlcpp.o -c $(SDIR)/smiuirtlcpp.cxx
+
+
+
+.PHONY : clean
+clean :
+	rm -f $(ODIR)/*.o $(ODIR)/libsmi.a $(ODIR)/libsmiui.a \
+			   $(ODIR)/libsmi.so $(ODIR)/libsmiui.so \
+                           $(ODIR)/smiSendCommand $(ODIR)/smiKill
+

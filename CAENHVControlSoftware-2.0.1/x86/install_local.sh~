@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "Installing software..."
+
+rm -rf ./lib/libcaenhvwrapper.so 
+ln -s ./lib/libcaenhvwrapper.so.5.20 ./lib/libcaenhvwrapper.so
+
+rm -rf ./lib/libhscaenet.so
+ln -s ./lib/hscaenetlib.so.1.7 ./lib/libhscaenet.so
+
+echo
+echo "Installation completed."

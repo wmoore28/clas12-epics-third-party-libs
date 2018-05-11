@@ -1,0 +1,102 @@
+set POSSOSVALUES = HP-UX,AIX,OSF1,SunOS,Solaris,LynxOS,Linux,Darwin,
+
+if ($?OS) then
+    echo Variable OS is set to $OS
+    set TEMP = $OS,
+    echo $POSSOSVALUES | grep $TEMP>/dev/null
+    if ( ! $status == 0) then
+        echo Unknown OS....setup failed
+        echo Possible values are : $POSSOSVALUES
+        exit 1
+    endif
+else
+    echo Variable OS must be defined ... setup failed
+    echo Possible values are : $POSSOSVALUES
+    exit 1
+endif
+
+if(-d ./src/stateManager) then
+	setenv SMIDIR `pwd`
+	echo Variable SMIDIR is set to $SMIDIR
+else
+if ($?SMIDIR) then
+	echo Variable SMIDIR is set to $SMIDIR
+else
+	echo You are not in the right directory... setup failed
+endif
+endif
+
+setenv SMIRTLDIR $SMIDIR
+
+if ($?DIMDIR) then
+    echo Variable DIMDIR is set to $DIMDIR
+else
+    echo Variable DIMDIR has to be defined... setup failed
+    exit 1
+endif
+
+if ($?ODIR) then
+    echo Variable ODIR is set to $ODIR
+else
+	switch ($OS)
+		case HP-UX:
+			setenv ODIR hp
+			breaksw
+		case AIX:
+			setenv ODIR aix
+			breaksw
+		case OSF1:
+			setenv ODIR osf
+			breaksw
+		case SunOS:
+			setenv ODIR sunos
+			breaksw
+		case Solaris
+			setenv ODIR solaris
+			breaksw
+		case LynxOS:
+			setenv ODIR lynxos
+			breaksw
+		case Linux:
+			setenv ODIR linux
+			breaksw
+		case Darwin:
+			setenv ODIR darwin
+			breaksw
+		default:
+			echo OS variable $OS is not known... setup failed
+                	exit 1
+	endsw
+    echo Variable ODIR is set to $ODIR
+endif
+
+if ( ${OS} == Linux ) then
+if (! $?LD_LIBRARY_PATH) then
+    setenv LD_LIBRARY_PATH $SMIDIR/$ODIR
+else
+    setenv LD_LIBRARY_PATH $SMIDIR/$ODIR\:$LD_LIBRARY_PATH
+endif
+set path = ($SMIDIR/$ODIR $path)
+rehash
+endif
+
+alias smiTrans $SMIDIR/$ODIR/smiTrans
+alias smiGen   $SMIDIR/$ODIR/smiGen
+alias smiSM    $SMIDIR/$ODIR/smiSM
+alias smiSendCommand    $SMIDIR/$ODIR/smiSendCommand
+alias smiPreproc $SMIDIR/$ODIR/smiPreproc
+alias smiMake  $SMIDIR/$ODIR/smiMake
+alias smiKill  $SMIDIR/$ODIR/smiKill
+alias smiGUI   $SMIDIR/$ODIR/smiGUI
+alias SMIGUI   $SMIDIR/$ODIR/smiGUI.tcl
+#
+if (! -d $SMIDIR/$ODIR) then
+   echo Created Directory : $SMIDIR/$ODIR
+   mkdir $SMIDIR/$ODIR
+endif
+exit
+
+
+
+
+

@@ -1,0 +1,3783 @@
+------------------------------------------------------------------------------
+ 3-Jul-1997  Moved all files from development to default. Before I did that
+             I backed the development to week.
+------------------------------------------------------------------------------
+ 7-Jul-1997 1) Allowed for action not finnishing with terminate_action 
+               instruction ...   small modification in state.cc
+            2) Putting some rudimentary prints in Smiobject.cc so that the
+               logic can be followed from the log files.  
+-------------------------------------------------------------------------------
+10-Jul-1997  1) parameters.hh   Max no of object lines increased to 20000
+                                Max no of states increased to 200
+
+             2) smpcond.hh     Max no of states in simple condition increased
+                               to 50      
+
+             3) name.cc   A few trivial bugs fixed having to do with strings
+                          containing just \0
+-------------------------------------------------------------------------------
+11-Jul-1997   condition.cc   debuging test of simple conditions taken out..
+                             not necessary any more
+-------------------------------------------------------------------------------
+14-Jul-1997   action.cc  one line test on pointer to instruction block not
+                         beiing zero. This is allowing for a situation when
+                         the action belonging to a logical object does not
+                         have any instructions (not even terminate_action)
+-------------------------------------------------------------------------------
+                     Alpha  Release;  Version 2.3.6     
+-------------------------------------------------------------------------------
+24-Jul-1997   All files from Development area moved to Default
+                     Version  3.0   (= Version 2.3.6)
+              This is DELPHI production vesrion, i.e. it can handle all DELPHI
+              SML code
+              The directory was backed up to HEPVS3 on 14-Oct-1997
+                   to File: BACKUP_DIR:SM_SOURCE_V3-0.BCK
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+24-Oct-1997   Objectregistrar.cc & .hh 
+                         The number of objects is now completely dynamical. 
+                         It holds only pointers to SMI objects and is basically
+                         an array class. All the member functions should behave
+                         as before. It could now be used for other lists of
+                         objects (not just all of them). It would be more tidy
+                         to change its name to say SMIObjectList and also the
+                         names of some of the member functions.
+-------------------------------------------------------------------------------
+28-Dec-1997   Name.cc  &  .hh
+                  This was developed further during coding Preprocessor :
+                  a) it was made 'const-correct'
+                  b) 3 new functions added : exists(const Name&), replace and
+                                                     squeeze
+                  c) Bug fixed: delete _ptn; replaced by  delete [] _ptn;
+                     everywhere were appropriate....memory leak!   
+                  d) Bug fixed:  in append appending empty string would 
+                                 overwrite unknown memory
+-------------------------------------------------------------------------------
+29-Dec-1997   1) Block_Name.cc & .hh
+                  This was developed further during coding Preprocessor :
+                  Functions out, numOfEntries and operator[] were made const
+                  New function append was added...this appends another block
+                  to the existing one.
+                  N.B. should create a utility directory for C++ classes and
+                       put Block_Name and Name (see below) in it so that both
+                       State Manager and Preprocessor can use it
+-------------------------------------------------------------------------------
+ 3-Mar-1998   COMMHANDLER.cc & DIS.HH   trivial mods made to achieve ANSI
+              compatibility and to get rid off compilation warnings. These
+              changes were done by Clara directly in the default area.
+-------------------------------------------------------------------------------
+ 5-Mar-1998   1) OBJECTREGISTRAR.HH & CC... Removing the _name argument from
+                 registerObject call 
+              2) SMIOBJECT.hh & .cc 
+                  a) New function name(Name& ) returning the object name
+                  b) Removing the _name argument from registerObject call
+-------------------------------------------------------------------------------
+ 6-Mar-1998   1) OBJECTREGISTRAR.HH & CC ... New function:
+                      SMIObject *ObjectRegistrar::gimePointer(const int inx) 
+                   giving the pointer for a given index
+              2) SCHEDULER.CC  when looping over all objects uses now the
+                    the new gimePointer(const int inx) instead of going through
+                    the object name
+              3) SMIOBJECT.CC  During the instantiation, the object name is 
+                               printed
+-------------------------------------------------------------------------------
+ 7-Mar-1998   1) UTILITIES.HH & CC   New function:
+                       print_obj(Name& objname)   in addition to 
+                       print_obj(char* objname)
+              2) SMIOBJECT.HH
+                    a) the function void name(&Name) changed to Name name()
+                    b) private data Name _objectName added in addition
+                       to char _name[..]
+              3) SMIOBJECT.CC
+                    a) the function name changed (see above)
+                    b) all print_obj(_name) changed to print_obj(_objectName)
+              4) OBJECTREGISTRAR.CC ... usage of name of SMIOBJECT corrected
+-------------------------------------------------------------------------------
+ 8-Mar-1998   1) SMIOBJECT.hh   ...  _name abolished
+              2) SMIOBJECT.CC   ...  usage of _name is abolished and only
+                                     _objectName is used
+              3) OBJECTREGISTRAR.CC  various error conditions such as 
+                    'object of a given name does not exists' are trapped and
+                    State Manager aborted
+              4) STATE_MANAGER.CC  
+                    a) SMI domain name from the command line is forced to be
+                                                                   uppercase
+                    b) prints version no  3.0.1 with date 8-March-1998
+-------------------------------------------------------------------------------
+                            Version 3.0.1
+-------------------------------------------------------------------------------
+ 9-Mar-1998    Before any copying from dev to default, default was backuped
+               to SM_SOURCE_V3-0-0-1.BCK and this was then copied to HEPVS3
+               backup_dir. This is because since v3.0 there were some minor 
+               changes done by Clara to COMMHANDLER.CC, DIS.HH, SMIOBJECT.CC
+               and UTILITIES.HH
+-------------------------------------------------------------------------------
+17-Mar-1998    All files from dev moved to default.               
+               Default was then backuped to SM_SOURCE_V3-0-1.BCK and this was
+               then copied to HEPVS3 backup_dir.
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+23-Mar-1998   1) action.hh  & action.cc
+                        action name used to be a character string. It is 
+                        now changed to type Name. Same with the parent object
+                        name
+
+              2) state_manager.cc
+                      a)  smiDomain has been made global variable of Type Name
+                      b)  prints version no  3.0.2 with date 23-March-1998
+
+              3) logic_engine.cc
+                      a)  picks up the domain name from the global variable
+                          rather than from the input argument
+                      b) before calling the CommHandler it has to convert it 
+                         to a string (***this is a temporary bodge)
+
+              4) doins.cc
+                      If value of parameter is equal to &SMIDOMAIN string
+                      it will replace it by the Smi Domain name picked from
+                      the global variable      
+-------------------------------------------------------------------------------
+                            Version 3.0.2
+-------------------------------------------------------------------------------
+All the files in dev moved to default
+-------------------------------------------------------------------------------
+17-May-1998    1) state_manager.cc 
+                   a)  input filename length allowed to be 256
+                   b)  prints version number 3.0.3 with date 17-May-1998
+-------------------------------------------------------------------------------
+                            Version 3.0.3
+-------------------------------------------------------------------------------
+01-08-Jun-1998
+               This is all to do with allowing different types for action parms
+
+               1) ACTION_PARAMETERS.HH & .CC
+                  a) made const correct
+                  b) types private data added
+                  c) various checks on compatibility of types and values added
+
+               2) BLOCK_NAME.HH & .CC  improved const correctness
+
+               3) DO_PARAMETERS.HH & .CC  made const correct...no other changes
+
+               4) INCOMMING_PARAMETERS.HH & .CC
+                  a) const correctness
+                  b) types private data added
+                  c) various checks on compatibility of types and values added
+
+               5) OUTGOING_PARAMETERS.HH & .CC ... similar to 4)
+
+               6) UTILITIES.HH & .CC  4 subroutines added:
+
+                    bool check_name( const Name&);
+                    bool check_int(const Name&);
+                    bool check_float(const Name&);
+                    bool check_string(const Name&); 
+ 
+                   for checking the types of parameter values
+
+     N.B. Notes on Action parameters:
+
+      - Parameters declared in the action:
+
+        Format :
+        ACTION : action-name (pd[,pd]....)
+
+          where:
+
+             pd  is parameter declarator of the form:
+
+                 [tp] nm[=v]
+
+               where :
+
+                  tp   is type definition and is equal to STRING
+                                                          INT
+                                                          FLOAT
+                       when not present, it is assumed STRING
+
+                  nm   is parameter name
+
+                  v    when present, it is the default value. When parameter
+                       is of type STRING, the value has to be enclosed in 
+                       double quotes.
+
+      - Parameters declared in DO instruction:
+
+          Format :
+
+             DO action-name (p[,p]....) object-name
+
+                where:  p  has form:
+
+                    nm=v
+
+                      where
+
+                         nm  is parameter name (declared for action-name of
+                                                             object-name)
+
+                          v  is either
+
+                              a) default value, in which case it has to be the
+                                 correct type (not checked at the moment). In 
+                                 particular, if a string, it has to be 
+                                 surrounded by doublequotes                   
+
+                              b) name of an action parameter (of the action to
+                                 which DO belongs
+
+      - Parameters incomming/outgoing to/from the object with action :
+
+         Format of the in/out string:
+
+            action-name[/p].....
+
+                 where:
+
+                    p has a form:
+
+                       nm[(t)]=v
+
+                          where:
+
+                             nm is parameter name
+
+                             t  is type indicator. It has to be present for
+                                integer and floating types, in which case it
+                                is either I or F. For string types it is not
+                                at the moment present. 
+
+                             v  is parameter value. For string types:
+                                   the incomming value can or does not
+                                   have to be enclosed in doublequotes.
+                                   the ougoing value will not have doublequotes
+                                   unless containing = or /. This is to ensure
+                                   backward compatibility with DELPHI
+------------------------------------------------------------------------------
+                         Object Parameters
+                         -----------------
+11-12-Jun-1998   1) New class  PARMS.CC & PARMS.hh ... this is intended to 
+                    replace  the all other parameter classes (in, out, action
+                     and do)
+
+                 2) SMIObject.hh and .cc 
+                   
+                  - Object Parameters added (class PARMS)
+                    - constructor modified, 
+                    - new method  parmString that will return parameter string
+                      to be used by CommHandler 
+                    - setState method modified (associated objects are now
+                      delivering parm string together with state)
+--------------------------------------------------------------------------------
+
+13-Jun-1998   1) ACTION.*  holds a pointer to parent object, new method
+                that returns pointer to incomming parameters, it also passes
+                the pointer to parent object down to instruction block class
+
+              2) DOINS.*  holds the pointer to the parent object
+
+              3) INCOMMING_PARAMETERS.*  new method get, returning a param
+                                         name and a value
+
+              4) INSLIST.* holds the pointer to the parent object and also
+                           passes it down to DOINS class
+
+              5) PARMS.*  several utility methods added
+
+              6) SMIOBJECT.CC passes its address down to STATE class
+
+              7) STATE.* holds the pointer to the parent object and also
+                           passes it down to ACTION and WHEN class
+
+              8) WHEN.*  holds the pointer to the parent object and also
+                           passes it down to its DO instruction
+------------------------------------------------------------------------------
+14-June-1998  1) ACTION.cc  trivial bug fixed in the new code
+
+              2) BLOCK_NAME.cc       dtto
+
+              3) INCOMMING_PARAMETERS.cc  dtto
+
+              4) DOINS.hh  DOparameters class abolished and replaced by Parms
+                 DOINS.cc  Parameter updating from action parameters during
+                           execution changed (Do instruction now fetches the
+                           parameters rather then askin the action for updating)
+                           Also object parameters are now used for updating.
+
+
+              5) DO_PARAMETERS.* new method 'get' added
+
+              6) INSLIST.* this now takes into account the new 'Set' instruction
+
+              7) PARMS.cc small bug fixed
+
+              8) SETINS.cc  new instruction class
+
+              9) SMIObject.* new method 'pObjectParameters' returning the
+                 pointer to object parameters
+-------------------------------------------------------------------------------
+15-Jun-1998   1) ACTION.* new method 'pActionParameters' returning pointer to
+                   action parameters
+
+              2) ACTION_PARAMETERS.*  new method 'get'
+
+              3) two new functions COPY_ACPARS_TO_PARMS and COPY_INPARS_TO_PARMS
+                 these are purely temporary
+
+              4) PARMS.* a few improvements
+
+
+              5) SETINS.* developed to do what it was intended for
+--------------------------------------------------------------------------------
+16-Jun-1998   1) ACTION.*  any references to do and out parameters removed.
+                           also that disgusting method match parameters was
+                           removed (do instruction does it itself). A few 
+                           utility methods added
+
+              2) In view of the changes to ACTIONS, DOINS.cc was improved
+                 somewhat
+
+              3) INCOMMING_PARAMETERS.hh  anything to do with do and out
+                 parameters removed
+
+              4) SETINS.*  the usage of COPY functions is supressed in view
+                            of all the other developments
+
+              5) STATE.CC  inpars variable is now class Parms rather than
+                       IncommingParameters
+
+              6) STATE_MANAGER.CC prints version 4.0 dated 16-Jun-1998
+------------------------------------------------------------------------------
+17-Jun-1998   1) COPY_INPARS_TO_PARMS  small bug fixed
+
+              2) PARMS.*  method 'clear' added and a small bug fixed
+
+              3) STATE_MANAGER.cc prints date 17-Jun-1998
+-------------------------------------------------------------------------------
+                           Version 4.0
+
+This was taken to SLAC as a part of smixx v2.0
+.............................
+During the visit to SLAC the following files were modified (at SLAC):
+
+  PARMS.CC  - adding some debug prints i.e. the mods not carried over
+
+  SMIOBJECT.CC  - adding some debug prints and
+                  small one line mod which was supposed to fix a bug but
+                  it was not a bug afterall i.e. the mods not carried over
+
+  UTILITIES.CC - this is a genuine bug fix in function 'check_name'
+-------------------------------------------------------------------------------
+ 10-Jul-1998  1) UTILITIES.CC  taken over the corrected version from SLAC
+                              and some debug prints taken out
+
+              2) SMIOBJECT.CC  activated information print when an associated
+                               object rejects an action in a current state.
+                               Absence of this print made me believe at SLAC
+                               that there was a bug in the logic 
+
+  At this point d$onl_dev:[smixx.state_manager.source] dircetory was backed up
+                to hepvs3::DATA_DISK1:[FRANEK]SM_SOURCE_10-JUL-1998_DEV.BCK
+
+         and  d$onl_default:[smixx.state_manager.source] directory was backed up
+              to hepvs3::DATA_DISK1:[FRANEK]SM_SOURCE_10-JUL-1998_DEfault.BCK
+-------------------------------------------------------------------------------
+14-Jul-1998  1) development and default area were independently purged
+
+             2) Files begining with _old_ deleted
+
+             3) All files moved from dev to default
+
+             4) Moved commhandler.cc, commhandler.hh and dis.hh from Clara's
+                development to default area.
+    Clara's comments:
+    Changes in commhandler since 16 Jun 98:
+
+    - Every time SMI connects to an associated object it sends a command
+    installing an exit handler, so that if the SMI process dies the
+    proxy dies (if it was setup to do so).
+
+    - An SMI process will at startup set itself an exit handler to execute a
+    callback routine when some specific clients (like GUIs) die. The clients
+    themselfs will enable the exit handler (via a DIM command) when they
+    allocate the domain (and disable it when they deallocate it). When the
+    client (GUI) dies while the domain is allocated the callback will be
+    executed and it will release the domain.
+
+            5) STATE_MANAGER.CC   marked as version 4.1 14th July 1998 
+                                  (in default)
+
+--------------------------------------------------------------------------------
+15-Jul-1998  1) COPY_INPARS_TO_PARMS.CC  Some guis can still send me a string
+                parameter without the double quotes. In that case I insert them.
+                I managed to put in a bug (else missing) but it works and as
+                this subroutine is going to dissapear, I leave it like that.
+
+             2) State_manager.cc is now version 4.1.1
+
+             3) PARMS.cc will remove double quotes in outgoing strings to make
+                delphi proxies work.
+
+             4) STATE_MANAGER.cc is now marked 4.1.2
+
+   This version of state manager (exe and olb) immediately installed in default
+   and put into production
+-------------------------------------------------------------------------------
+20-Jul-1998   COPY_INPARS_TO_PARMS.CC, PARMS.cc and STATE_MANAGER.cc moved
+              into default
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+23-Jul-1998   1) INITIATOR.cc  After initiating an object a check is made
+                 if it is an external object and if yes a new subroutine
+                 'createAlloc' (part of INITIATOR.cc file) is called that
+                 creates the &ALLOC associated object for the external domain
+
+              2) NAME.cc & hh  New method added which allows to compare
+                     a name with a character string.
+
+              3) OBJECTREGISTRAR.CC method gimePointer :when object is not 
+                     found, pointer 0 is returned (untill now it aborted)
+
+              4) SMICLASSREGISTRAR.cc &hh  some half harted const correctness
+                      introduced
+
+              5) SMIOBJECT.cc & hh New method externDomain added: It returns
+                     Domain name for external objects and 'null' name for 
+                     'local' objects
+-------------------------------------------------------------------------------
+24-27-Jul-1998
+
+              1) PARMS.hh 
+                 a) a couple of methods added for use by action
+
+                 b) when initialising from a string, if "STRING" value is
+                    not surounded by doublequotes, these are added.
+
+                 c) when building a string, then if "STRING" value does not
+                    contain = or / then doublequotes are removed.
+                    b) and c) are for compatibility with DELPHI
+
+                 d) method setFromParmString modified. It should now work
+                    for object parms and action parms. It drives the 
+                    replacement from the local data. If parameter is found
+                    in the string, the local value is replaced. The method
+                    does not care if there are more parms in the string. However
+                    if any of local parms is not found in the string, it returns
+                    'false'. 
+
+                2) ACTION.HH  Bye bye  ActionParameters and IncommingParameters
+                   classes. All parameters are now class Parms.
+
+                   ACTION.CC this of course requires apropriate changes here
+                             as well
+
+                3) SETINS.CC small change in conection to changes in action.cc
+-------------------------------------------------------------------------------
+28-Jul-1998     1) I started to impose CONST correctness on ACTION class and
+                   it 'cascaded' down and finished to having to impose some
+                   CONST correctness on :
+                   TWONAMES, PARMS, COMMANDHANDLER(Clara informed), CONDITION,
+                   DOINS, IFINS, INSLIST, SETINS, SMPCOND, TERMINS and WHEN.
+
+                2) TWONAMES.CC & HH  new method 'set', taking two names rather
+                   than just two strings
+-------------------------------------------------------------------------------
+29-Jul-1998     1) ACTION.CC & HH keeps as new private data pointer to the
+                   parent state. It also passes it to the constructor of
+                   InsList class.
+
+                2) INSLIST.CC &HH keeps as new private data pointer to the
+                   parent state. It also passes pointer to parent state and
+                   parent action to terminate instruction.
+
+                3) SCHEDULER.CC  state string used to be char[] type. It is now
+                   class Name
+
+                4) SMIOBJECT.CC
+                   a) two new private methods 
+                      int SMIObject::stateInx( const Name& stname) const
+                      int SMIObject::stateInx( const char stname[]) const
+                      returning state index (-1 if not found)
+
+                   b) private array  char _state[][] holding state names 
+                      abolished and these are picked up from the state 
+                      instantiations using the new stateName method.
+
+                   c) usage of object name in char form limited and replaced
+                      by Name
+
+                   d) setState method now takes Name rather than char[]
+                      and so does split method. Usage of statename as a char[]
+                      strongly limited.
+
+                3) STATE.CC & HH
+                   a) _name (char[]) replaced by _stateName (Name)
+
+                   b) some more const corectness imposed
+
+                   c) new method 
+                      Name State::stateName() const    returning the state name
+
+                   d) passes its addresse to Action class
+
+                   e) new method
+                      void State::changeName( const Name& name )  it will
+                      replace the state name by name
+
+                4) TERMINS.CC & HH
+                   a) private date prefixed with underscore.
+
+                   b) The constructor accepts pointer to parent object and 
+                      action
+
+                   c) execute method behave differently when it belongs to 
+                      &ALLOC object
+
+                4) There is a bug in C++ compiler and the declarations of typ
+                   const char lines[][MAXRECL] give trouble. For this reason
+                   I had to remove it from the following classes :
+                   CONDITION, DOINS, IFINS, INSLIST, SETINS, SMPCOND, TERMINS 
+                   and WHEN.
+--------------------------------------------------------------------------------
+30-Jul-1998     1) SCHEDULER.CC Usage of object name as char[] limited
+
+                2) STATE.CC & HH
+                   a) new private data item introduced:
+                      Name _stateNametag;
+                      at the instantiation it is set to be equal to the state
+                      name. The difference is, that it never changes while
+                      the state name can change.
+
+                   b) new method:
+                      Name State::tagName() const 
+
+                3) SMIOBJECT.CC & HH new method
+
+                   State* SMIObject::pTaggedState (const Name& tagname) const
+
+                   returns a pointer to what I call 'tagged' state which is
+                   a crapy name and should be changed.
+
+                4) TERMINS.CC & HH  small tuning and bug fixing
+--------------------------------------------------------------------------------
+31-Jul-1998      STATE.CC & HH 
+                   1) new method
+                      bool actionExists( const Name& actname) const
+
+                   b) parent object name is now type Name
+
+                   c) method execute_assoc changed... made more elegant and
+                      also for remote &ALLOC objects, domain name is sent
+-------------------------------------------------------------------------------
+ 1-Aug-1998      1) SMIOBJECT.CC & HH
+
+                   a) new public method:
+                      Name currentState() const;    
+
+                   b) new private methods:
+                      int stateInxDeadState() const;
+                      int stateInxTaggedState() const;
+                      void setStateAlloc( const Name& statestr)
+                          this is a special setState method for 
+                          remote::&ALLOC objects
+
+
+                 2) STATE.CC & HH
+                     Method execute_assoc will now protect remote objects
+                     from commands if the remote dom is allocated to somebody
+                     else. It is actually protecting itself from hanging.
+
+                 3) TERMINS.CC  some more tuning.
+-------------------------------------------------------------------------------
+ 2-Aug-1998      1) PARMS.CC & HH  new method:
+
+                    int remove( const Name& name) supposed to remove parameter
+                    name
+
+                 2) SCHEDULER   before an external action is queued, new 
+                        private method:
+          int Scheduler::guardianOK(const Name& objectName, Name& actionstring) 
+                        is called to check if the action is sent from a proper
+                        'allocator'
+
+                 3) TERMINS.CC  more changes in connection with allocation
+
+                 4) STATE_MANAGER.CC declares global  Name allocator("\0");
+-------------------------------------------------------------------------------
+ 3-Aug-1998      1) PARMS  the way method remove was design got me into trouble
+                    .... something to do with instantiation of temp Parms, so
+                    I had to rewrite it as:
+                     void Parms::remove( const Name& name, Parms& parms)
+
+                 2) SCHEDULER.CC
+                    a) had to take into account the redefinition of remove
+
+                    b) some debug prints put in
+
+                    c) when action is rejected, 
+                         _pCommHandler->invalidAction(pSMIObj); has to be
+                       called, to stop the object to be 'busy' on the display
+
+                 2) ACTION.CC  In case of &ALLOC object, all incomming 
+                    parameters  are accepted without any regard to declared
+                    parameters...this is a temp bodge.
+-------------------------------------------------------------------------------
+ 4-Aug-1998      1) TERMINS.CC a small bug fixed
+
+                 2) STATE_MANAGER.CC is now marked Version 5.0
+
+       delphi$online made to point to franek gaspar default
+
+       new library made
+
+       new *.exe made
+
+       d$onl_dev:[smixx.state_manager.source]*.*.*  and
+       d$onl_default:[smixx.state_manager.source]*.*.*   backuped to
+
+       HEPVS3
+-------------------------------------------------------------------------------
+17-19-Aug-1998  
+       1) TERMINS.CC  In order so that the domain gets released(by COMMHANDLER
+          injecting RELEASE action to &ALLOC object on the external action
+          queue) the following has to be done: a) when the allocator manages
+          to allocate, method domainAllocated(connection-id) is called in 
+          commhandler. b) when the allocator releases, method domainDeallocated
+          (connection-id) is called in commhandler.
+
+       2) COMMHANDLER.CC & HH appropriate changes for above
+
+
+       3) LOGIC_ENGINE.CC the pointer to COMMHANDLER is stored into a Global
+                         variable. This is used by TERMINS. All these global
+                         variables should be put into a SINGLETON
+
+       4) SCHEDULER.CC
+           all changes in the guardian method:
+            a) a few cosmetics changes to variable names.
+
+            b) the current version of COMMHANDLER always suplies two parameters
+               with every external action i.e.
+                    &ID ... process id that sent the action e.g.
+                               FRANEK_3@axdecp.cern.ch           
+               and  &CONN_ID  ... this is dim's connection identifier
+
+               the guardian removes those two parameters from all actions
+               except for acctions going to &ALLOC object where it insists
+               that they are present otherwise the action is rejected (it should
+               actually kill the state manager as this is obviously an internal
+               error).
+.............................
+
+        5) SMPCOND.CC  If a state name in condition instruction is &SMIDOMAIN,
+                      this is translated to the actual domain name. e.g.
+
+                        if  ( &ALLOC in_state &SMIDOMAIN ) then
+                              ...
+................................
+
+        6) SMIOBJECT.CC  when high priority action (consequence of when instr.)
+               is queued, a message is printed
+
+        7) DOINS.CC a debug print commented out
+
+        8) STATE_MANAGER.CC  marked Version 5.1 and dated  19 August 1998
+...............................................................................
+25-Aug-1998   ftp ed to unix as part of the smixx Version 3.0
+
+26-Aug-1998 Clara made minor mods to Commhandler.*, dic.hh and dis.hh
+            these mods were done both on UNIX and in Clara develop. area
+..............................................................................
+22-SEP-1998 During the visit to SLAC(7/9-11/9) a bug was found in PARMS.CC
+            which caused the method buildParmString to blow up when one of
+            the parameters was "". It was fixed at SLAC and taken over to this
+            directory
+................................................................................
+23-SEP-1998 
+
+           disk$user:[franek.smixx.state_manager.source] dircetory was backed up
+             to hepvs3::DATA_DISK1:[FRANEK]SM_SOURCE_23-SEP-1998_DEV.BCK
+
+           d$onl_default:[smixx.state_manager.source] directory was backed up
+             to hepvs3::DATA_DISK1:[FRANEK]SM_SOURCE_23-SEP-1998_DEFAULT.BCK
+
+  and      disk$user:[gaspar.smixx.state_manager.source] dircetory was backed up
+             to hepvs3::DATA_DISK1:[FRANEK]SM_SOURCE_23-SEP-1998_GASPAR.BCK
+...............................................................................
+ 8-OCT-1998  1) initiator.cc ... method createAlloc : a check is made whether
+                class &ALLOCATION_OBJECT exists and if not, the generation of
+                the remote &ALLOC objects is not done to prevent the program
+                blowing up. This is to allow usage of 'old' .sobj files which
+                do not contain this class.
+
+             2) state.cc ... the action is allowed to be sent to remote domain
+                also when &ALLOC object in the remote domain does not exists.
+
+             3) smiobject.cc 
+                  a) When associated object changes state and was
+                     locked , it now remains locked.
+                  b) Various debug prints all to do with locking and unlocking
+                     of objects.
+...............................................................................
+ 9-Oct-1998  1) state.cc & .hh  constructor: it is not called with parent
+                object name and this is picked up using the object pointer.
+                Also the state name is not returned back because if anybody
+                wants it it can obtain it using the state pointer.
+
+             2) smiobject.cc  constructor:
+                 a) changes to comply with changes in 1)
+                 b) If a subobject does not have dead_state declared, this is
+                    created and given name DEAD.
+...............................................................................
+10-Oct-1998  1) smiobject.cc  ... switching on printing in which state an
+                 associated object starts.
+             2) state_manager.cc ... given version number 5.2 and today's date
+...............................................................................
+13-Oct-1998  1) state.cc&hh   
+                 a) _atribute is now a Name and not char
+                 b) an additional constructor for constructing either dead
+                    or initial state for associated objects. The way it works
+                    is as follows: 
+                    For each subobject of an associate object, there are two 
+                    special states
+                      1) Initial state...the state in which the object starts
+                         when State Manager begins execution (this state will
+                         never trigger an execution of a when clause). It is
+                         declared by specifying state atribute /initial_state.
+                         If such a state is not declared, it is created and
+                         given name &INITIAL
+
+                      2) Dead state...the state into which the object is put
+                         when the remote process dies. It is declared by 
+                         specifying state atribute /dead_state. If such a state
+                         is not declared, it is created and given name DEAD.
+                         (The absence of & is for backward compatibility)
+
+             2) smiobject.cc 
+                  a) Implementing the above handling of Initial and dead states
+                     (untill now associated objects started in a dead state
+                      and also when this was not declared, it caused a crash)
+
+                  b) Method currentState was improved. It used to work only
+                     when object had only one subobject. It now works also
+                     when there are more then one in which case it returns the
+                     usual string subobj1.st1, ... ,subobjn.stn
+...............................................................................
+14-Oct-1998   smiobject.hh & cc
+                  a) new methods: 
+                     int stateInx( const int isub, const Name& state ) const ;
+                        given subobject index and state name it returns
+                        state index.                       
+                 
+                     int stateInxDeadState(const int isub) const ;
+                        returns state index of the dead state for isub subobject
+
+                     int stateInxInitialState(const int isub) const ;
+                        returns state index of the initial state for isub 
+                                                                       subobject
+  
+                     void setCurrStateInxes( const Name& stateNm ) ;
+                         from the string subobj1.st1, ... ,subobjn.stn it sets
+                         the subobject state indexes
+
+                   b) Object atributes and subobject names are now of type Name
+                      and not char
+
+                   c) the above methods utilised in setState and startup, 
+                      thus simplyfying significantly the code 
+...............................................................................
+15-Oct-1998   smiobject.cc & .hh
+
+                   a) as a result of above changes, method getNextSubState
+                      goes out which makes me very happy.
+
+                   b) a few minor bugs fixed in the new methods
+
+                   c) state_manager...version 5.2.3 and dated today
+...............................................................................
+                           Version 5.3
+20-Oct-1998   The State Manager has been running successfully for a few days
+               ----> 
+            1) state_manager.cc   marked Version 5.3  (=5.2.3) dated 20 Oct-1998
+
+            2)d$onl_dev:[smixx.state_manager.source] directory was backed up
+                to hepvs3::DATA_DISK1:[FRANEK]SM_SOURCE_20-oct-1998_DEV.BCK
+
+            3)d$onl_default:[smixx.state_manager.source] directory was backed up
+              to hepvs3::DATA_DISK1:[FRANEK]SM_SOURCE_20-oct-1998_DEfault.BCK
+
+      disk$user:[gaspar.smixx.state_manager.source] directory was not backed up
+             as it has not changed since 23 Sep 1998 when it was backed up
+             to hepvs3::DATA_DISK1:[FRANEK]SM_SOURCE_23-SEP-1998_GASPAR.BCK
+
+            4) d$onl_dev:[smixx.state_manager.source] purged and files
+               beginning with _old_ deleted
+
+            5) d$onl_default:[smixx.state_manager.source] purged and files
+               beginning with _old deleted
+               Also several files (to do with old parameter handling) were
+               renamed to _old_*
+
+            6) all *.cc and *.hh files moved from dev to default (with a few
+               exeptions of irrelevant test files)
+
+            7) commhandler.*, dic.hh  and  dis.hh copied from
+                   disk$user:[gaspar.smixx.state_manager.source]   to
+                   default
+            8) delphi$online set just to default and state_manager.olb and
+               state_manager.exe were remade  ... this note should really be
+               in the directory above
+
+................................................................................
+21-Oct-1998  smiobject.cc   more debug prints added in :
+                a) when an action is queued
+                b) when a lock is queued
+                c) when action is suspended and
+                d) when action is resumed
+
+             state_manager.cc   version left to be 5.3, but the date changed
+
+  All these changes were done directly in d$onl_default
+...............................................................................
+ 3-5 Feb-1999   Small changes in NAME.*, SMIOBJECT.*, and STATE.*
+
+              default areas backed up and then the above 6 files were moved
+              to default.
+
+              at the same time Clara moved some communication related files
+              there as well with some substantial changes. These are:
+              
+              COMMHANDLER.*, DIC.CC, DIC.HH, DIS.CC, DIS.HH, PTRVECTOR.CC 
+                and PTRVECTOR.HH
+                
+...............................................................................
+19-Feb-1999  some changes to commhandler.cc
+...............................................................................
+20-Feb-1999  state_manager.cc    marked as version 6.0    this was done directly
+             in the default area
+             
+             - have to do something to state_manager_olb.make ... it did not
+               take the extra 3 files (dic.cc,dis.cc,ptrvector.cc). had to
+               add them separately.
+               
+              - what are these compilation warnings in dic.cc ???
+
+              smiobject.cc  fixed two small declaration omissions causing
+                            compilation warnings on hpplus. done directly
+                            in default area             
+................................................................................
+ 1-Mar-1999   The no of object lines had to be increased in parameters.hh
+              state_manager.cc marked as version 6.0.1
+...............................................................................
+23-Mar-1999   It is necessary that the State Manager is compiled by Solaris
+              native compiler CC. The following problems turned up
+
+              a) CC has to have bool defined same as VMS while g++ does not
+                
+              b) Those classes which use str* such as strcpy has to include
+                 <string.h>
+
+              c) Those classes using abort or exit has to include <stdlib.h>
+
+               This was achieved by putting the necessary mods into
+
+                    typedefs.hh   as this is directly or indirectly used by
+                                  everybody (except smiclass.cc).
+
+                    smiclass.cc  had to have put #include <string.h> in
+                                 explicitly
+
+                    smiobject.cc produced 2 warnings about variables not beiing
+                                 initialised and it was put right. It was not
+                                 actually bug because they were properly
+                                 initialised, but the compiler could not have 
+                                 known
+................................................................................
+28-29 Mar-1999   All new and delete in name.cc are protected by disabling 
+               signals before and enabling them after. Also a new include file
+               asts.h which has all the necessary stuf.
+               New processcommandline.cc function which does exactly what it
+               says. Not used yet.
+...............................................................................
+ 7 April 1999  parameters.hh modified...no of instructions increased to 300
+                state_manager.cc marked as version 6.1 and todays date
+...............................................................................
+ 8 April 1999 SMIOBJECT.CC & typedefs.hh small mods to get it through both GNU
+              and native solaris compiler.
+.............................................................................
+19 May 1999   1) asts.h  moved to default as it is a new file
+              2) processcommandline.cc file moved to default for the same reason
+              3) also the remaining files moved to default i.e.
+                 name.*, parameters.hh, smiclass.cc, smiobject.cc,
+                 state_manager.cc and typedefs.hh
+...............................................................................
+20 May 1999   $BFROOT/package/smixx/v4.1.4/state_manager/source  from SLAC
+              copied to work directory and compared with 
+              d$onl_default:[smixx.state_manager.source] Only 2 files were 
+              found different :
+
+              parameters.hh  .... increased numb of parameters sent in do instr
+
+              smiobject.cc .... abstract objects now publish Busy when they
+                                execute an instruction
+
+              They were copied from work to 
+                     d$onl_default:[smixx.state_manager.source]
+
+           - Some debugging prints were taken out. This affected 
+                doins.cc, smiobject.cc and state_manager.cc (version num)
+................................................................................
+28 May 1999   doins.cc, smiobject.cc and state_manager.cc  were moved to
+              default where everything is at this point
+................................................................................
+ 9 June 1999 1) a bug fixed in state_manager.cc   initiator was incorrectly
+                declared as ObjectRegistrar* instead of void.
+
+             2) termins.hh  char pstate[]    replaced by char* pstate
+                            to make it compatible with termins.cc
+
+             3) utilities.cc   return 0 added before closing (end of function)
+                               braket to pacify PC compiler    
+
+             4) utilities.hh 
+                  a)  removed definition of DISABLE_AST and ENABLE_AST
+                  b)  put in #include dis.hh which now defines the above
+
+        all these changes done directly in default
+...............................................................................
+14 June 1999
+          smiobject.cc   ---- because of the problem with compilation on
+             windows NT, the following declaration:
+
+                char clines[MAXCLASSLINES][MAXRECL]; was replaced by
+
+
+                typedef char OBJLINE[MAXRECL];
+                OBJLINE *clines;
+                clines = new char[MAXCLASSLINES][MAXRECL];
+...............................................................................
+15 June 1999
+          initiator.cc  similar change as in smiobject.cc above concerning 
+                object lines
+...............................................................................
+22 September 1999
+
+          initiator.cc   and  smiobject.cc moved to default. At this point
+          everything is there
+...............................................................................
+23 September 1999
+       1)  name.cc and name.hh copied to develop. from v5.0.3 at SLAC. The
+               changes are to do with removing protecting new and delete
+               (see 28-29-mar-1999). This was never necessary on VMS and
+               is not necessary on solaris any more because DIM is now
+               multithreaded.
+
+       2)  smiobject.cc   a few more diagnostic prints suppresed (as was done
+                           at SLAC)
+
+       3) name.cc, name.hh  and smiobject.cc   moved to default...everything is
+                                               now there
+...............................................................................
+24 September 1999
+
+         changed state_manager.cc   version 6.3
+
+         recompiled and relinked
+
+         created new directory under source called old_source which serves as
+         dust bin
+...............................................................................
+  1 December 2000
+  
+     This file has been moved to cern.ch (Afs) from VMS which from today stops
+     being the Master
+...............................................................................
+  4 January 2000
+
+  Geting rid of MAXOBJECTLINES which was set to 28000
+  ---------------------------------------------------
+
+ - initiator.cc  object (or class) lines are collected into an object 
+           of NameVector class instead of 2dim vector of fixed dimensions.
+           Once collected it is then copied into a two dimensional 
+           array [][MAXRECL] ( dynamicaly created on the heap). This is because
+           SMIObject and SMIClass instantiators expect an array of this type and
+           this is the quickiest way to make it work. Once the the object
+           (or class) is instantiated, the array is deleted.
+
+ - name.cc & name.hh & namevector.cc & namevector.hh are picked up from 
+           utilitiesxx directory
+
+ - parameters.hh MAXOBJECTLINES parameter removed
+.................................................................................
+ 5 January 2000
+
+  Changes for Solaris 7
+  ---------------------
+  These were done at SLAC originaly and they are minor changes to
+    typedefs.hh  & smpcond.cc
+  Both files were copied from SLAC to CERN-Unix
+
+  Getting rid of MAXCLASSLINES
+  ----------------------------
+   First step is to store class lines in NameVector rather then in two dim
+   array:
+     small change to smiclass.hh & .cc....only private data changes and
+     methods do same as before.
+
+   Second step is to dynamicaly create space for class lines in instantiator
+   of SMIObject  in file smiclass.cc and MAXCLASSLINES removed from parameters.hh 
+.................................................................................
+ 8 January 2001
+
+   - new file state_managerversion.hh   defining the version
+
+   - processcommandline.cc  (which has not been used yet) was re-written ala
+           the one used by CXXTranslator 
+
+   - state_manager.cc    uses the above two files 
+
+   - smiobject.cc   some of the debug prints were removed
+............................................................................
+ 9 January 2001
+
+   - typedef.hh   Bool is defined only when defBool is there
+
+   - rather then using soft links, name.cxx, name.hxx, 
+     namevector.cxx and namevector.hxx were copied here to .cc and .hh
+     files.
+...........................................................................
+10 January 2001
+
+  - block_name.cc  and  set_name.cc   now needs #include <stdlib.h>
+...........................................................................
+ Sometimes between 10 January and 23rd April 2001
+ 
+  - logic_engine.cc    pause() was replaced by dim_wait()
+       this is because in one of the dim include files there was a define
+       statement replacing pause() (which is the correct call for state manager)
+       this define statement was taken out because some people may need
+       the genuine pause for something else. 
+............................................................................
+23-27 April 2001
+
+   -  .cc files renamed to .cxx    and .hh to .hxx
+
+   -  Necessary changes had to be done almost in all of the files to include
+      .hxx rather than .hh
+
+   - Copyright notices added 
+   
+   - files name.cxx, name.hxx, namevector.cxx and namevector.hxx deleted
+      (actually renamed to _old_...)
+     They are going to be picked up from common_source directory as they
+     are identical with exception of namevector.cxx which has a bug fixed
+     in common_source directory 
+..............................................................................
+16 May 2001
+
+   - bug fixed in commhandler.cc  (not enough space reserved for domain name)
+..............................................................................   
+17 May 2001
+
+   - parms.cxx   ommited int declaration put in
+   
+   - state_managerversion.hxx   Version 6.5 
+................................................................................
+11-13 June 2001
+
+   Object Sets
+   -----------
+
+   - new files smiobjectset.cxx & hxx describing SMIObject class
+
+   -  initiator.cxx  is now also looking for Object Sets.
+
+   -  state_manager.cxx  debugging prints
+................................................................................ 
+   
+ 14 June 2001
+
+   Windows NT does not have (nor needs) include file unistd.h  ...#ifndef
+   employed in logic_engine.cxx
+..........................................................................
+  16 June 2001
+    Object Sets implemented in do instruction:
+
+      - smiobjectset.cxx&hxx  new method reset() and nextObject(Name&)
+
+      -  doins.cxx  when object name begins with &ALL_IN_, all
+                    objects in the set are sent the same action.
+...........................................................................
+ 17 June 2001
+      remove/insert instruction implemented:
+
+      - smiobject,cxx added code to recognise and perform
+
+      - smiobjectset.cxx&hxx new method add(Name&)  and  remove(Name&)
+     ** realised it would be better to inherit all this stuff from
+        NameList class.
+...........................................................................
+ 18 June 2001
+
+   Added a new method to Queue_TwoNames class  (queue_twonames.hxx&cxx)
+
+   smiobject.cxx - after remove/insert, change of the state of object is
+                  signaled same way like if it was any other action ending
+                  in the same state
+		  
+   smpcond.cxx - method evaluate and isPresent now handles object sets
+...........................................................................
+ 19 June 2001
+ 
+    - smpcond.hxx  added two new private data : _objectSet and _all_in flag
+    - smpcond.cxx   using the above simplifiing the code 
+    
+    - smpcond.hxx&cxx two new methods added : 
+           1) smiObjectSet() returns the  SMI Object set it operates on
+	   2) objectList(NameList&)  returns the list of objects in the set
+	  
+    - condition.cxx modifications to method objectSet   and addto_objectSet
+            they take into account the existence of simple conditions that
+	    operate on SMI Object Sets.
+	    
+	    nb the name of the methods is rather unfortunate because the set
+	       in this context is not ObjectSet  !!!
+...............................................................................
+ 20-21 June 2001
+
+   Various debug prints removed and some diagnostic prints changed: 
+     initiator.cxx, smiclass.cxx, smiobject.cxx, smiobjectset.cxx,
+     smpcond.cxx state_manager.cxx
+
+   do instruction can handle name of the object passed as value of action
+   parameter : doins.cxx
+...............................................................................
+ 3 July 2001
+    - New class InsertIns   representing  insert/remove instruction
+      new files  insertins.hxx  & insertins.cxx 
+
+    - inslist.cxx processes insert/remove instruction as any other instruction
+
+    - logic_engine.cxx   new global variable pSchedulerGl holding the pointer
+                         to Scheduler.
+..................................................................................
+ 4 July 2001
+
+    - scheduler.hxx & cxx  
+          Execution of whens refering to object sets that changed composition
+          -------------------------------------------------------------------
+              1) new private date NameList _reqObjectSetList;
+                 This keeps a list of Object Sets requesting execution of whens
+              2) new public method 
+                     void reqWhenExecution(const Name& objSet);
+                 ads Object Set to the above list. It is used by insert instruction
+              3) new private function 
+                     void handleObjectSetWhens();
+                 which, driven by the above list, executes the relevant whens.
+
+              After execution of a action, even when action is only suspended,
+              scheduler uses handleObjectSetWhens() to execute the whens
+
+    - smpcond.cxx 
+         method isPresent(objName)
+            if objName begins with &SET_ then the following string is 
+            interpreted as Object Set name and when the condition refers
+            to this set, 1 is returned
+
+    - smiobject.cxx 
+         processing of &INSERT  and &REMOVE actions removed as they do not
+         exists any more.
+
+        
+...............................................................................
+ 5 July 2001
+
+     Improvement in diagnostic prints
+     --------------------------------
+      smiobjectset.cxx,  state.cxx,  utilities.cxx&hxx
+
+     The first when that is activated, will break the execution of whens
+     -------------------------------------------------------------------
+                            for the object
+                            --------------
+       state.cxx,   when.cxx&hxx
+..............................................................................
+  12 July 2001
+
+      Proper handling of 'Ghosts' in conditions
+      -----------------------------------------
+      At the moment Ghost is an empty Object set
+
+  - new private function of Condition class:
+          int evalBool(operation[],operand1,operand2)
+                   operation is one of the "and", "or", "not 
+                   operand1,operand2 = 1,0,-2   where 1 is true
+                                                      0 is false
+                                                     -2 is 'ghost'
+                 the function evaluates the expression taking ghosts
+                 properly into account. The result is: 0 or 1 or -2
+                 when both operands are ghosts. 
+           the function is then used in evaluate() method of Condition class
+
+      changes in condition.cxx & hxx 
+
+ -when object set is empty, evaluate() method of SMPCond class returns -2
+     smpcond.hxx &cxx 
+...............................................................................
+  13 July 2001
+
+  - in addition ifins.cxx had to change. There was an implicit assumption
+    (for the old version quite correct) that the objects participating
+    in the If instruction are the same from execution to execution.
+    the set of objects to be locked is calculated every time the istruction
+    is initiated
+...............................................................................
+  20 July 2001
+
+  -trivial bug (missing space) fixed in condition.cxx. The consequences were
+   that conditions containing or did not work...quite serious
+................................................................................
+  23 July 2001
+
+  - smiobject.cxx & hxx  arg1 in method currentState declared const
+
+  - smiobjectset.cxx & hxx  copy constructor and assignement operator added
+
+  - smpcond.hxx&cxx a) new private data for SMPCond class:
+                      int _frozen; int _frozenResult; and SMIObjectSet _frozenSet;
+                    b) two private methods:
+                      1) evaluate_obj()
+                      2) evaluate_set()
+                    c) two public methods
+                      1) freeze
+                      2) unfreeze
+...............................................................................
+  24 July 2001
+
+  - smpcond.cxx   method evaluate() rewritten using the new methods evaluate_set
+                 and evaluate_obj and also taking into account _frozen flag
+
+  - condition.cxx &hxx  new methods freeze() & unfreeze()....they simply
+                        execute the method(s) of the same name on the
+                        simple conditions.  
+
+  - ifins.cxx & hxx  
+          a) new private methods freezeConditions() & 
+             unfreezeConditions()...these will freeze/unfreeze all the
+             If's conditions
+
+          b) method execute()....when if has to be suspended because some
+             of the objects in the conditions are transiting, all the conditions
+             are 'frozen'. When the execution is resumed, they are 'unfrozen'
+             again 
+
+   At this point Object Sets are properly treated in If conditions 
+................................................................................
+23 August 2001   Bug found!
+
+  This is actually more a design fault. Frozen results in Simple conditions
+  will have to be calculated more judiciously then first thought. Quick fix
+  is to define that frozen result can not be calculated.
+
+      smpcond.cxx
+
+  also some tydiing up in  condition.cxx and ifins.cxx 
+  ............................................................................
+24 August 2001
+     Will be using utilities file from the commonSource
+     --------------------------------------------------
+     - typedefs.hxx removed  
+     - functions specific to state manager moved from utilities files
+       into ut_sm files and utilities.hxx & .cxx files removed
+       
+     - all files in the directory reviewed vis-a-vi the usage of utilities
+     
+--------------------------------------------------------------------------------
+29 January 2002
+
+     Two new lists defined and calculated in the State class during
+     --------------------------------------------------------------
+     instantiation :
+     -------------  
+     
+        1) _srvOList   list of server objects, i.e. objects mentioned in
+	               the state's when conditions
+	2) _srvOSList  list of server object sets, i.e. object sets mentioned
+	               in the state's when conditions
+
+      Files affected :
+           - smpcond.hxx & cxx ... new method objectName() 
+	   - condition.hxx & cxx ... srvOList and srvOSList defined and 
+	                             calculated specificaly for the condition
+	   - state.hxx & cxx ... same as above, but for the state.
+--------------------------------------------------------------------------------
+31 January 2002
+ 
+     -  Bug fixed in ptrvector.cxx in the method append. This is the same
+        as was already fixed in all the other *vector classes a few month ago
+	
+     - InsList  class allows unlimited number of instructions using the
+	         PtrVector class. Files changed:
+		 
+		 parameters.hxx, inslist.hxx & cxx
+--------------------------------------------------------------------------------
+ 7 February 2002 (Boda Franek)
+ 
+     - removed(commented out) normaly unnecessary prints associated with Sets
+       from  insertins.cxx, scheduler.cxx & state.cxx 
+       
+       This resulted in factor 12 reduction in ALICE runControl State Manager
+       log file  
+-------------------------------------------------------------------------------- 		       
+ 4 February 2003 (Boda Franek)
+      remove &ALL from 'set-name'    instruction will remove all objects from
+                                     the set
+	1) Class SMIObjectSet (smiobjectset.hxx, smiobjectset.cxx)...new method 
+                void removeAll()
+        2) insertins.cxx modified accordingly
+--------------------------------------------------------------------------------
+18 March 2003 ( Boda Franek & Clara Gaspar)
+	
+	Publishing contents of Object Sets
+	----------------------------------
+	commhandler.cxx & hxx  ...a couple of new methods
+	smiobjectset.hxx & cxx ... new method to get set name
+	scheduler.cxx & hxx ...  declares sets at the begining and then
+	                        publishes them whenever contents changes
+==========================  v13 ===============================================	
+17 July 2003 (Boda Franek)
+        Class SmpCond  (File smpcond.hxx & cxx)
+	-------------
+	method whatAreYou substantially improved and updated.
+	Instead of returning character string protected by max char constant
+	it now returns Name.
+	It uses whatAreYou1 (for TYP1) and whatAreYou2 (for Typ2). This
+	is in anticipation of using inheritance.
+	
+	This method is used in Condition class for debuging so this had to
+	be modified slightly
+	
+	State manager only tagged with ===== Jul17-2003 =====
+
+18 July 2003 (Boda Franek)
+        Continuing cleaning Class SmpCond 
+	---------------------------------
+	- Because of the existence of subobjects in the past, there 3 private
+	  variables describing an object : 1) _objectStr[]   eg. OBJECT.SUB
+	    2) _objectName[]  OBJECT  and 3) _subobjectName[] SUB
+	  As we do not have subobjects anymore, _objectStr and _subobjectName
+	  are removed.	smpcond.hxx (Ver 1.10    smpcond.cxx ver 1.15)
+	  
+	- private data char _objectName   changed to type 'Name'
+	  smpcond.hxx ver 1.11    smpcond.cxx ver 1.16
+	   
+        - private  char _states[_maxStates][MAXNAMESIZE]  changed to
+	  NameVector _states smpcond.hxx 1.12    smpcond.cxx  1.17
+	  
+-> State manager tag  Jul18-2003
+
+21 July 2003 (Boda Franek)
+        Continuing cleaning Class SmpCond
+	---------------------------------
+	- method void objName(char* objnm,int maxsize) removed
+	 smpcond.hxx ver 1.13   smpcond.cxx ver 1.18
+	 
+	  This has impact on Condition class that is using it : 
+	  condition.cxx ver 1.9	
+	  
+        - method isPresent(const char* objname) replaced by
+	         isPresent(const Name& objname) with consequences for
+		 condition class
+           smpcond.hxx ver 1.14    smpcond.cxx ver 1.19   condition.cxx 1.10
+	      	
+22 July 2003 (Boda Franek)
+
+         SmpCond class
+	 
+	 Frozen result has not been ever used as there was some doubt if it
+	 can be done (see smpcond writeup)
+	 This was achieved by setting _frozenResult variable to -1 in freeze
+	 method. As a result the cond was always evaluated again even when
+	 frozen. In order to improve the clarity of the code, I am taking
+	 usage of _frozenResult out. (method evaluate and freeze)
+	 
+	 smpcond.hxx ver 1.15     smpcond.cxx ver 1.20
+
+23 July 2003 (Boda Franek)
+
+         SmpCond class
+	 
+	 Two new private methods: 
+	    isPresent1(...) this handles type1 simple condition and
+	    isPresent2(...) this handles type2 simple condition.
+	    
+	    isPresent(...) simply calls one or the other. This is similar
+	    to evaluate and whatAreYou.
+	    I am basically getting redy to use inheritance.
+	    
+	 smpcond.hxx ver 1.16      smpcond.cxx ver 1.21
+	
+25 July 2003
+
+        Speeding things up
+	------------------
+	  - initiator.cxx  increasing allocation chunk in NameVector class
+	                    instantiation for object code from 20 to 200
+	  - smiclass.cxx  initialising class code object in initialisation
+	                  list with 200 allocation chunk
+			  
+          - smiobject.hxx&cxx  changing function Name name() to Name& name()
+	  
+	SmpCond class
+	
+  	  -Two new private methods
+	     freeze1()  handles type1 simple condition and
+	     freeze2()  handles type2 simple condition
+	  
+	     freeze() simply calls one or the other. This is similar
+	     to evaluate and whatAreYou etc.
+	    
+	     smpcond.hxx ver 1.17        smpcond.cxx  ver  1.22
+	     
+	  - new private variable _type holding the simple condition type.
+	    Untill now whenever needed the type was recognised by testing
+	    _objectSet (when ==\0  type 1, otherwise type 2). This is pretty
+	    ugly. If this was just internal then maybe, but it is like that
+	    used by Condition class *****
+	    
+	  - new function int type() returns the type (this should be used
+	    by Condition class instead)
+	    
+	      smpcond.hxx ver 1.18   smpcond.cxx  ver  1.23
+=================================  v14  ======================================
+	      
+31 July 2003 (Boda Franek)
+
+           SmpCond   constructor will use the new version of the translator
+	           output, in particular it uses the type information.
+		   
+		   smpcond.cxx ver 1.24
+		   
+ 1 August 2003 (Boda Franek)
+ 
+        No need to choose allocation increment for NameVector class
+	(see commonSource) this is done dynamicaly for every object.
+	smiclass.cxx,   initiator.cxx
+	
+================================  v15  ========================================	
+ 05 August 2003 (Boda Franek)
+    - objectregistrar.cxx  instantiating temp Name object taken out of the loop
+================================  v15r2 =======================================
+-16 August 2003 (Boda Franek)
+
+   - ObjectRegistrar  class   (objectregistrar.cxx&hxx)  new method out
+   
+   - SMIObjectSet class 
+   
+       a) uses NmpPtnrList class rather NameList for _objectList
+          saving also the pointer to objects to speed things up
+	  
+       b) new methods firstObject and nextObject using the new  and safer 
+          methods in the NmpPtnr class. They have an additional
+           argument void*& pNext which is kept on the caller's stack and
+	   therefore safe.  ***** review all the other lists
+	  
+   - SmpCond class  uses the new safe nextObject method of class SMIObjectSet
+      which also suplies SMI object pointer
+================================  v15r3 =======================================
+ 27 October 2003 (Boda Franek)
+ 
+   - new global funclion : makeStateString   ut_sm.hxx&cxx
+    
+   - SmpCond class : a) private method 'stateString' removed (smpcond.hxx&cxx)
+                     b) global function makeStateString is used instead
+================================  v16 ==========================================
+ 31 October 2003 (Boda Franek)
+ 
+   - SmpCond class : a) method objectList removed and replaced by
+                        objectsToLock method , To start its name expresses
+			better its purpose.
+		     b) objectsToLock calls either objectsToLock1 or
+		        objectsToLock2 depending on the type. Obviously in 
+			preparation for inheritance
+   - Condition class : method objectSet & addto_objectSet use objectsToLock
+                       method of SmpCond instead of objectList			
+			
+================================ v16-sm1 ====================================== 
+
+ 8 November 2003 (Boda Franek)
+ 
+   - SmpCond class :
+   
+        a) new private methods 1) constructor1 (for type1)  and constructor2
+            the main constructor just reads the first line and having determined
+	    the type, it calls the corresponding constructor.
+	    
+        b) methods objectName()   and smiObjectSet()   removed
+   
+        c) new private data  1) NameVector _refObjects
+		                list of normal SMI objects the condition referrs
+			     2) NameVector _refOcjectSets
+		                list of Object Sets the condition referrs to.
+        d) new methods   1) NameVector& refObjects()....accessing _refObjects
+	                 2) NameVector& refObjectSets...accessing _refObjectSets
+
+   - condition.cxx uses the new methods (d) above) to build _srvOList and
+                                                            _srvOSList 
+   - state_managerversion.hxx renamed to version.hxx
+         the relevant change made in processcommandline.cxx & state_manager.cxx
+	 
+==================================  v17  ======================================
+   14 November 2003 (Boda Franek)
+  
+    - class SmpCond  (smpcond.cxx & hxx) was significantly simplified by
+               making it a base class and most of its methods made purely
+	       virtual.
+	       
+    - new classes SmpCondTyp1 and SmpCondTyp2  (new files smpcondtyp*.cxx&hxx)
+              They inherit from SmpCond. They also have all the code for
+	      the purely virtual methods
+	
+    - class Condition (condition.cxx) ... as simple conditions are constructed
+            during the execution of the constructor, calling now different
+	    constructors depending on the typ.      
+  	
+    - ifins.cxx ...for some reason now needs #include "smiobject.hxx"
+    
+    - smiobject.cxx added #include <stdlib.h>	
+===================================  v18  ===================================
+  17 November 2003 (Boda Franek)
+  
+    - added #include <stdlib.h> to inslist,cxx  and  smiobjectset.cxx	
+    
+  20 November 2003 (Boda Franek)
+  
+    -  Set_Name class: method isPresent ... small mod to speed it up
+    
+    - State class : method Name State::stateName() const   changed to
+                           Name& State::stateName()
+                 saves one copy ( state.cxx & hxx)
+    - smiobjectset.cxx & inslist.cxx need stdio.h to compile on ALICE
+===================================  v18r1  ===================================
+ 26 March 2004 (Boda Franek)
+ 
+   - ut_sm.cxx   thread safe version of ctime (ctime_r)
+   
+   - new format for version.hxx. this required mods in
+         state_manager.cxx & processcommandline.cxx
+	 
+   - some debug prints switched off in condition.cxx
+
+ 26 March 2004 (Clara Gaspar)
+
+   - increased permitted size of a name to 65  ... parameters.hxx
+   
+   - commhandler.cxx .. ctime -> ctime_r
+=== 02-April-2004:12:21 ==========  v20  =================
+24 May 2004 (Boda Franek)
+
+   Removing limitation on the length of SMI Domain
+   -----------------------------------------------
+   Files affected: state_manager.cxx & logic_engine.cxx
+================================== v20-sm1 =============================
+  - Class ObjectRegistrar method gimeName changed Files: objectregistrar.hxx
+                                                       & objectregistrar.cxx
+  - the above method is used only in state_manager.cxx so the necessary chnage
+     was applied.
+================================== v20-sm2 ===============================
+26 May 2004 (Boda Franek)
+
+ - state.cxx ...
+       1)passing the name of the parrent object in the action constructor is
+         redundant since pointer to the parent object is passed as well and
+	 so this is removed.
+	 
+       2) method execute_assoc  intermediate char string for object name
+                                 removed. 
+       3) pointer to the parent state is alos passed to When constructor
+  			
+ - action.cxx 
+       1) parent object name removed from the constructor call and _objName
+          initialised using pointer to the parent object.
+	  
+       2) passing the name of the parrent object in the InsList constructor is
+         redundant since pointer to the parent object is passed as well and
+	 so this is removed.
+ - inslist 
+       1) parent object name removed from the constructor call
+       
+       2) instead of passing the name of parrent object to IfIns constructor,
+          pointer to the parent object and pointer to the parent state is sent
+	  to be consistent with the rest of the stuff.
+
+       3) since _objName is not now used, it is removed	  
+
+       4) all instructions are now passed pointer to parent object, parent
+          state and parent action.
+ - ifins
+       1) parent object name removed from the constructor call and replaced
+          with pointer to parent object and pointer to parent state.
+
+       2) _objName changed from char string to Name class
+       
+ - when
+       1) pointer to the parent state added to the constructor.
+       
+       2) _objName changed from char string to Name class
+       
+ - doins, insertins and setins were additionaly affected by point 4) inslist
+ ================================== v20-sm3 ==================================
+=== 01-June-2004:17:23 ==========  v21  =================
+=== 24-June-2004:12:17 ==========  v21r1  =================
+=== 10-August-2004:13:11 ==========  v22  =================
+  20 Sep 2004 (Boda Franek)
+  
+    ptrvector.cxx  casting of a pointer to int removed...could cause problems
+                   with 64 bit architectures.
+=== 20-September-2004:12:06 ==========  v23  =================
+  04-October-2004 (Boda Franek)
+  
+    - Bug in handling whens:  
+        Scheduler::handleWhens   (scheduler.cxx)
+	before whens are evaluated, check has to be made whether object is
+	busy and also whether there are already when actions pending.
+	
+    - two new methods in SMIObject:  isBusy   &  hpActionsPending	
+=== 04-October-2004:12:45 ==========  v23r1  =================
+  27-October-2004 (Boda Franek)
+  
+     iostream migration:
+      Many files modified. This consisted basicaly in replacing 
+      #include <iostream.h> by #include <iostream.inc>    or/and
+      #include <fstream.h>  by  #include <fstream.inc>
+      iostream.inc & fstream.inc are new files in commonSource folder.
+-------------------------------------------------------------------------
+  28-October-2004 (Boda Franek)
+  
+      iostream migration
+      ------------------
+      usage of iostream.inc  & fstream.inc  replaced by  smixx_common.hxx
+      
+=== 29-October-2004:19:52 ==========  v24r1  =================
+
+  11-November-2004 (Clara Gaspar)
+    commhandler.cxx & hxx
+      - when object is executing move_to action from when condition,
+        it is not marked 'busy'
+	
+      - new static method   CommHandler::setDnsNode("name of the node")
+      
+  11-November-2004 (Boda Franek)
+      Allowing input of dns on smiSM command line as -dns option
+      Files affected: processcommandline.cxx  &  state_manager.cxx
+=================================  v24r1-sm1 ===========================       
+  24-November-2004  (Boda Franek)
+  
+     Several levels of diagnostic printing introduced
+     ------------------------------------------------
+     
+    - the level is controlled by global variable 'dbg'. The higher level, the
+      more printing. This is read from command line as the -d option. When not
+      specified, it is set to 3 to be backward compatible with BaBar.
+      see processcommandline.cxx modifications.
+      
+    - the diagnostics prints that are at the moment bothering LHCb most, were
+      put under dbg control. Assuming LHCb will be running with level 1.
+      This affects the following files:
+       scheduler.cxx, setins.cxx, smiobject.cxx, state.cxx & state_manager.cxx
+================================  v24r1-sm2  ==================================
+   25-November-2004  (Boda Franek)
+   
+     more work on diagnostic prints. Files affected:  smiclass.cxx
+        smiobject.cxx  &  smiobjectset.cxx
+================================  v24r1-sm3  ===================================
+=== 25-November-2004:16:15 ==========  v24r2  =================
+
+   29-November-2004 (Boda Franek)
+   
+   - initiator.cxx  ...  small adjustments to diag prints
+  
+   - state_manager.cxx ...   -dtto-
+   
+   - smiobject.cxx  ... adjustments to diag. prints  NB since now I know whether
+                       action exists or not when I print, I could use this
+		       knowledge and not go through the attempted action
+		       execution
+		       
+=== 22-December-2004:14:33 ==========  v25  =================
+
+  31-January-2005 (Boda Franek)
+  
+   Limitation on num of whens removed
+   ----------------------------------
+   - class State (state.hxx & .cxx) 
+      When *_pWhen[MAXWHENS]  replaced by PtrVector
+      
+   - parameters.hxx  definition of MAXWHENS removed
+===============================  v25-sm1 =======================================
+
+    1-February-2005 (Boda Franek)
+    
+    Limitation on num of actions removed
+    ------------------------------------
+    
+    - class State  (state.hxx & .cxx)
+       Name _action[MAXACTION]     and  Action* _pAction[MAXACTIONS]
+       replaced by    Registrar _actions;
+       
+    - parameters.hxx   definition of MAXACTIONS removed
+================================  v25-sm2 =====================================
+
+   24-February-2005 (Boda Franek)
+   
+   Limitation on num of statess removed
+   ------------------------------------
+   
+   - class SMIObject  (smiobject.hxx & cxx)
+      State* _pState[MAXSTATES]      replaced by  Registrar _states
+      
+   - parameters.hxx  
+       a) definition of MAXSTATES removed
+       b) MAXSUBOBJECTS is set to 1
+       Only associated objects have subobjects and at the moment only one
+       dummy one. This is for some obscure historical reason I can not remember.
+       
+   NB. At various places in the code of smiobject.cxx, the fact, that there
+       is at most one subobject was used.
+=================================  v25-sm3 =====================================
+   11-March-2005  (Boda Franek)
+   
+   - smiobject.cxx   to satisfy some compilers,  return 0 inserted even
+                    thought the respective method is never called.
+		    
+=== 11-March-2005:15:54 ==========  v26  =================
+
+  20-May-2005 (Boda Franek)
+  
+  
+    New feature: stay_in_state  
+    --------------------------
+    
+    It is possible to say:
+    
+         when (....) stay_in_state
+	
+    Successfull evaluation of the when will have an effect of aborting
+    evaluation of the following whens without taking any action and so
+    the behaviour will be the same like if none of the whens was successfull.
+    
+    The way it is implemented is that in the translator the string stay_in_state
+    is treated like if it was 'do &NULL' and here in State Manager in
+    DoIns::executeHp() method (file doins.cxx) whenever action name is &NULL,
+    no action is queued.
+    
+=== 20-May-2005:15:58 ==========  v27  =================
+=== 25-May-2005:12:04 ==========  v27r1  =================
+
+  23-Jun-2005 (Boda Franek)
+  
+  MAXPARA from parameters.hxx is non-functional (it is only used in assert
+  instruction..must be a left over) and therefore removed
+  
+  changes in parameters.hxx,  doins.cxx
+  
+=== 23-Jun-2005:11:08 ========= v27r1-sm1 ========================
+
+  27-Jun-2005 (Boda Franek)
+  
+  Class State  :  private data  Name _atribute[MAXATRIBUTES]   replaced by
+                                NameVector _attributes;   thus making the
+		number of state attributes unlimited.
+  Files: state.hxx * state.cxx
+=== 27-Jun-2005:11:08 ========= v27r1-sm2 ==========================
+
+  Class SMIObject :  private date Name _attribute[MAXATRIBUTES] teplaced by
+                                  NameVector _attributes; -->
+	             number of SMIObject attributes unlimited
+  Files: smiobject.hxx & cxx,  parameters.hxx (MAXATRIBUTES removed)
+=== 27-Jun-2005:12:00 ========= v27r1-sm3 ===========================
+
+  definition of MAXSTATESTRING  removed from parameters.hxx...it is not used
+  
+  28-Jun-2005 (Boda Franek)
+  
+  - ifhandler.cxx ... unnecessary usage of a local character array dimensioned
+          to MAXOBJECTNAME removed. ObjectRegistrar class method gimePointer
+	  takes also Name as an argument.
+    
+  - scheduler.cxx ...unnecessary usage of a local character array dimensioned
+          to MAXOBJECTNAME removed. ObjectRegistrar class method gimePointer
+	  takes also Name as an argument. Also Queue_Name class method remove
+	  takes Name as an argument.
+	  
+   - smiobject.cxx  ...unnecessary usage of a local character array dimensioned
+          to MAXOBJECTNAME+6 removed.Method add of Queue_Name class takes also
+	  Name as an argument. 
+=== 28-Jun-2005:12:00 ========= v27r1-sm4 ====================================
+
+   - set_name.hxx & cxx ...  new method elment(inx) that returns inxth element
+                           as Name
+   - ifins.cxx ...unnacessary usage of a local character array 'obj' dimensioned
+          to  MAXOBJECTNAME removed. 'obj' is declared as Name and the new
+	  method of Set_Name class used	
+	  
+   - parameters.hxx  MAXOBJECTNAME is now not referenced and therefore removed
+=== 28-Jun-2005:16:00 ========= v27r1-sm5 ====================================
+  
+     01-Jul-2005
+     
+     - ut_sm.cxx&hxx ... function subobjectState & strElement  removed. They
+                         are not used any more
+			 
+     - smiobject.hxx & cxx
+           1) ... method int SMIObject::currentState(int, State**)  removed
+	          because nobody is using it
+		   
+           2) ... method 
+                            int SMIObject::currentState( const char*, char* )
+		      
+	      replaced by   int SMIObject::currentState(Name&) 
+	
+	      this is because the 1st argument was subobject name and we 
+	      do not have subobjects any more. Also the second argument
+	      (the state name) I want to be a Name type.
+	      
+     - smpcondtyp1.cxx  and smpcondtyp2.cxx  ... using the new currentState
+              method
+=== 01-Jul-2005:15:00 ========= v27r1-sm6 ====================================
+
+   04-Jul-2005 (Boda Franek)
+   
+   - smiclass.cxx & hxx  privata char _name[MAXNAMESIZE] replaced by
+                                 Name _name;
+				 
+   05-Jul-2005 (Boda Franek)
+   
+   - state_manager.cxx   ... declaring new global variable  
+                             SMIClassRegistrar allSMIClasses
+   - initiator.cxx ... instead of creating SMIClassRegistrar on the heap,
+                       will use the one already created in state_manager.cxx
+
+   08-Jul-2005 (Boda Franek)
+   
+    -initiator.cxx ... function createAlloc...will use the global allSMIclasses
+                         object instead of the argument pointer
+=== 08-Jul-2005:16:00 ========= v27r1-sm7 ====================================
+
+    -smiclass.hxx & cxx, initiator.cxx  ...SMIClass is using the global
+                         allSMIClasses object
+			 
+    - smiobject.hxx & cxx, initiator.cxx ... SMIObject class is using the global
+                         allSMIClasses object		 
+
+			 
+    - smiobjectset.hxx & cxx, initiator.cxx ... SMIObjectSet class is using the global
+                         allSMIClasses object	 
+=== 08-Jul-2005:17:00 ========= v27r1-sm8 ====================================			 
+
+   11-Jul-2005 (Boda Franek)
+   
+   -     Using Registrar class instead of SMIClassRegistrar
+	--------------------------------------------------
+       The following files were affected:
+      initiator.cxx   smiclass.cxx   state_manager.cxx & smiobject.cxx
+      
+   - smiobject.hxx _className changed from char string to Name
+   
+=== 11-Jul-2005:15:00 ========= v27r1-sm9 ====================================	  
+=== 14-July-2005:17:07 ==========  v28  =================
+
+  15-Aug-2005 (Clara Gaspar)
+  
+    commhandler.*  ... bug fix
+    
+  28-Sep-2005  (Boda Franek)
+  
+  scheduler.cxx, doins.cxx insertins.cxx ... some prints suspended for dbg < 3
+  
+=== 28-September-2005:15:35 ==========  v28r1  =================
+
+  28-Sep-2005 (Boda Franek)
+  
+   - termins.* class TermIns ...  private _endState changed from char string type to Name
+   
+  - End State of an instruction will be returned as type Name rather then char string
+   ---------------------------------------------------------------------------------
+   The reason is that if it is returned as a string a fixed space has to be reserved
+   for it.
+   The class Instruction (instruction.hxx) has the declaration of execute method changed.
+   Because all the instructions inherit from it they all have to change this declaration
+   even if they do not set the endstate. These are: DoIns (doins.*), InsertIns (insertins.*)
+   and SetIns (setins.*).
+   TermIns (termins.*)  and IfIns (ifins.*) are the only instructions that can end in a new
+   state and require some mods.
+   At this stage I decided to return string from InsList (inslist.*) as before. However
+   the class now has to take into account that the instructions are returning Name.
+   
+=== 28-September-2005:17:40 ==========  v28r1-sm1  =================
+   
+  29-Sep-2005 (Boda Franek)
+  
+  - End State of an instruction list will be returned as type Name rather then char string
+   ---------------------------------------------------------------------------------------
+   Instruction list (class InsList) is used by IfIns class and Action class. Therefore
+   changes to inslist.*, ifins.cxx and action.cxx
+   
+=== 29-September-2005:15:25 ==========  v28r1-sm2  =================   
+
+  30-Sep-2005 (Boda Franek)
+  
+  - End State of an action will be returned as type Name rather then char string
+   -----------------------------------------------------------------------------
+   
+   Action class is used by State class. Therefore changes to action.* & state.cxx
+   
+=== 30-September-2005:13:55 ==========  v28r1-sm3  =================      
+  
+  - End State of a state will be returned as type Name rather then char string
+   -----------------------------------------------------------------------------
+          This is the end of End State saga
+	     
+   State class is used by SMIObject class. Therefore changes to state.* & smiobject.cxx
+   
+=== 30-September-2005:14:25 ==========  v28r1-sm4  =================      
+
+   - removing the remaining usage of MAXNAMESIZE parameter
+     -----------------------------------------------------
+    action.* ... the method name which uses MAXNAMESIZE is not used by anybody
+              and therefore deleted
+	      
+    commhandler.cxx ... MAXNAMESIZE used in commented-out section of the code
+             this section was therefore deleted.
+	     
+    smiclassregistrar.* removed. The class was made obsolete. See 11-Jul-2005
+    
+    smiobject.cxx ...the main change is removal of an obsolete method
+            subobjectName(int, char*)     
+
+    action.*  constructor returns action name as Name type rather than char
+              string.
+
+    state.cxx ... takes the above into account
+                  obsolete method action(int, char*) removed
+		  
+    parameters.hxx MAXNAMESIZE removed
+    
+=== 30-September-2005:16:10 ==========  v28r1-sm5  =================   
+
+   4-Oct-2005 (Boda Franek)
+   Removing remaing 'fixed' declarations
+   -------------------------------------
+   I have ran the following command:
+   
+   grep '\[.*\] *[\[,;]' * > badDeclarationx.txt
+   
+   and visualy inspected the result. The following files were identified as
+   containing bad declarations:
+   
+   action.cxx, condition.cxx, condition.hxx, doins.cxx,
+   ifhandler.hxx, initiator.cxx, ifins.hxx, setins.cxx,
+   smiclass.cxx, smiobject.cxx & state.cxx
+   The offending lines in badDeclarations.txt are marked by *- at the begining
+   
+   NB I have ignored declarations with well defined fixed
+      size such as char type[7]
+   
+   5-Oct-2005 (Boda Franek)
+   
+   ifins.*  private data InsList *_pblocks[100]; Condition *_pCondition[100]
+            replaced by PtrVector _insLists; PtrVector _conditions;
+    
+=== 05-October-2005:12:10 ==========  v28r1-sm6  ================= 	  
+=== 06-October-2005:15:38 ==========  v29  =================
+
+ 11-Jan-2006 (Boda Franek)
+    Removed the limitations on the number of Instruction Blocks of an action
+    ------------------------------------------------------------------------
+    ifIns.hxx, ifIns.cxx ... 
+          1) Argument InsList** pAllBlocks replaced by PtrVector& allBlocks
+	  2) argument int *no_lines replaced by int& no_lines
+	  3) whatAreYou method improved
+
+    inslist.hxx & cxx ...
+          1) Argument InsList** pblocks replaced by PtrVector& allBlocks
+	  2) argument int *no_lines replaced by int& no_lines	  
+    
+    action.cxx ...
+          InsList *pblocks[maxInsBlocks]   replaced by PtrVector allBlocks
+=== 11-January-2006:14:10 =========== v29-sm1===============================
+
+ 12-Jan-2006 (Boda Franek)
+    condition.hxx & cxx ...
+        SmpCond* _pSmpCond[_maxSmpCond]    replaced by PtrVector _smpConditions;
+=== 20-January-2006:11:40 =========== v29-sm2===============================	
+
+ 20-Jan-2006 (Boda Franek)	
+	 
+    condition.hxx & cxx
+      Internal int smpflags[_maxSmpCond]  replaced by
+               vector<int> smpflags;
+	       
+=== 20-January-2006:14:46 ==========  v29r1  =================
+
+ 31-Mar-2006  (Boda Franek)
+ 
+   smiobject.hxx & cxx  new method : bool hasAssociatedAttribute() const
+   
+   smiobject.cxx  ... ASSOCIATED attribute for is_of_class is taken only from
+                      the class
+
+   state_manager.cxx ... some debug prints added and are commented out
+=== 31-March-2006:17:27 ==========  v30  =================
+
+ 19-May-2006  (Boda Franek)
+ 
+  - Changes to IfHandler class
+    --------------------------
+     a) private data
+        Name int _numOfObjects; _objNames[100];  SetName* _pTobeLocked[100]; replaced by
+        NmdPtnrList _suspendedObjects; holding the same info
+
+     b) 2 new private methods
+        int findRequester     and  int findFreeToResumeObject
+	
+     c) method bool isEmpty() removed as it is not used by anyone
+   
+     d) arguments of public method addSet    and    objectLocked  rationalised
+   
+     Files affected: ifhandler.hxx, ifhandler.cxx,  ifins.cxx and smiobject.cxx
+   
+  - state.cxx   eliminated the usage of temporary string char actionstr_out[256]
+  
+  This concludes the dynamisation campaign that started some time ago. There are two
+  outstanding things that should get attention some time in future:
+       1) the finate dimension of the input record and the associated MAXRECL parameter
+       2) initiator should be probably redesigned.
+       
+=== 19-May-2006:20:34 ==========  v31  =================
+  21-May-2006 (Boda Franek)
+  
+     ifhandler.cxx .. various diagnostic prints conditioned on dbg> 5
+     
+=== 21-May-2006:21:01 ==========  v31r1  =================
+
+  16-May-2007  (Boda Franek)
+  
+  Making State Manager to accept spaces in string parameter values
+  ----------------------------------------------------------------
+  
+    - action.cxx   when reading the default parameters, 'strpcy' used instead of 'sscanf'
+                   sscanf treats the space as delimiter
+		   
+    - doins.cxx    when reading the values of parameters, same as above
+    
+  23-May-2007 (Boda Franek)
+  
+  Making State Manager to accept = in string parameter values
+  -----------------------------------------------------------
+  (even when not enclosed in doublequotes)
+  
+   - parms.cxx  uses new method in Name class subString
+   
+
+  24-Jul-2007  (Clara Gaspar)
+  
+   - commandhandler.cxx   method setDnsNode now also accept port number
+   
+=== 25-July-2007:14:58 ==========  v32  =================
+=== 07-August-2007:11:55 ==========  v32r1  =================
+=== 25-August-2007:13:31 ==========  v32r2  =================
+
+  28-Sep-2007  (Boda Franek)
+  
+  - commandhandler.cxx   obsolete definition of MAX_BUFFER removed
+=== 28-September-2007:15:29 ==========  v32r3  =================
+=== 07-October-2007:16:50 ==========  v32r4  =================
+
+  09-Nov-2007 (Boda Franek)
+  
+  - commhandler.cxx & hxx ... removed 'const' qualiflier from the argument
+        in 'setDnsNode' function
+	
+	
+=== 12-November-2007:14:40 ==========  v32r5  =================
+
+  28-Mar-2008 (Boda Franek)
+  
+  - smiobjectset.hxx removed the class name before function name. The new
+                     compilers do not tolerate this.
+		      
+=== 31-March-2008:15:41 ==========  v32r6  =================
+
+   4-Apr-2008 (Boda Franek)
+   
+   - New classes : ClientWhens, ClientObject and ClientState ... see class
+                description. This results in the following new files:
+		clientwhens.hxx(cxx), clientobject.hxx(cxx) and
+	        clientstate.hxx(cxx)
+		
+   - state.hxx  obsolete NameVector _srvOList   and  _srvOSList removed		
+   - state.cxx  also the code that builds was removed from the constructor
+
+   - condition.hxx(cxx)  names _srvOList and _srvOSList changed to
+                             _refObjects and -refObjectSets
+---------------------------------------------------------------------
+   9-Apr-2008 (Boda Franek)
+   
+   - clientwhens.hxx, clientstate.hxx and clientobject.hxx
+     removed "using namelist std" which was causing compiler problems
+     and using explicitly std::vector
+     
+   - smiobject.hxx
+           new private data    ClientWhens _clientWhens
+	   declaration of new method   
+	        addClientWhen(whenObjName, whenStateName, whenInx)
+		
+   - when.hxx (cxx)  some tydiing up
+   
+=== 09-Apr-2008:12:00 ==========  v32r6-sm1  =================   
+
+   - smiobject.cxx  implementation of addClientWhen method
+   
+   - when.cxx(hxx)  class State has 2 new private data:
+                    _parentStateName and _whenInx which is the when position
+		    within the parent state. This is passed from the constructor
+		    
+   - state.cxx  passing whenInx to the new When constructor
+   
+   - smiobjectset.hxx(cxx) 
+              new private data    ClientWhens _clientWhens
+	   declaration and implementation of new method   
+	        addClientWhen(whenObjName, whenStateName, whenInx)
+		
+=== 09-Apr-2008:14:50 ==========  v32r6-sm2  =================   
+		    
+   11-Apr-2008  (Boda Franek)
+   
+   - when.cxx(hxx)  new method  updateReferencedObjectsandSets()
+                    loops over the objects and sets which are refered by
+		    the when's condition and updates their client whens
+		    accordingly.  
+   - state.cxx(hxx)  new method  updateReferencedObjectsandSets()   
+                    simply loops over its whens and calls the above method.
+		    
+   - smiobject.cxx(hxx)  new method  updateReferencedObjectsandSets()   
+                    simply loops over its states and calls the above method.
+
+   - state_manager.cxx after the initialisation stage, loops over all
+   			the objects and calls updateReferencedObjectsandSets()
+			
+   - clientwhens.cxx   implementation of numObjects method added
+   
+   - smiobject.cxx(hxx) & smiobjectset.cxx(hxx)  new method 'printClientWhens'
+   
+   - state_manager.cxx client for all the objects and sets are printed
+
+=== 11-Apr-2008:14:30 ==========  v32r6-sm3  =================   
+
+   22-Apr-2008  (Boda Franek)
+   
+   - clientstate.cxx  method 'out' : indexes of client whens are printed,
+             rather than 'clien flags'
+	     
+	     
+   23-Apr-2008  (Boda Franek)
+   
+   - clientstate.cxx (hxx)  new method 'mergeIn'
+   
+   24-Apr-2008  (Boda Franek)
+   
+   - clientstate.hxx   class ClientObject is made friend
+   
+   - clientobject.cxx(hxx)
+         1) new method 'addClientState' ...adds new client state to the client
+	    object
+	 2) new method 'mergeIn'  ... merges in the client states of another
+	    client object
+	 3) implementation of the method 'numStates'
+	 
+   28-Apr-2008  (Boda Franek)
+   
+   - clientobject.hxx  class ClientWhens is made a friend
+   
+   - clientwhens.hxx (cxx)
+       1) new method  'addClientObject'  ... adds new clent object to client
+                                     whens
+       2) new method 'mergeIn'  ... merges in the client whens of anothe 'client
+                                   whens structure'.
+				   
+=== 11-Apr-2008:14:30 ==========  v32r6-sm4  =================   
+
+   13-May-2008  (Boda Franek)
+   
+   - smiobject.hxx (cxx)
+   	1) SMIObjectSet made a friend
+	2) new private member where the object's membership in sets is kept
+	3) releted printing method
+
+   - smiobjectset.cxx
+        1) Bug fixed in copy method used in copy constructor and assignement
+	   operator. Recently added a new member that has to be also copied.
+	   
+	2) method removeAll, add and remove : all the involved member objects
+	   are informed about their status change.
+	   
+	3) (also .hxx)  new method informObjectsAboutMembership().   This is
+	    called after the initialisation stage from state_manager and
+	     'informs' the member objects about their membership.
+	    
+	    
+    - state_manager.cxx after the initialisation stage it loops over the
+           object sets and informs the members.
+	   
+				   
+=== 13-May-2008:14:30 ==========  v32r6-sm5  =================  	   	    
+
+   16-May-2008
+   
+    - smiobjectset.hxx (cxx)
+            new method 'const ClientWhens& gimeClientWhensRef()'
+	    returns referrence to set's client whens
+	    
+    - smiobject.hxx (cxx)
+            new method  'gimeCurrentClientWhens(clientWhens)'  .... builds the
+	     client whens out of the object's direct client whens and 
+	    the client whens of all the sets the object belongs to
+	   
+    - state_manager.cxx  some more debug printing
+    
+=== 16-May-2008:14:30 ==========  v32r6-sm6  =================      
+
+   26-May-2008 (Boda Franek)
+   
+   - when.cxx (hxx)
+           new method 'forcedExecute'. The when is executed. The only thing
+	   that can stop the execution is one of the objects in the condition
+	   transiting.
+	   
+   - state.cxx (hxx)
+           new method 'executeWhensFromFlagList'. Will execute state whens that
+	   are marked in the flag list.
+	   
+   - smiobject.cxx (hxx)
+           new method 	'executeWhensFromFlagList'. Will execute state whens that
+	   are marked in the flag list.   
+	   
+   - clientstate.cxx (hxx)   2 new methods:
+           1) 'correctState(const Name& stateName)  ... returns true or false
+	       depending if it is the correct state or not
+	   2) 'getRefToWhens()'  ... returns reference to the when flag list
+	   
+   - clientobject.cxx (hxx)
+           new method   'executeWhens()' ... checks that the object is not busy
+	   and then it searches if its current state is among its client states.
+	   if yes, it gets the when flag list and invokes its
+	   'executeWhensFromFlagList' method.
+	   
+    - clientwhens.cxx (hxx)
+           new method   'executeWhens'  executes the client whens if possible
+	   
+=== 26-May-2008:14:30 ==========  v32r6-sm7  =================    	   
+	   
+  04-June-2008  (Boda Franek)
+  
+    -scheduler.hxx (cxx)
+       The existing methods 'handleWhens' and 'handleObjectSetWhens' with
+       *_new versions. When this is thoroughly tested, the old ones should be
+       removed together with the underlying software.
+       
+    - smiobject.hxx (cxx)
+        new method  'executeAllWhens'
+	
+    - state.hxx (cxx)
+        new method  'executeAllWhens'
+	
+=== 04-Jun-2008:15:30 ==========  v32r6-sm8  =================    
+
+  09-June-2008  (Boda Franek)
+  
+    - state_manager.cxx
+       Removed a lot of diagnostic prints
+       	        
+=== 11-June-2008:15:51 ==========  v33  =================
+
+  26-June-2008  (Boda Franek)
+  
+    - initiator.cxx  fixed a trivial memory leak. This was found by running
+    
+    valgrind --leak-check=yes --log-file=valgrind smiSM boda XDET_DCS > /tmp/log2.txt &
+    
+    ran in tests/newWhens
+    
+   02-Jul-2008  (Boda Franek)
+   
+    Fixed a few redefinitions of variables in  smiobject.cxx  &  state.cxx.
+    These are, quite rightly, not tolerated by Windows C++ compiler
+=== 02-July-2008:12:44 ==========  v33r1  =================
+
+  16-July-2008  (Boda Franek)
+  
+   smiobject.cxx (hxx) Bug fixed. Object is prevented executing whens when it
+          is already queuing when action.
+	  
+	  
+=== 16-July-2008:17:11 ==========  v33r2  =================
+
+  17-July-2008  (Boda Franek)
+  
+  clientobject.cxx  more consistent place to check whether object is queuing
+                   high priotity actions.
+		   
+=== 24-Sep-2008:14:11 ==========  v33r2-sm1  =================
+
+  - clientobject.cxx  typo fixed
+  
+  - smiobject.cxx (hxx)   new data item of SMIObject class that keeps the
+                          pointer to the IF that caused 'suspension' 
+			  and two methods to manipulate it.
+  - ifins.hxx     new data item...pointer to the parent object
+  
+  -  ifins.cxx    method execute   The parent object is informed when the
+                  instruction is TypeI suspended
+		  
+=== 24-Sep-2008:15:11 ==========  v33r2-sm2  =================
+		  
+  - condition.hxx (cxx) 3 new methods:
+  		1   isObjectDirectlyReferenced
+		2   isObjectSetReferenced
+                3   removeObjectFromFrozenObjectSets
+		
+  - smpcondtyp2.hxx (cxx)  class SmpCondTyp2  new method:
+  
+               removeObjectFromFrozenObjectSet
+	       
+=== 25-Sep-2008:15:11 ==========  v33r2-sm3  =================
+
+  - queue_name.hxx (cxx)   new method  removeItem(Name val)  in class QueueName
+                           removes item from the queue that has value 'val'
+
+  - smiobject.cxx (.hxx)
+  		1) lock method ... making sure, that the requestor's name is
+		    uppercased.
+		2) new method  'removeQueuedLock'
+		
+=== 01-Oct-2008:14:11 ==========  v33r2-sm4  =================	
+
+  -set_name.hxx (cxx)  'constancy' added to argument of method 'remove'
+                      and 'isPresent'
+		      
+  - IfIns Class (ifins.cxx (hxx))
+  
+  	new methods : 
+	
+	1) int removeObjectFromSet( const Name& objName, const Name& setName);
+		For TypeI suspended IF instruction it will do all the necessary
+		cleaning so that it appears like object 'objName' was not
+		included in the set 'setName' at the time when the IF was
+		initially executed
+		
+	2) bool isObjectDirectlyReferenced( const Name& objName);
+		will check weather object is directly referenced in
+		the IF's conditions
+		
+	3) bool isObjectSetReferenced( const Name& objSetName);
+		will check weather object set is referenced in the IF's
+		conditions
+		
+	4) void removeObjectFromFrozenObjectSets(const Name& objName, const Name& setName );
+		will remove object 'objName' from all the frozen object sets of 'setName'
+		in IF's conditions
+
+=== 02-Oct-2008:11:30 ==========  v33r2-sm5  =================	
+
+	- IfHandler Class (ifhandler.cxx & hxx)
+	
+		new method :  
+	int removeObjectFromSet( const Name& objName, const Name& setName);
+		It loops through it's list of suspended objects and
+		 'removes' object 'objName' from set 'setName' in the relevant
+		 IF's
+
+         - InsertIns Class (insertins.cxx)
+	 
+	     method 'execute' modified : whenever an object is removed from a set,
+	     IfHandler is informed
+	     
+	- IfIns Class  (ifins.cxx)
+	
+	     method 'execute':
+		unfreezing sets moved after unlocking. This is because contents
+		of frozen sets is used to determine which objects were locked.
+		This is going to be changed in future.
+
+=== 02-Oct-2008:16:15 ==========  v33r2-sm6  =================	
+                
+   some diagnostic prints added to :
+   
+   ihandler.cxx, insertins.cxx, ifins.cxx, smiobject.cxx
+   
+   
+=== 06-October-2008:11:30 ==========  v33r3  =================
+
+   - smpcondtyp2.cxx  bug fixed in 'objectsToLock'. When frozen, it should
+                      return  the objects in the frozen set. 
+
+  10-Oct-2008
+  
+  Tydiing debug prints in recently modified files, ie:
+  
+  ifhandler.cxx, ifins.cxx, insertins.cxx and smiobject.cxx
+  
+=== 10-October-2008:15:00 ==========  v34  =================
+=== 10-October-2008:16:04 ==========  v34  =================
+
+  15-Oct-2008
+  
+    ifins.cxx ... more debug prints tydiing
+    
+  16-Oct-2008
+  
+    condition.cxx ... one of the warnings was put under 'dbg' control
+    
+    smiobject.cxx ... one of the warnings was put under 'dbg' control
+    
+    
+=== 16-October-2008:15:52 ==========  v34r1  =================
+ 
+   11-Nov-2008
+   
+    Some tydiing up of dbg prints plus smiSMrtl messages
+    Files affected :
+    initiator.cx, scheduler.cxx, smiobject.cxx, state_manager.cxx,
+    ut_sm.cxx and ut_sm.hxx
+    New files :
+    msg.hxx and msg.cxx defining new class Msg
+    
+=== 11-November-2008:12:56 ==========  v34r2  =================
+
+   03-Dec-2008
+   
+   - condition.cxx ... adding a redundant line to pacify some compilers
+   
+   - ifins.cxx ...  fixing obscure bug (nested ifs)
+   
+    
+=== 03-December-2008:13:17 ==========  v35  =================
+
+  19-Jan-2009  New class   'WaitIns'  file  waitins.cxx(hxx)
+  
+  26-Jan-2009  (Boda Franek)
+  
+  - inslist.cxx   recognises and creates WAIT instruction
+  
+  -smiobject.cxx(hxx)  A)new private data:
+  
+    		1) Name _suspendedInsType      this is either IF or WAIT
+		2) WaitIns* _pointerToSuspendedWAIT   
+		
+		B) new methods:
+		
+		1) Name& suspendedInsType()
+		2) void setPointerToSuspendedWAIT(WaitIns* pointer) used by
+		   WAIT instruction when suspended
+		3) int reportingLockedObject( Name& lockedObjName )
+		
+		C) In the method 'execute' informs ResumeHandler about arrival
+		   of locking action.
+		   
+   - state_manager.cxx  declared global  ResumeHandler resumeHandler
+   
+   - new class ResumeHandler  new files  resumehandler.cxx (hxx) 
+   '
+   27-Jan-2009  (Boda Franek)
+   
+   - WaitIns class:  new method 'reportingObjectRemovedFromSet'
+   		used by SMIObject class
+		
+   - SMIObject class:  new method 'reportingObjectRemovedFromSet'
+   		used by ResumeHandler class
+
+    29-Jan-2009  (Boda Franek)
+    
+    - insertins.cxx : when an object is removed from a set, this is reported
+         to 'resumeHandler'
+	 
+    - resumehandler.cxx(hxx)
+    	1) removed obsolete method 'removeSuspendedObject'
+	
+	2) new method 'reportingObjectRemovedFromSet' used by InsertIns
+	
+	3) some tydiing
+
+    - waitins.cxx   ...  bug fixed. Argument to 'removeQueuedLock' has to be
+                         WAIT's parent object name.
+			 
+  31-Jan-2009  (Boda Franek)
+  
+   - ifhandler.cxx ... added temporary protection from suspended WAITs
+   
+  10-Feb-2009  (Boda Franek)
+  
+  - doins.cxx  ... added diagnostic prints under 'dbg' control
+  
+  - smiobject.cxx --- put some diag. prints under 'dbg' control
+  
+  - waitins.cxx --- improved the diag. prints
+ 
+ -  class ResumeHandler :
+     Rather than executing 'resume' on objects that are ready to resume,
+     such object is put on the new '_readyToResumeObjects' internal queue.
+     Later on, Scheduler calls the new method 'resumeReadyToResumeObjects'
+     to resume  the objects at that stage.
+     files modified: resumehandler.hxx(cxx) and scheduler.cxx
+		       
+=== 11-February-2009:14:48 ==========  v35r1  =================
+=== 07-April-2009:14:07 ==========  v35r2  =================
+
+  21-July-2009  (Boda Franek)
+
+ - scheduler.cxx    method execute
+	So far only state changes were put on the State Q. From now, also
+        'busy' state of remote objects will be reported to State Manager
+         by putting it on the State Q as a state:
+		&BUSY-xxx          (where xxx is the name of executed action)
+	at the moment, the only thing State Manager will do is to publishBusy
+	This needs more thought !!!!
+====================================  v35r2-sm1 ======================
+
+  24-July-2009  (Clara Gaspar)
+  
+  - commhandler.cxx & hxx   changes needed to facilate the  above 'busy'
+                            reporting.
+			    
+  - logic_engine.cxx   extra flag has to be supplied to CommHandler to make
+                       it to report 'busy'
+		      
+=== 24-July-2009:14:40 =============  v35r2-sm2  =====================		      
+
+  31-July-2009  ( Boda Franek )
+  
+          Allowing associated objects to go into a state that was not declared
+	  --------------------------------------------------------------------
+  
+  - state.hxx, (.cxx)   
+          1 ) new method  'bool undeclaredState()' returns TRUE
+              if state has 'undeclared_state' attribute.
+		 
+	  2)  one of the constructors extended to allow instantiation of
+	      a state with name '&UNDECLARED_STATE' and attribute
+	      'undeclared_state'. Similar to DEAD and &INITIAL state.
+	      
+   - smiobject.cxx
+   
+          1) new method 'stateInxUndeclaredState()'...gets index of undeclared
+	                                               state.	      
+	      
+	  2) in the constructor:    if user has not defined undeclared state,
+	     it is instantiated using the above constructor and
+	     given name '&UNDECLARED_STATE'. This is by analogy
+	     to initial state handling.
+	     This applies only to associated objects.
+	     
+	  3) method setState:
+	  
+	     a) diag messages tydied up	
+	     b) when object announces state, whose name is not known to State
+	        Manager, the object's state is set to undeclared state name.
+		This is either defined by used or &UNDECLARED_STATE.
+=== 31-July-2009:15:49 ==========  v36  =================
+
+   06-August-2009 (Clara Gaspar)
+   
+   -  small bug just introduced to commhandler.cxx  fixed.
+       after a remote object went DEAD it was then declared as 'busy'
+       
+=== 06-August-2009:15:54 ==========  v36r1  =================
+
+   27-August-2009  (Boda Franek)
+   
+         New type of Simple Condition (Type 3)
+	 -------------------------------------
+    ( 'object-set-name'   empty )  or  ( 'object-set-name  not_empty )
+	 
+    -  2 new files  smpcondtyp3.hxx (cxx)  defining the new class SmpCondTyp3
+
+    -  condition.cxx modified to take into account the new type
+=== 27-August-2009:17:17 ==========  v37  =================
+
+   01-September-2009  (Boda Franek)
+   
+    - Bug fixed in waitins.cxx
+     
+   02-September-2009  (Clara Gaspar)
+   
+    - Bug fixed in  commhandler.cxx 
+=== 02-September-2009:14:44 ==========  v37r1  =================
+
+   07-October-2009  (Clara Gaspar)
+   
+     - Bug fixed in commhandler.cxx
+     
+=== 07-October-2009:12:46 ==========  v37r2  =================
+
+   07-October-2009  (Boda Franek)
+ 
+  Removing obsolete code used for the old treetment of WHENs
+  ----------------------------------------------------------
+    
+   scheduler.cxx,hxx
+   
+   - removed the old, commented out call to 'handleWhens'
+   
+   - removed handleWhens code and also the declaration in the hxx file
+   
+   - removed the old, commented out call to 'handleObjectSetWhens'
+   
+   - removed handleObjectSetWhens code and also the declaration in the hxx file
+   
+   smiobject.cxx,hxx
+    
+   - removed executeWhens method. This was only called from  'handleWhens'
+      
+   state.cxx,hxx
+   
+   - removed executeWhens method. This was only called from executeWhens method
+     of 'smiobject'
+     
+   when.cxx,hxx
+   
+   - removed  'execute' method. This was only called from 'executeWhens' of
+        state.
+	
+   08-October-2009  (Boda Franek)
+   
+   condition.cxx, hxx
+   
+   - removed 'isPresent' method. This was only called from 'execute' of 'when'
+   
+   	
+   smpcond.cxx, hxx;  smpcondtyp*.cxx, hxx
+   
+   - removed 'isPresent' method. This was only called from 'execute' of 
+      'condition'
+       
+=== 08-October-2009:15: ==========  v37r2-sm1  =================
+
+  26-October-2009  (Boda Franek)
+  
+  - SMIObjectSet class:  removed method firstObject and nextObject using
+     the next pointer. This was just a feable attempt for iterator. If it
+     ever becomes needed, it should be done properly. Only iteration using
+     reset is allowed.
+
+  - smpcondtyp2.cxx had to be modified to take the above into account
+  
+  27-October-2009  (Boda Franek)
+  
+  - smiobjectset.cxx,hxx
+  
+     new private method addObjectToSet identical to the current add and used
+     in the constructor instead of add.
+
+  30-October-2009 (Boda Franek)
+  
+   - insertins.cxx, hxx
+       when an object is either added or removed from the Set, this is
+       reported to Scheduler class. When removed, it is also reported to
+       ifHandler and resumeHandler.
+       All the above reporting is taken out of InsertIns class and delegated
+       to SMIObjectSet class. See bellow. 
+       
+   - smiobjectset.cxx
+   
+      a)  all the reporting that has been done by InsertIns class (see above)
+        is now delegated to 'add' and 'remove' method.
+      b) removeAll method now simply calls remove for every object of the set
+          one by one.
+       
+=== 02-November-2009:15: ==========  v37r2-sm2  =================	  
+
+10 Nov 2009  (Boda Franek)
+
+ - smiobject.cxx (hxx)   two new public methods to update private data:
+      1)  youJoinedSet    2) youLeftSet
+      
+      The existing class SMIObjectSet now becomes SMIObjectSetSimple and
+      ------------------------------------------------------------------
+      inherits from a new SMIObjectSet class.
+      --------------------------------------
+      
+      The new SMIobjectSet class (smiobjectset.*):
+      
+      - keeps all the private data except _isOfClass
+
+      - Keeps the following methods:
+          - name()
+	  - numOfObjects()
+	  - nextObject(Name&)
+	  - nextObject(Name&, SMIObject*&)
+	  - addClientWhen
+	  - printClientWhens
+	  - informObjectsAboutMembership()
+	  - gimeClientWhensRef()
+	  
+      - the following methods are purely virtual :
+      
+          - reset()
+	  - gimeObjectListRef()
+	  - out()
+
+     The new SMIObjectSetSimple class (smiobjectsetsimple.* new files)
+     -----------------------------------------------------------------
+     This represents the existing object sets.
+     
+      - has only 1 private data item i.e.  _isOfClass
+      
+      - implements constructors and = operator for its class.
+      
+      - keeps 'add', 'remove' and 'removeAll' as these are only specific for this
+          class 
+	  
+      - implements 'reset', 'out' and the new 'gimeObjectListRef'
+      
+      - has a new public method 'copyObjectList(const SMIObjectSet& '
+      
+ - initiator.cxx
+     instantiates SMIObjectSetSimple instances instead of SMIObjectSet instances
+      
+ - insertins.cxx
+      now deals with the instances of SMIObjectSetSimple
+      
+ - smpcondtyp2.hxx,  smpcondtyp3.hxx
+      _frozenSet is now an instance of SMIObjectSetSimple class
+      
+ - smpcondtyp2.cxx,  smpcondtyp3.cxx
+      _frozenSet is 'initialised' by using the new method 'copyObjectList'.
+      
+      
+=== 10-November-2009:18:53 ==========  v37r3  =================
+
+ 11-Nov-2009  (Boda Franek)
+ 
+     Bug fix
+     --------
+     
+     For frozen sets a different remove method has to be used:
+     
+     - smiobjectsetsimple.cxx (hxx)
+           new method in SMIObjectSetSimple class called 'simpleRemove'
+	   which simply removes the object from the list and
+	   does not do any reporting
+	   
+     - smpcondtyp2.cxx and  smpcondtyp3.cxx  use the new method.
+     
+     
+=== 13-November-2009:14:59 ==========  v37r4  =================
+
+ 24-Nov-2009  (Boda Franek)
+ 
+   - Improved diagnostic prints for:
+    
+    ifhandler.cxx, ifins.cxx, insertins.cxx, resumehandler.cxx, scheduler.cxx,
+    smiobject.cxx and smpcondtyp2.cxx
+    
+    
+   - class SMIObjectSet  method 'out' 
+          1) will use char* as an argument rather than Name
+                this affects  smiobjectset.hxx,  smiobjectsetsimple.hxx and 
+                smiobjectsetsimple.cxx
+		
+	  2) the method was temporarily simplified.
+             This will be remedied when we have frozen class. see below.
+	     
+=== 24-November-2009:15:30 ==========  v37r4-sm1  =================
+
+27-Nov-2009  (Boda Franek)
+
+   -  New class 'SMIFrozenSet'  inheriting from 'SMIObjectSet':
+   	two new files  smifrozenset.hxx and .cxx
+	
+   -  SMIObjectSet class given default constructor. Changes in
+          smiobjectset.hxx and .cxx
+	  
+   - class 'SMIObjectSetSimple':
+   	1)  removed obsolete method 'copyObjectList'
+                       and    'simpleRemove'
+		       
+	2)  a) explicitly invoking base class constructor
+	    b) improved the method 'out'
+	    
+   - class 'SmpCondTyp2' and 'SmpCondTyp3' :
+      private data _frozenSet   is now instantiation of SMIFrozenSet class
+      changes to: smpcondtyp2.hxx and .cxx and  smpcondtyp3.hxx and .cxx
+      
+   - more diag prints to SmpCondTyp2 class
+   
+=== 27-November-2009:15:30 ==========  v37r4-sm2  =================
+       
+  10-Dec-2009 (Boda Franek)
+  
+  - new class 'SMIObjectSetUnion':  2 new files  smiobjectsetunion.hxx *.cxx
+  
+  - initiator.cxx  ...recognises *OBJECTSETUNION keyword and acts appropriately  
+						   	  
+  - class SMIObjectSimple (smiobjectsimple.hxx & .cxx) :
+      1) new private data...list of unions to which the set belongs
+      
+      2) new method... 'joinUnion' informing the set about a membership
+          of an union
+	  
+=== 10-December-2009:14:30 ==========  v37r4-sm3  =================
+
+  11-Dec-2009  (Boda Franek)
+  
+  - class 'SMIObjectSetSimple'  new 2 methods 'gimeObjectList'    and
+                                              'mergeInObjectList'
+					      
+  - class 'SMIObjectSetUnion'  method 'update'  using the above new methods.
+  
+ 
+   14-Dec-2009   (Boda Franek) 
+   					      
+  - class 'SMIObjectSetUnion' 
+  
+       1) constructor: at the end the complete Object List is built
+       
+       2) method 'out' improved
+       
+   17-Dec-2009  (Boda Franek)
+   
+  - class SMIObject
+      new method 'memberOfSet'  returns true or false
+      
+  - class 'SMIObjectSetUnion'
+  
+     new method 'addedObjectToOneOfYourSets'
+     
+     new method 'removedObjectFromOne OfYourSets'
+     
+   18-Dec-2009  (Boda Franek)
+   
+   - class 'SMIObjectSetSimple'
+   
+     1) method 'add'  informs all the unions to which it belongs about adding
+     
+     2) method 'remove' informs all the unions to which it belongs about removing
+
+   
+   - methods  'gimeObjectList' and 'mergeInObjectList' of class 'SMIObjectSetSimple'
+     were moved to the base class 'SMIObjectSet'
+
+   08-Jan-2009  (Boda Franek)
+   
+   - class 'SMIFrozenSet'  method 'copyObjectList'
+            ... using the new method 'gimeObjectList' of the base class
+	        rather than 'gimeObjectListRef'
+	  
+   - class 'SMIObjectSet', 'SMIObjectSetSimple', 'SMIObjectSetUnion' and
+           'SMIFrozenSet'    removed obsolete method 'gimeObjectListRef'
+	   
+	   
+   - class 'SMIObjectSet'  new method 'reset' (used to be purely virtual)
+   
+   - class 'SMIObjectSetSimple', 'SMIObjectSetUnion' and
+           'SMIFrozenSet'  will be using 'reset' from base class
+
+  20-Jan-2009  (Boda Franek)
+  
+   -  resumehandler.cxx  ... improved diag. prints
+   
+   - smiobject.cxx (.hxx) ... removed 'const' qualifier from method 'memberOfSet'
+                  to allow use of some diag. functions
+		  
+   - smiobjectset.cxx ... subsequently commented-out diag. prints added
+   
+   -smiobjectsetsimple.cxx  ... diag.prints added
+   
+   - smiobjectsetunion.cxx  ... 1) Bug fixed: inside the first loop, instead of
+                                  setNm, there should have been _objectSets[i]
+				2) more diag. prints added
+				
+=== 20-January-2010:16:26 ==========  v38  =================
+
+  28-May-2010  (Boda Franek)
+  
+       create_object Instruction
+       -------------------------
+       
+   -  new Class   'CreateObjectIns'   two new files createobjectins.hxx & cxx
+   
+   -  inslist.cxx   ... incorporates creation of 'create_object' instruction
+   
+   -  Class CommHandler
+       1)  new method 'void addObjToDynObjList'  when a new object is created
+           'on the fly', this has to be called.
+	   
+       2)  method 'declareObj'  ... at this time, also all the DIM services are
+            created
+	    
+       3)  method 'declareObjList'  some commented lines removed
+       
+       4)  method 'declareDynObjList'
+            a) using the new method of class Name to remove the last character
+	       from itsDynObjList.
+	       
+	    b) using the method 'length' of Name class instead of 'strlen'
+
+       5)  method  'publishState' 
+            a) creation of object services removed. This is now done in
+	      'declareObj'
+	    b) starting DIM server is removed.
+	    
+       6)  method  'startIt'  ... this is simplified. No checks on the SMI
+            objects made. It is called from scheduler when it thinks is
+	    the right time.
+            
+    - logic_engine.cxx   pointer to the state queue is made global variable
+    
+    - scheduler.cxx   method initialise().   At the end starts DIM server
+    
+  14-June-2010  (Boda Franek)
+  
+  Class  'CreateObjectIns'  some improvements:
+  
+      - createobjectins.cxx
+            a) some comments added
+	    b) some diag prints commented out
+	    c) some warning and error prints improved
+	    d) object name picked up from param value uppercased and trimmed
+	       and checked that it is a name.
+	    
+      - createobjectins.hxx
+               comments added  
+
+  18-June-2010   (Boda Franek)
+  
+    - insertins.cxx   method 'execute'  ... the value of the object name
+            picked up from the parameter value is trimmed and uppercased
+	    and checked if it is a name. If not, the instruction is ignored.
+	
+    - createobjectins.cxx   method 'execute' ... if object already exists,
+             the instruction is ignored 
+	     
+       Some of the changes made 28-May-2010 were undone
+       ------------------------------------------------
+   
+   -  Class CommHandler
+	   
+      point 2)  method 'declareObj'  ... creation of DIM services taken out. i.e
+                the method is left as it was before 28-May-2010
+
+      point 5)  method  'publishState' 
+            a) creation of object services was put back. However the check
+	      wheather object should be created or not is made on the object's
+	      create flag rather than on started flag 
+	    b) starting DIM server was put back
+	    
+	 NB:  The main reason why we want to have creation of DIM services
+	      done here is that this guarantees that the object is in some well
+	      defined state before the services are created.
+	         
+      point 6)  method  'startIt'  ... this is left as it was before 28-May-2010
+        
+	 NB: As this is only called from 'publishState', the code in 'startIt'
+	     will assure, that DIM server is started only when all declared
+	     objects are in well defined state and its services are created.
+       
+       
+    - scheduler.cxx    method 'initialise' ... starting DIM server taken out
+=== 21-June-2010:15:54 ==========  v39  =================
+=== 02-September-2010:15:31 ==========  v40  =================
+
+  26 October 2010 (Boda Franek)
+  
+    - class DoIns  (doins.hxx  and  .cxx )
+         new method  'stay_in_state()'  it returns 'true' when the associated
+	 action is stay_in_state
+	 
+    - class When  (when.hxx and .cxx)
+         new private data: _stay_in_state_flag   and
+	 new  method  'specialWhen()'  it returns 'true' for 'stay_in_state'
+	 when
+	 
+-----------------------------------------------------------------------------
+
+   04 November 2010 (Boda Franek)
+   
+   - class State  (state.hxx and .cxx)
+   	1) new private data: _special_termination_when_inx
+	
+	2) constructors set this data to -1
+	
+	3) method 'executeAllWhens' sets it if necessary to special terminating
+	    when index.
+	    
+--------------------------------------------------------------------------------
+   09 November 2010  (Boda Franek)
+   
+   - class State  (state.hxx and .cxx)
+   
+       new private function 'executeRequestedWhens'
+       	    
+------------------------------------------------------------------------------
+   11 November 2010 (Boda Franek )
+   
+   - class State  method 'executeAllWhens'
+      modified to use the new function
+------------------------------------------------------------------------------
+   18 November 2010  (Boda Franek)
+   
+   -  class State  method 'executeWhensFromFlagList' ... completely re-written.
+         This method is indirectly called by Scheduler when a 'relevant' object
+	 to the state's 'whens' of the current
+         object  reaches a new state, or 'relevant' object-set changes its
+	 contents. These whens were previously executed at least once from
+	 method 'executeAllWhens' when the current object reached its current
+	 state and then possibly in subsequent calls of
+	 'executeWhensFromFlagList'.Depending on what was the outcome of
+	 the previous execution, the following will happen:
+	 
+	 1) Previously all the whens were dormant. Then in this case only the
+	 relevant 'whens' from the list are executed.
+
+         2) Previously the sequence was terminated by a special (stay_in_state)
+	  when.
+	      a) if this special when is irrelevant meaning that it is still
+	      alive, all the relevant whens in front of it will be executed
+	      and if none of them is alive, the sequence will again be
+	      terminated by this when.
+	      b) if this special when is relevant which means that it could be
+	      dormant then all the relevant whens in front of it are executed
+	      and if none of them is alive then this when is executed and then
+	      if not alive we continue with all the following 'whens' regardless
+	      whether they are 'relevant' or not. This is because these
+	      following whens might not have been executed and so even
+	      irrelevant could be alive.
+-------------------------------------------------------------------------------
+=== 21-November-2010:13:22 ==========  v41  =================
+
+  14-Dec-2010  (Boda Franek)
+  
+  Bug fixed in Class 'State' method  'executeRequestedWhens':
+  The return argument 'terminatingWhenSpecial' must have & in the declaration.
+  What is fascinating that it worked on 32 bits!!
+  
+=== 06-January-2011:16:18 ==========  v42  =================
+
+ 19-Jan-2011  (Boda Franek)
+ 
+   - added virtual destructors to 
+       'Instruction', 'SmpCond' and 'SMIObjectSet' classes
+       
+rev 4371
+
+   - changed the declaration 'vector<short>' to 'vector<int>' everywhere.
+      This affected clientstate.cxx, clientstate.hxx, smiobject.cxx,
+      smiobject.hxx, state.cxx, state.hxx, clientobject.cxx
+      
+      the reason is that it was causing a lot of compiler warnings and 
+      potentialy the portability issues are present.
+
+   - condition.cxx   method 'whatAreYou' re-written
+   
+ 24-Jan-2011  (Boda Franek)
+ 
+   - createobjectins.cxx 
+   	1) added a dummy test on a parameter to remove compiler warnings
+	2) method 'execute':  endState  set to "" as it does not have any
+	    meaning for create object instruction
+	3) removed checking on the class name. This is done in SMIObject
+	   constructor    
+	
+   - doins.cxx
+        1) added a dummy test on a parameter to remove compiler warnings
+	2) removed a couple of unused variables
+	
+   - ifins.cxx
+        1) added a dummy test on a parameter to remove compiler warnings
+	2) removed a few unused variables	
+
+ 25-Jan-2011  (Boda Franek)
+ 
+   - insertins.cxx
+        1)  added a dummy test on a parameter to remove compiler warnings
+	2) method 'execute':  endState  set to "not changed".
+	
+   - objectregistrar.cxx
+        method 'gimeName': removed a couple of unused variables
+	
+   - scheduler.cxx
+        method 'guardianOK' : removed unused variable
+	
+  27-Jan-2011  (Boda Franek)
+  
+   - setins.cxx
+        1)  added a dummy test on a parameter to remove compiler warnings
+	2) method 'execute':  endState  set to "not changed".	   
+
+   - smiobject.cxx
+        method  'execute()' : removed unused variable   
+	
+	method  'pCurrentState(const int index)' : removed parameter index
+	    as it is not used. It is a remnant of subobjects.
+	    
+	method  'executeState()'  : removed unused variable
+	
+	method  'stateInx(int isub, Name& state)' : method removed. Nobody
+	      is using it. It is a remnant of subobjects.
+	      
+        method  'setCurrStateInxes( Name& stateNm )' : big chunk of code,
+	      relevant only to the case when num of subobjects is greater
+	      than 1,  removed.
+
+    - smiobject.hxx
+       declaration of 'State* pCurrentState' method changed...see above
+       
+       declaration of 'stateInx(isub, Name& state)' method removed...see above
+       
+    - commhandler.cxx
+        method 'findState()'  :  big chunk of code,
+	      relevant only to the case when num of subobjects is greater
+	      than 1,  removed. This had to be done because it used now
+	      obsolete method 'pCurrentState(int index)' of SMIObject class..
+	      see above
+
+-----------------------------------------------------------------------------
+  01-Feb-2011  (Clara Gaspar + Boda Franek)
+  
+     Bug fixed in method 'executeWhensFromFlagList' of class 'State' (state.cxx)
+=== 04-February-2011:15:29 ==========  v42r1  =================
+
+  11-Feb-2011 (Boda Franek)
+  
+   - Getting rid of compiletion warnings. Mostly unused variables.
+    Files affected:
+    smpcondtyp2.cxx, smiobjectset.cxx, smiobjectsetunion.cxx, waitins.cxx,
+    clientstate.cxx and state.cxx
+ 
+   - bug corrected in commhandler.cxx : there were extra ';' at the end of line
+      168  and  210
+      also some compilation warnings removed
+      
+  17-Feb-2011  (Boda Franek)
+  
+    - processcommandline.cxx  : compiler warning fixed
+       
+  30-Jun-2011  (Boda Franek)
+  
+    - new method in ResumeHandler class :  'isResumeQueueEmpty()'.
+    
+    - replaced DISABLE_AST by dim_lock()     and  ENABLE_AST by dim_unlock()
+       in commhandler.cxx, queue_name.cxx, queue_twonames.cxx and 
+           smpcondtyp2.cxx
+     
+   1-July-2011  (Boda Franek)
+   
+     - resumehandler.hxx   added dim locking to 'resumeReadyToResumeObjects()   
+
+     - scheduler.cxx   resuming objects is taken out of executableObjectQ loop
+           and placed outside. This way all the queues are handled in a similar
+	   way. The only difference is that the loop over the resume Q is inside
+	    ResumeHandler method
+   5-July-2011   (Boda Franek)
+   
+      - state_manager.cxx   added printing diagnostic level.
+      
+  07-July-2011 (Boda Franek)
+  
+     - class 'ResumeHandler' : new method 'void objectReadyToResume( Name& objName )'
+            this deregisters object from suspended objects list and puts it
+	    on 'ready to resume Q' 
+	    
+  12-July-2011  (Boda Franek)
+  
+     - class 'SMIObject'  (file smiobject.cxx & hxx) 
+          a) method 'execute'
+           when &lock action is received and the object is locked, this is
+	   now reported directly to the client object (the one requesting
+	   the lock), instead of to the ResumeHandler.
+	   
+	  b) new method 'void reportingLockedObject(Name& lockedObject)'
+	     used by locked object to inform the client object.
+
+          c) the old method 'int reportingLockedObject(Name& lockedObject)'
+	     removed.
+	  
+     - class 'ResumeHandler' the obsolete method 'reportingLockedObject'
+             removed.
+
+  14-July-2011  (Boda Franek)
+  
+    - New class  'SleepIns'    two new files sleepins.hxx and sleepins.cxx
+    
+  15-July-2011  (Boda Franek)
+  
+    - class SMIObject  (smiobject.hxx and cxx)
+          a) new private data   SleepIns*  _pointerToSuspendedSLEEP
+	  
+          b) new method  'void setPointerToSuspendedSLEEP(SleepIns*)'
+
+  18-July-2011   (Boda Franek)
+  
+    - class  'InsList'  (inslist.cxx) now processes SLEEP instruction.
+    
+  19-21-July-2011  (Boda Franek)
+  
+    - new class 'SleepInsTimer' (sleepinstimer.hxx&cxx ) .... timer object
+              used by 'SleepIns' class
+  
+    - class SMIObject (smiobject.cxx)   method 'resume()'
+             a) private data connected with suspension reset
+             b) added diagnostic print
+    
+    - waitins.cxx   minor improvements to debug prints
+    
+    - logic_engine.cxx ...  there is now a new source of asynchronous events
+           i.e. timer events from SLEEP instruction. They affect the contents
+	    of Resume Queue and so we have to have an extra check on it.
+=== 27-July-2011:16:13 ==========  v43r0  =================
+
+  23-Aug - 01-Sep 2011 (Boda Franek)
+		   
+   -  new file : instruction_return_status.hxx
+            header file holding the definition of 'InstructionReturnStatus_t'
+	    enum type. This the return status of any SMI instruction and the
+	    type provides for better clarity.
+	    
+   - class InsList : method 'execute':
+                     a) returns type 'InstructionReturnStatus_t' instead of int
+		     b) the code tydied up using the new type.
+		     NB: as most instruction still return 'int', their return
+		         is cast into the new type.
+			 
+  
+   - class IfIns :  1) private data _suspend_flag was made enum type for better
+                       clarity.
+
+                    2) method 'execute' :
+		     a) returns type 'InstructionReturnStatus_t' instead of int
+		     b) the two new enum types are used inster of ints
+		     
+   ->  08 Sep 2011 (Boda Franek)
+   
+   - IfIns class : method 'execute':
+                     a) continuing tidying up by converting the main 'if-else'
+		        construct into 'switch'. This being clearer.
+		       
+		     b) improved spacing and general appearance of the code.
+		        When comparing differences, '-b' option should be used
+
+   ->  13 Oct 2011 (Boda Franek)
+   
+   - IfIns class : method 'execute':
+   			
+		     a) removed unnecessary freezing and unfreezing of IF's
+		     conditions. Once conditions are evaluated they can be
+		     unfrozen untill the IF is executed again from scratch.
+
+                     b) renamed local variable 'returnStat' to 'blockReturnStat'
+		        as in all cases it is the return status of the last
+			instruction executed in an instruction block (list).
+			
+		     c) added a few redundant lines of code to make three
+		        sections of code,dealing with execution of 'true'
+			instruction block, identical.
+		     
+   -> 18 Oct 2011 (Boda Franek)
+   
+   - IfIns class : method 'execute':
+   
+   		The three sections of code dealing with execution of 'true'
+		instruction block were replaced by
+		 'goto executeInstructionBlock;' statement and
+		the single version of the code itself was placed at the end
+		of the method and labeled executeInstructionBlock: 
+
+    20 Oct 2011 (Boda Franek)
+    
+    - Condition  class : new method
+    		'getCurrentRefObjects(NameList& currRefObjects)'
+		will get list of objects that are currently referenced by
+		the condition, directly or indirectly through Object Sets.
+
+    21 Oct 2011 (Boda Franek)
+    
+    - IfIns   class
+    
+    	a) 3 new private data all of them type 'NameList':
+	    _refObjectsAtStartExecution  ... holds list of objects referenced
+	                      by IF's condition at the start of it's execution.
+	    _lockedObjects 
+	    _objectsWaitingForLock
+	    
+	b) new private method 'getCurrentRefObjects()'  ... fills in the above
+	    private list
+	    
+	c) method 'execute()
+	   at the begining of execution of IF it calls the above new private
+	   method.
+
+    26 Oct 2011  (Boda Franek)
+    
+    - TermIns  class :  improved diagnostic prints
+    
+    - InsList  class :
+    
+        a) FATAL BUG fixed. This was recently introduced in r4562. This stopped
+	    any IF that had to be suspended from working.
+	    
+	b) improved diagnistic printing
+
+   08 Nov 2011  (Boda Franek)
+   
+      IfIns  class:
+      
+         - two new private methods: 
+	     1)'attemptToLockObjects()' and  2) 'unlockLockedObjects()'
+	     
+	 - two new public methods:
+	 
+	     1) 'reportingLockedObject(Name&)
+	     The usage will be as follows: when locking action is executed
+	     on an object, this object informs its client (the object that
+	     requested the lock). The client in turn informs its IF instruction
+	     by calling the new method.
+	     
+	     2) 'reportingObjectRemovedFromSet(Name& obj, Name& set)'
+	     The future usage: 
+	     when an object is removed from a set, all suspended objects are
+	     informed by 'resumeHandler'. Each of them then calls this new
+	     method for its suspended IF to take necessary action (if any).
+	     
+	 - more diagnostic prints in 'execute' method.
+
+   11 Nov 2011  (Boda Franek)
+   
+     The following changes will change (hopefully for the better) the behaviour
+     --------------------------------------------------------------------------
+     of  IF handling.
+     ----------------
+     
+     - 'IfIns'  method 'execute()'
+         - instead of calling the old 'unlockObjects()', the new
+	 'unlockLockedObjects()' is used.
+	 
+         - case fresh (fresh IF instruction)
+	    a) instead of the old 'lockObjects()', the new
+	    'attemptToLockObjects()' method is called that builds two lists:
+	        _lockedObjects   and  _objectsWaitingForLock
+	    b) if there are objects waiting for lock, then instead of informing
+	       'ifHandler', it will call 'registerSuspendedObject' method of
+	       resumeHandler.
+	    
+     -  'SMIObject' class
+            method 'execute()'
+	       when the locking (&lock) action arrives, ifHandler is not
+	       informed about it anymore. This is reported directly to the
+	       object requesting the lock (see below)
+	       
+	   method 'reportingLockedObject'
+	       it will call method of the same name of the suspended IF.
+	       If all the objects of IF are locked, it will inform resumeHandler
+	       that the object is ready to resume.
+	       This was before allowed only for WAIT instruction 
+	       
+   14-Nov-2011 (Boda Franek)
+   
+     -  'SMIObjectSetSimple' class  method 'remove'
+                                when object is removed from set, this is no
+				longer reported to ifHandler. It is reported to
+				resumeHandler instead.
+				
+     -  'SMIObjectSetUnion'  class  method 'removedObjectFromOneOfYourSets'
+                                when object is removed from set, this is no
+				longer reported to ifHandler. It is reported to
+				resumeHandler instead.
+   
+   15-Nov-2011  (Boda Franek)
+   
+    - 'SMIObject' class  method 'reportingObjectRemovedFromSet'
+    
+          this is called by resumeHandler for all suspended objects when 
+	  an object is removed from a set. This will now call method of the
+	  same name of class 'IfIns'
+   
+=== 29-November-2011:16:00 ==========  v44r0  =================
+
+  07-Dec-2011  (Boda Franek)
+  
+               Option '-u' on smiSM command
+               ----------------------------
+	       
+     This option will alter IF processing: IF's objects, instead of being locked
+     for the whole duration of IF, are released as soon as IF's conditions are
+     evaluated.
+     
+     Files modified:
+     
+     - state_manager.cxx 
+     - processcommandline.cxx
+     
+     - ifins.cxx:  Class 'IfIns'   method 'execute'
+    
+    
+=== 15-December-2011:15:36 ==========  v45r0  =================
+=== 20-January-2012:14:16 ==========  v45r1  =================
+
+  18-Jul-2012  (B. Franek)
+  
+    - new class 'SmpCondTyp4' for testing on parameter values
+       -> two new files smpcondtyp4.hxx * .cxx at this moment it does nothing
+       
+    - condition.cxx recognises the new class and calls the appropriate
+                    constructor, which at the moment is just dummy.
+
+  20-Jul-2012  (B. Franek)
+  
+    - condition.cxx   the recently introduced bug fixed
+    
+    - smpcondtyp4.hxx  _frozen private data removed (it is in the base class)
+    
+    - smpcondtyp4.cxx  constructor implemented
+    
+  25-Jul-2012  (B. Franek)
+  
+   - class 'SMIObject'   new method 'getObjectParameter'
+       (files: smiobject.hxx &cxx)
+   
+   - class 'Action'     new method 'getObjectParameter'
+       (files: action.hxx &cxx)
+	 
+   - method 'evaluate' of class 'SmpCondTyp4' needs info about its
+      parents (object, state, action). In order to supply this info the
+      folowing 4 modifications were made:
+      
+   1) class  'IfIns'  (files:  ifins.hxx & cxx)
+   
+       A) new private data:
+               State*  _pParentState  (the other 2 are already there)
+	       
+       B) the constructor stores the extra pointer. (it was already supplied)
+       
+       C) supplies these 3 pointers to the constructor of 'Condition' class.
+       
+	       
+   
+   2) class  'When'   (files:  when.hxx & cxx )
+  
+       A) new private data:
+               State*  _pParentState  (_pParentObject was already there
+	                               and parent action is meaningless)
+	       
+       B) the constructor stores the extra pointer. (it was already supplied)
+				       
+       
+       C) supplies the 3 parent pointers to the constructor of
+          'Condition' class. Pointer to parent action is supplied as zero.
+				       
+   
+   3) class 'Condition'   (files condition.hxx & cxx)
+         A) new private data:
+                SMIObject* _pParentObject
+		State*     _pParentState
+	        Action*    _pParentAction
+			 
+         B) the constructor accepts the 3 pointers and stores them
+	 
+	 C) supplies these pointers to the constructor of  'SmpCondTyp4'
+   
+   
+   
+   4) class  'SmpCondTyp4'  (files: smpcondtyp4.hxx & cxx)
+         A) new private data:
+                SMIObject* _pParentObject
+		State*     _pParentState
+	        Action*    _pParentAction
+			 
+         B) the constructor accepts the 3 pointers and stores them
+
+   
+ 31-July-2012  (B.Franek)
+ 
+     class 'SmpCondTyp4'
+     
+          new private method 
+	     'int getOperandValue(ParOperand& operand, name& value, Name& type)'
+	     
+	     Given operand, it returns its value and type.
+	        - if the operand type is VALUE, it is trivial
+		- if operand is parameter name, it returns the current value of
+		  the parameter of the current action if such parameter exists.
+		  If not, it returns value of the object parameter. If that
+		  does not exist either, it returns failure (0).
+		- if the operand is composite name, ie. object-name.par-name,
+		  it returns value of the parameter par-name of object obj-name.
+	     
+	     Files modified: smpcondtyp4.hxx  &.cxx
+	     
+ 07-August-2012 (B.Franek)
+ 
+    class 'SmpCondTyp4'
+    
+        1) 3 new private methods:
+	
+	    bool compare_str( Name& v1, Name& v2, int& er);
+	    bool compare_int( Name& v1, Name& v2, int& er);
+	    bool compare_float( Name& v1, Name& v2, int& er);
+	    
+	 they compare the values in v1 and v2 using the _operator. If anything
+	 goues wrong, er is non-zero.
+	 
+	2) public method 'int evaluate()' implemented
+	
+   ----  This should finish Type 4 condition development  ------------
+
+ 08-August-2012 (B.Franek)
+ 
+   Continuing with the development of SET instruction
+   --------------------------------------------------
+   
+   class 'SetIns'
+   
+     - new private data:
+     
+         ParOperand _lOperand;
+	 ParOperand _operand1;
+	 ParOperand _operand2;
+	 Name _operator;   
+
+    - extended the constructor to process type 10 SET instruction which has
+       general format:
+       
+       'left side operand' = 'operand1' operator 'operand2'
+       
+       
+ 09-August-2012  (B.Franek)
+ 
+  class 'SetIns'
+  
+    - new private function
+    
+       'int getOperandValue(...' which is an identical copy of the one in
+           SmpCondTyp4
+	 
+   - function 'execute'
+        added some of the code for processing the new type (10). At the moment
+	it just retrieves the values of the two operands without any
+	calculation. The instruction will have no effect.
+
+ 13-August-2012  (B.Franek)
+ 
+   class 'SMIObject'
+         new method:  'setObjectParameter(const Name& name, const Name& value)'
+	 
+   class 'SetIns'
+        a) 3 new methods declared:
+	 
+	 'evalExpr_str(Name& value1, Name& value2, Name& res)'  not implemented
+	 'evalExpr_int(Name& value1, Name& value2, Name& res)'
+	 'evalExpr_float(Name& value1, Name& value2, Name& res)'  not implemented
+	 'setLeftOperand( Name& value)'
+	 
+	b) method 'execute'   finished coding
+	
+ 14-August-2012  (B.Franek)
+ 
+   class 'SetIns'
+   
+       a) implemented 'evalExpr_str' and 'evalExpr_float'
+       
+       b) some diagnostic prints put under debugging switch
+       	 
+ 30-August-2012 (B.Franek)
+ 
+   Bug fixed
+   
+   class 'IfIns'   method 'reportingObjectRemovedFromSet'
+   
+   The situation which I thought could not arrise and so when it did I aborted
+   the program, can arrise. Only warning is now printed.
+   It happens when an object is inserted into a SET and then subsequently
+   removed from the same SET during an execution of the relevant IF instruction.
+   NB: Relevant IF is the one having the SET in one of its conditions.
+=== 31-August-2012:11:18 ==========  v46r0  =================
+
+ 11-September-2012 (B.Franek)
+ 
+  -  state_manager.cxx - State Manager version and diagnostic level are always
+         printed. Some other prints removed.
+	 
+  -  smpcondtype4.cxx  -  when comparing floating point numbers,
+                          operators  ==   and  <>  are also allowed
+			  
+  -  setins.cxx  -  'snprintf'  calls replaced  by 'sprintf'. This is because
+                    Windows do not support the call. It almost certainly is not
+		    needed anyway.
+		    
+=== 26-September-2012:12:33 ==========  v46r1  =================
+
+ 25-October-2012 (B.Franek)
+ 
+  class 'SetIns' (setins.hxx & .cxx)
+  
+  a) Bug fixed in private function 'evalExpr_str'. When two strings are added
+     together, the end string of the first string and beginning string of
+     the second string have to be removed.
+     
+  b) some type mixing is now allowed when performing parameter operations:
+  
+      int,float  --> int converted to float and the result is float
+      int,string --> if str reopresents int, then it is converted to
+                     int and the result is int
+		    
+  c) some type mixing allowed between the resulting parameter and the result of
+      the operation:
+      
+      Res Par     Result
+        int        float    float converted to int (i.e. truncated)
+	int        str      if str represents integer then it is converted
+	float      int      int converted to float
+	str        int      int converted to str
+	 
+ 29-October-2012  (B.Franek)
+ 
+   class 'SetIns'   private method 'sortTypeMixing' was made global function
+                    by removing it from 'setins.hxx' and also moving it to the
+		    front in file 'setins.cxx'.
+		    
+		    It was then sufficient to put the header info at the
+		    begining of file smpcondtyp4.cxx to use the function there.
+		    See below.
+		    
+   class 'SmpCondTyp4'    method 'evaluate'
+                    implemented some type mixing:
+		    
+		    int comparing with float, int converted to float first
+		    int comparing with string, if str represents int it is
+		    converted first.
+		    
+=== 19-November-2012:14:31 ==========  v46r2  =================
+
+  14-December-2012  (B.Franek)
+  
+  SET instruction  - handling extended to type 10 with only 1 operand
+  -------------------------------------------------------------------
+  
+  - setins.hxx  two new private data: 
+  
+                   _numOperands  .. number of operands on the right side
+		   -numOperations  .. not used at the moment
+  - setins.cxx  the necessary changes in constructor and method execute.
+  
+  17-January-2013  (B.Franek)
+  
+  - class 'Action'   new method 'Name& actionName'. Amazing I have not needed
+                     it yet!
+		     
+  - class 'SetIns'   method 'constructor' : improved diagnostics for type 1,2,3
+                     which is going to be obsolete soon.
+
+  25-January-2013
+  
+  class 'SetIns' 
+  
+    - SET instruction now accepts % operator
+    
+    - CLEANING
+        - As there is only type 10 SET instruction, all the code relating to
+          the old types and their data structures was deleted. 
+
+        - 5 global functions that were residing in setins.cxx were moved into
+          ut_sm.cxx (hxx)
+=== 28-January-2013:16:36 ==========  v46r3  =================
+
+20-Apr-2014
+
+   - ut_sm.cxx & hxx
+         1) new function 'gime_milis(char* string)' - returns miliseconds in the
+	 current time
+	 
+	 2) new function 'newTime(char* timeString)' - if the global flag
+	    newTimeFlag is non zero, it will convert the old time string
+	    such as 'Fri Jan 31 16:00:52 2014' into the new one
+	    '2014.01.31 16:00:52.824'
+	    
+    - 'gime_date_time' and 'print_date_time' modified:
+         before returning the old format string 'newTime' is called.
+	 
+    - state_manager.cxx  new global flag  'newTimeFlg'
+    
+    - processcommandline.cxx  picks up the newTimeFlg from the command line
+                              (-t option)
+			      
+->30-Jun-2014  (B. Franek)
+
+   - ut_sm.cxx    in order to make compiler happy, include file '<climits>'
+                  has to be included for non-windows platforms.
+		  
+   
+=== 30-June-2014:15:16 ==========  v47  =================
+
+->15-Jul-2014  (B. Franek)
+
+    - class 'Action'  (action.cxx&hxx)
+    
+       new private function 'dealWithDomainCommands(...)'
+       
+           This is called when a command intended for '&DOMAIN' object
+	   is received. At the moment it expects only command 'DIAG'
+	   with an integer parameter 'LEVEL'. 
+           It will set the value of the global flag 'dbg' which controls the
+	   diagnostic printing to the value of parameter 'LEVEL'
+       
+-> 07-Sep-2014 (B.Franek)
+
+   All the changes are in conection with the fact, that type mixing of
+   parameters is dealt with in Translator.
+   -------------------------------------------------------------------
+   - ut_sm.hxx & cxx
+   
+         new function  'getOperandValue'  moved here from 'SmpCondTyp4'. Used
+	                 to be its private function.
+
+   - class 'SmpCondTyp4'
+   
+         - instantiator   ... put in more controlled diagnostic prints
+   
+         - method 'evaluate'  ...
+	 
+	     - using the common 'getOperandValue'
+	     
+	     - removed type mixing sorting...it is done now in Translator
+	    
+    - class 'SetIns'
+    
+         - method 'execute'  ...
+	 
+	      - using the common 'getOperandValue'
+	      
+	      - removed type mixing sorting...it is done now in Translator
+	      
+	 - method  'setLeftOperand'
+	 
+	      - using the common 'getOperandValue'
+	      
+	      - and quite substantially re-written
+	      
+-> 09-Sep-2014 (B.Franek)
+
+   - global function 'sortTypeMixing' not used anymore:
+   
+         a) removed from ut_sm.cxx & hxx
+     
+         b) it's declaration were removed from 'setins.hxx' & 'smpcondtyp4.cxx'
+	     
+   - omitted 'return 1' statement added to 'floatParToStringPar' in 'ut_sm.cxx'
+
+   - class 'SmpCondTyp4'
+   
+         a) implemented public method 'whatAreYou'
+	 
+	 b) used the above method to improve diagnostic printing
+=== 12-September-2014:11:49 ==========  v47r1  =================

@@ -1,0 +1,19 @@
+#! /bin/tcsh -f
+#
+# This is a very rough first prototype
+#
+#                            Boda Franek,    10 May 2002
+#---------------------------------------------------------
+#
+set FILENAME = ${1}
+set OUTPUT = ${2}
+
+set SMIFILE = /tmp/FILE$$.smi
+
+
+smiPreproc ${FILENAME} ${SMIFILE}
+
+
+
+grep ":" ${SMIFILE} | egrep -i '(object)|(state)' > ${OUTPUT}
+

@@ -1,0 +1,41 @@
+#! /bin/tcsh -f
+
+set FILE = ${1}
+set firstLine = ${2}
+set lastLine = ${3}
+
+#echo $FILE
+#echo $firstLine
+#echo $lastLine
+
+set nl = `wc -l $FILE | awk '{print $1}'`
+if ( $lastLine == "end" ) then
+	set lastLine = $nl
+endif
+
+if ( $nl >= $lastLine ) then
+	@ numLinesToExtract = ($lastLine - $firstLine) + 1
+else
+	@ numLinesToExtract = ($nl - $firstLine) + 1
+endif
+
+#echo $nl
+
+#echo $numLinesToExtract
+
+#Num of lines starting from firstline to the end nl-firstline+1
+@ numLinesFromFirst = ($nl - $firstLine) + 1 
+
+#echo $numLinesFromFirst
+
+#extract the lines starting with the first to the end of file
+
+set TMP = /tmp/FILE$$
+
+tail -n $numLinesFromFirst $FILE > $TMP
+
+# now extract the rest
+head -n $numLinesToExtract $TMP
+
+rm -f $TMP
+exit

@@ -1,0 +1,67 @@
+#! /bin/csh -f
+#                 B.Franek   25-March-2004
+#
+set Tag = ${1}
+
+set DATE = `date +%d-%B-%Y:%H:%M`
+
+set SMIXX_VERSION_FILE = ./smixx/version.h
+rm -f $SMIXX_VERSION_FILE
+
+echo 'smixx version number :'
+set vnum = $<
+echo '#ifndef __SMIXXDEFS' | cat > $SMIXX_VERSION_FILE
+echo '#define __SMIXXDEFS' | cat >> $SMIXX_VERSION_FILE
+echo "#define SMIXX_VERSION ${vnum}" | cat >> $SMIXX_VERSION_FILE
+echo '#endif' | cat >> $SMIXX_VERSION_FILE
+
+set VERSION_FILE = /tmp/version.hxx
+
+rm -f $VERSION_FILE
+
+echo '#ifndef INCVERSION' | cat > $VERSION_FILE
+echo '#define INCVERSION' | cat >> $VERSION_FILE
+echo '#define smixxVersion "'${Tag}\" | cat >> $VERSION_FILE
+echo '#define smixxDate "'${DATE}\" | cat >> $VERSION_FILE
+echo "#endif /* INCVERSION */" | cat >> $VERSION_FILE
+
+echo 'The version file to be used is :'
+cat $VERSION_FILE
+echo 'is this OK ? (y/n)'
+set answer = $<
+echo $answer | grep '^y'
+if ( $status != 0 ) then
+    exit
+endif
+echo continuing
+
+foreach versionFile (`find . -name version.hxx`)
+    echo " Replacing $versionFile"
+    cp $VERSION_FILE $versionFile
+end
+
+
+set tagstamp = "=== ${DATE} ==========  ${Tag}  ================="
+
+# -mindepth 2 in the find command will exclude the top History file
+# which has a different format
+foreach HistoryFile (`find . -mindepth 2 -name History`)
+    echo " Updating $HistoryFile"
+    echo "$tagstamp" | cat >> $HistoryFile
+end
+
+# Now the top History file:
+
+set HistoryFile = "./History"
+echo " "
+echo " Updating top History file"
+
+set tempfile = "/tmp/tmp$$"
+rm -f $tempfile
+echo "$tagstamp" | cat > $tempfile
+
+cat $HistoryFile >> $tempfile
+
+mv $tempfile $HistoryFile
+
+exit

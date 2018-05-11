@@ -1,0 +1,147 @@
+
+
+  18-Jan-2007 (Boda Franek)
+**** This poor subdirectory so far did not have a History file ****
+  Some ad-hoc writeup:
+  
+  Process 'monObjects' can receive commands from 'tellMonObjects' by declaring
+  itself as DIM server with a command service. The name of the server and
+  the service have to be unique for the pair and also known to both. Untill
+  now it was an adhoc string 'hardcoded' to both. This of course meant that
+  only one pair could run in a given DNS domain.
+    To make this more general, I addopted the following convention:
+  
+  For the name of the server :
+  
+  node-name[/'localId']/SMIGUI
+  
+  and for the service :
+  
+  node-name[/'localId']/SMIGUI/CMNDS
+  
+  The 'localId' is supplied(or not) as the first argument to both processes.
+  It has to be some identifier that uniquely identifies the pair such as
+  PID of the GUI that uses them. 
+  
+-----------------------  tclTkGUI-v01  -------------------------------------   
+
+---> JULY 2007
+
+  The following new files are needede by tcl/Tk GUI:
+  
+  getDomainObjects.cxx, getDomains.cxx, monObjects.cxx,
+  monObjectsServiceName.cxx, tellMonObjects.cxx   Their description will follow
+  in future
+  
+  new directory  efftcl   containing 'Effective Tcl/Tk Programming' procedures
+  
+  
+=== 25-July-2007:14:58 ==========  v32  =================
+
+  3-Aug-2007  (Boda Franek)
+  
+  - monObjects.cxx   a few minor changes to do with empty strings.
+  
+  
+=== 07-August-2007:11:55 ==========  v32r1  =================
+
+  07-Aug-2007  
+  
+  - new file tclTkGUI-Builder.cxx ... builds tclTkGUI
+  
+  - tellMonObjects.cxx ... Clara made mods to make it work on Windows.
+  			    To do with node name
+                           also converted to UNIX format before checked in
+			   from UNIX
+  
+  - getDimVersions.cxx, getDomainObjects.cxx, getDomains.cxx,
+     monObjectsServiceName.cxx and serverInError.cxx ...
+      were converted from DOS to UNIX format before checked in from UNIX.
+     This was carefullychecked and it is OK
+----------------------------------------------------------------------
+  8-Aug-2007
+  
+    - monObjects.cxx  fixed to work on windows ala tellMonObjects.cxx
+----------------------------------------------------------------------     
+ 10-Aug-2007
+ 
+   - dnsRunning.cxx  changed from DOS to UNIX before checked in from UNIX
+------------------------------------------------------------------
+
+ 23-Aug-2007
+ 
+  - tclTkGUI-Builder.cxx  some changes necessary to make it run on Windows,
+        in particular, gif files have to be copied as binary.
+	
+=== 25-August-2007:13:31 ==========  v32r2  =================
+=== 28-September-2007:15:29 ==========  v32r3  =================
+=== 07-October-2007:16:50 ==========  v32r4  =================
+=== 12-November-2007:14:40 ==========  v32r5  =================
+=== 31-March-2008:15:41 ==========  v32r6  =================
+=== 11-June-2008:15:51 ==========  v33  =================
+=== 02-July-2008:12:44 ==========  v33r1  =================
+=== 16-July-2008:17:11 ==========  v33r2  =================
+=== 06-October-2008:11:30 ==========  v33r3  =================
+=== 10-October-2008:16:04 ==========  v34  =================
+=== 16-October-2008:15:52 ==========  v34r1  =================
+=== 11-November-2008:12:56 ==========  v34r2  =================
+=== 03-December-2008:13:17 ==========  v35  =================
+=== 11-February-2009:14:48 ==========  v35r1  =================
+=== 07-April-2009:14:07 ==========  v35r2  =================
+=== 31-July-2009:15:49 ==========  v36  =================
+=== 06-August-2009:15:54 ==========  v36r1  =================
+=== 27-August-2009:17:17 ==========  v37  =================
+=== 02-September-2009:14:44 ==========  v37r1  =================
+=== 07-October-2009:12:46 ==========  v37r2  =================
+=== 10-November-2009:18:53 ==========  v37r3  =================
+=== 13-November-2009:14:59 ==========  v37r4  =================
+=== 20-January-2010:16:26 ==========  v38  =================
+=== 21-June-2010:15:54 ==========  v39  =================
+
+  02-September-2010  (Boda Franek)
+  
+  two new utilities:
+  
+    1) getDomainObjectSets.cxx ... gets a snapshot list of domains objects
+    
+    2) getSetObjects.c  ... gets a snapshot list of objects in Object Set
+    
+=== 02-September-2010:15:31 ==========  v40  =================
+=== 21-November-2010:13:22 ==========  v41  =================
+=== 06-January-2011:16:18 ==========  v42  =================
+=== 04-February-2011:15:29 ==========  v42r1  =================
+
+  24-Feb-2010  (Boda Franek)
+  
+    fixing compiler warnings. This affected:
+    
+       proxyexists.cxx
+       monObjectState.cxx
+       getDomainObjects.cxx
+       getSmiVersions.cxx
+       tellMonObjects.cxx
+       getSetObjects.c
+       getDomainObjectSets.cxx
+       getDimVersions.cxx
+       listdomain.cxx
+       monObjects.cxx
+       getObjectState.cxx
+       domainexists.cxx
+       tclTkGUI-Builder.cxx
+       shellcmd.c
+
+   
+   21-Jul-2011  (Boda Franek)
+   
+     - tellMonObjects.cxx and tclTkGUI-Builder.cxx
+          added a couple of header files to pacify some picky compilers
+=== 27-July-2011:16:13 ==========  v43r0  =================
+=== 29-November-2011:16:00 ==========  v44r0  =================
+=== 15-December-2011:15:36 ==========  v45r0  =================
+=== 20-January-2012:14:16 ==========  v45r1  =================
+=== 31-August-2012:11:18 ==========  v46r0  =================
+=== 26-September-2012:12:33 ==========  v46r1  =================
+=== 19-November-2012:14:31 ==========  v46r2  =================
+=== 28-January-2013:16:36 ==========  v46r3  =================
+=== 30-June-2014:15:16 ==========  v47  =================
+=== 12-September-2014:11:49 ==========  v47r1  =================

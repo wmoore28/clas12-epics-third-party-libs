@@ -1,0 +1,69 @@
+<html xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils">
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<link title="Style" type="text/css" rel="stylesheet" href="../../stylesheet.css">
+</head>
+<body onload="open('package-frame.html','classListFrame')">
+<h1>Unit Test Results</h1>
+<table width="100%">
+<tr>
+<td align="left"></td><td align="right">Designed for use with <a href="http://www.junit.org/">JUnit</a> and <a href="http://jakarta.apache.org/">Ant</a>.</td>
+</tr>
+</table>
+<hr size="1">
+<h3>Package testsuite.simple</h3>
+<h2>Classes</h2>
+<p>
+<table width="95%" cellspacing="2" cellpadding="5" border="0" class="details">
+<tr valign="top">
+<th width="80%">Name</th><th>Tests</th><th>Errors</th><th>Failures</th><th nowrap="nowrap">Time(s)</th>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="16_BlobTest.html">BlobTest</a></td><td>2</td><td>0</td><td>0</td><td>90.562</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="17_CallableStatementTest.html">CallableStatementTest</a></td><td>7</td><td>0</td><td>0</td><td>11.984</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="18_ConnectionTest.html">ConnectionTest</a></td><td>20</td><td>0</td><td>0</td><td>53.516</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="19_DataSourceTest.html">DataSourceTest</a></td><td>2</td><td>0</td><td>0</td><td>0.781</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="20_DateTest.html">DateTest</a></td><td>5</td><td>0</td><td>0</td><td>1.766</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="21_EscapeProcessingTest.html">EscapeProcessingTest</a></td><td>2</td><td>0</td><td>0</td><td>0.500</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="22_MetadataTest.html">MetadataTest</a></td><td>7</td><td>0</td><td>0</td><td>8.546</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="23_MiniAdminTest.html">MiniAdminTest</a></td><td>2</td><td>0</td><td>0</td><td>0.531</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="24_NumbersTest.html">NumbersTest</a></td><td>1</td><td>0</td><td>0</td><td>0.656</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="26_ServerControllerTest.html">ServerControllerTest</a></td><td>1</td><td>0</td><td>0</td><td>0.438</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="25_SSLTest.html">SSLTest</a></td><td>1</td><td>0</td><td>0</td><td>0.484</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="27_StatementsTest.html">StatementsTest</a></td><td>18</td><td>0</td><td>0</td><td>71.813</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="28_TransactionTest.html">TransactionTest</a></td><td>1</td><td>0</td><td>0</td><td>0.687</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="29_TraversalTest.html">TraversalTest</a></td><td>1</td><td>0</td><td>0</td><td>2.859</td>
+</tr>
+<tr valign="top" class="Pass">
+<td><a href="30_UpdatabilityTest.html">UpdatabilityTest</a></td><td>4</td><td>0</td><td>0</td><td>15.109</td>
+</tr>
+</table>
+</p>
+</body>
+</html>

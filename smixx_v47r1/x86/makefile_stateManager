@@ -1,0 +1,64 @@
+include makefile_common
+
+CFLAGS += -O0 -I./src/commonSource -I./smixx 
+SM_EXTRALIBS = $(EXTRALIBS)
+
+
+ifeq ($(OS),HP-UX) 
+	CFLAGS += +a1 -DdefBool
+endif
+
+ifeq ($(OS),Solaris)
+	CFLAGS += -xs
+        SM_EXTRALIBS += -lpthread -lposix4 -lsocket -lnsl
+endif
+
+ifeq ($(OS),Linux)
+        SM_EXTRALIBS += -lpthread
+endif
+
+srcdir := ./src/stateManager
+srcs := $(wildcard $(srcdir)/*.cxx)
+objstemp := $(srcs:.cxx=.o)
+objs := $(subst $(srcdir),$(ODIR),$(objstemp))
+
+
+comsrcdir = ./src/commonSource
+COMODIR := $(ODIR)
+
+comcxxsrcs := $(comsrcdir)/name.cxx $(comsrcdir)/namevector.cxx \
+           $(comsrcdir)/registrar.cxx $(comsrcdir)/namelist.cxx \
+           $(comsrcdir)/nmdptnr.cxx $(comsrcdir)/nmdptnrvector.cxx \
+          $(comsrcdir)/smlline.cxx $(comsrcdir)/smllinevector.cxx \
+           $(comsrcdir)/utilities.cxx $(comsrcdir)/nmdptnrlist.cxx \
+	   $(comsrcdir)/paroperand.cxx $(comsrcdir)/errorwarning.cxx
+	  
+comcxxobjstemp := $(comcxxsrcs:.cxx=.o)
+comobjs := $(subst $(comsrcdir),$(COMODIR),$(comcxxobjstemp))
+
+comcsrcs := $(comsrcdir)/smixx_parstring_util.c 
+	  
+comcobjstemp := $(comcsrcs:.c=.o)
+comobjs += $(subst $(comsrcdir),$(COMODIR),$(comcobjstemp))
+
+$(ODIR)/%.o: $(srcdir)/%.cxx; $(CXX) -c $(CFLAGS) $< -o $@
+$(COMODIR)/%.o: $(comsrcdir)/%.cxx; $(CXX) -c $(CFLAGS) $< -o $@ 
+$(COMODIR)/%.o: $(comsrcdir)/%.c; $(CC) -c $(CFLAGS) $< -o $@   
+
+all:  clean $(objs) $(comobjs)
+	$(CXX) $(CFLAGS) -ldl -o $(ODIR)/smiSM $(objs) $(comobjs) -L$(DIMDIR)/$(ODIR) -ldim $(SM_EXTRALIBS)
+	
+.PHONY : clean	
+clean :
+	rm -f $(ODIR)/*.o $(ODIR)/smiSM
+	rm -f $(COMODIR)/*.o
+
+
+
+
+
+
+
+
+
+

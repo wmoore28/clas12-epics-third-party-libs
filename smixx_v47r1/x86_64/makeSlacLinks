@@ -1,0 +1,5 @@
+#! /bin/tcsh -f
+
+ln -s Linux24RHEL3_i386_gcc323 Linux24SL3_i386_gcc323
+ln -s Linux24RH72_i386_gcc2953 Linux24RH72_i386_gcc2953-noOptimize-Debug
+ln -s SunOS59_sparc_Forte7 SunOS59_sparc_Studio9

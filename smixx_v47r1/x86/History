@@ -1,0 +1,2200 @@
+------------------------------------------------------------------------
+r4800 | franek | 2014-09-12 11:57:30 +0200 (Fri, 12 Sep 2014) | 2 lines
+
+ Commiting the updated History and version files fo tag  v47r1
+
+------------------------------------------------------------------------
+=== 12-September-2014:11:49 ==========  v47r1  =================
+------------------------------------------------------------------------
+r4798 | franek | 2014-09-12 11:38:12 +0200 (Fri, 12 Sep 2014) | 46 lines
+
+    Last minute changes before tagging
+  --------------------------------------
+           
+	   Bug fixes
+	   ----------
+	   
+    1) When checking for cast indicators it is necessary to ignore the case
+     i.e (INT) same as (int). This bug was fixed in :
+     
+        - method 'checkForCast' of class 'ParOperand'  (src/commonSource)
+	
+        - method 'castIndicator' of 'Condition' class   (src/translator)
+         
+	- method 'checkForRightSideCast' of 'SetIns' class  (src/translator)
+          
+    2) old bug fixed in method 'translate' of class 'IsOfClassObject'.
+       This should be further investigated.
+       
+    3) omitted 'return 1' statement added to 'floatParToStringPar' in
+                                               'src/stateManager/ut_sm.cxx
+					       
+	    New features
+	    ------------
+  folder   src/stateManager
+
+   - class 'SmpCondTyp4'
+   
+         a) implemented public method 'whatAreYou'
+	 
+	 b) used the above method to improve diagnostic printing
+	    
+	    
+            Code tidying
+	    ------------
+     The main purpose was to eliminate compiler warnings. Files affected:
+     
+     src/translator/attributeblock.cxx
+                    condition.cxx
+		    oepmanager.cxx
+		    setins.cxx 
+		    smlunit.cxx    
+		    
+     src/stateManager/ut_sm.hxx & cxx
+     
+     NB: For details see the relevant History files
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4797 | franek | 2014-09-07 17:21:09 +0200 (Sun, 07 Sep 2014) | 65 lines
+
+                Final changes for dealing with parameter casting
+        in SmpCondTyp4 ans SetIns classes. This time mainly in State Manager
+  --------------------------------------------------------------------------
+             Hope fully, this is it!
+
+   folder  src/commonSource
+
+    - class ParOperand
+		   
+	  - method 'outSobj'  ... outputs '_operValueType'. This will change
+	                      .sobj file
+    
+          - method 'initFromSobj_firstLine' &
+	           'initFromSobj_nextLine'  are reading the '_operValueType'
+
+   folder  src/translator
+
+    - class 'SetIns'
+         it accepts also right hand side casting. This only switches off
+	 warning message about the right side conversion.
+	      
+	      SET A = (S)( B + C )
+         This required changes in 
+	 
+             1) method 'translate'
+	     2) method 'examine'
+	      and also 
+	      
+	     2 new methods:
+	         'skipSpacesandTabs' & 'checkForRightSideCast'
+		 
+   folder  src/stateManager
+   
+    All the changes are in conection with the fact, that type mixing of
+   parameters is dealt with in Translator.
+   -------------------------------------------------------------------
+   - ut_sm.hxx & cxx
+   
+         new function  'getOperandValue'  moved here from 'SmpCondTyp4'. Used
+	                 to be its private function.
+
+   - class 'SmpCondTyp4'
+   
+         - instantiator   ... put in more controlled diagnostic prints
+   
+         - method 'evaluate'  ...
+	 
+	     - using the common 'getOperandValue'
+	     
+	     - removed type mixing sorting...it is done now in Translator
+	    
+    - class 'SetIns'
+    
+         - method 'execute'  ...
+	 
+	      - using the common 'getOperandValue'
+	      
+	      - removed type mixing sorting...it is done now in Translator
+	      
+	 - method  'setLeftOperand'
+	 
+	      - using the common 'getOperandValue'
+	      
+	      - and quite substantially re-written
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4796 | franek | 2014-08-31 16:49:02 +0200 (Sun, 31 Aug 2014) | 58 lines
+
+  Final changes for dealing with parameter casting
+        in SmpCondTyp4 ans SetIns classes
+  -------------------------------------------------
+
+   folder  src/commonSource
+
+    - class ParOperand
+         - new private data  'Name _operValueType' this is the operand
+	                      value type after the possible casting was
+			      considered.
+			      
+	 - new private data  'int _castingRequested'.
+	                        0 - no casting
+				1 - user casting in SML
+				2 - imposed by Translator
+				3 - imposed by Translator and overriding user
+				    cast
+				    
+	 - new public method 'int calcOperValueType()' ... calculates the
+	                      operand value type from the type of ref parameter
+			      and possible casting.
+			      return
+			        1 - success
+				2 - casing constant, casting ignored
+				-1 - casting STRING to FLOAT not allowed.			    
+          - new public method 'void outShort() const' ... prints one line info
+	 
+          - new public method 'int castingRequested()' ... retieves the 
+                                                relevant private data
+
+   folder  src/translator
+
+    - class 'OperManager'
+    
+         - new method 
+	   ' int getParValueAndOperValueTypes(...)'
+	   This method also issues the standard warnings or errors.
+	   The return is 0 if only warnings, 1 if errors.
+           The code from this method was picked up from examine method
+           of class SmpCondTyp4
+
+         - new method
+           ' int makeOperandsSameType(...)'
+           This also issues the standard warnings and errors.
+           The return is 0 if only warnings, 1 if errors.
+
+         - new private method
+           ' int attemptCasting(...)'   ... used by the above method
+
+    - class 'SmpCondTyp4'
+
+         - method 'examine()' uses the new functions in 'OperManager' class
+
+    - class 'SetIns'
+
+         - method 'examine()' substantially re-written using the two new
+           methods in 'OperManager' class
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4795 | franek | 2014-08-20 15:06:25 +0200 (Wed, 20 Aug 2014) | 46 lines
+
+  Some preparatory work. Should not affect anything
+  -------------------------------------------------
+
+   folder  src/commonSource
+
+
+    class ParOperand
+
+       - new method 'setValue(Name& value)' ... set the '_value' to the 
+                    value of referenced parameter. This is clearly only 
+                    used in the State Manager when the actual values 
+                    become known.
+
+      - new method 'setCast(Name& cast)'  ... sets the value of the 
+                                               '_tobeCastedTo'
+
+      - new method 'operValueType()'  ... retrieves the final operand
+                        value type after all the casting has been done.
+             
+       - paroperand.hxx ... oxygen type writeup added and the code re-organised
+                            a bit.
+
+       - instead using "UNKNOWN" for the initial value private data, we
+                use "".
+
+   folder  src/translator
+
+   -  new class 'OperManager'  used for encapsulating various functions 
+                               used for managing operands
+
+          - method 'getParValueType(...)' retrieves the referenced 
+                parameter value type from SML code. (called from examine 
+                method in translator). The code was moved here from 
+                ut_tr.cxx
+
+          -  methods may produce warning/error messages which are stored  
+                 in 'static Name _message' local data.
+
+          -  method 'Name& getMessage()' retrieves the last message.
+
+    - ut_tr.hxx,cxx   ... moved 'getParValueType(...)' to class 
+                          'OperManager'
+
+    - class 'SmpCondTyp4'  ... picks ups 'getParValueType' from 
+                               'OperManager' class
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4794 | franek | 2014-08-14 13:48:06 +0200 (Thu, 14 Aug 2014) | 67 lines
+
+
+   Casting in Simple condition and SET instruction - parsing
+   ---------------------------------------------------------
+ 
+    It is possible to say  ( PARSI > (I)PARSS ) or
+    
+    SET X = (F)A +B       etc
+    
+      
+   - folder  src/commonSource
+ 
+  - class 'ParOperand'
+      a) new protected method 
+            'void checkForCast(SMLline& line, int& jst, int& jnext)'
+	    
+	   Operand name is now allowed to be preceeded by a 'cast'.
+	   That is one of (S), (STRING), (I), (INT), (F) or (FLOAT).
+	   The function assumes that operand name starts with jstth
+	   col of line and checks wheather it begins with cast, in which
+	   case it sets _tobeCastedTo to STRING, INT or FLOAT. It then sets
+	   jnext to the col where the proper name begins. This way
+	   the rest of the parsing code can proceed as before.
+	   
+      b) new private data  'Name _tobeCastedTo'    
+	    
+      c) new public method
+            'Name& tobeCastedTo()'  retrieving the above private data
+
+
+
+
+   - folder  src/translator
+ 
+  - class 'Condition'
+  
+       - new protected method 
+            'bool castIndicator(SMLlineVector* pSMLcode, int ist, int jst)'
+	   This checks whether (ist,jst) in the pSMLcode is begining of
+	   cast indicator. Used by getNextItem method.
+	    
+       - method getNextItem(...) modified
+            This method is searching forward for 'item'. Possible items are:
+	    ), (, NOT, AND, OR, 'simple condition'. Before, as soon as we found
+	    (, this was it. As we have now allowed for casting, we have to make
+	    sure that this bracket is not a begining of casting indicator
+	    because in this case we would be at the begining of Simple
+	    Condition.
+	    casting, 
+	    
+	    
+  - class  'SmpCondTyp4'
+  
+        - method examine()  modified
+	
+	     this now takes into account the type into which an operand is
+	     to be casted to. At parsing stage, it allows user to switch off
+	     mixing types warnings.
+	     An example: PARSS is type STRING and PARSI is type INT. Simple
+	         condition ( PARSI > PARSS ) would have generate warning.
+		 It is now possible to say ( PARSI > (I)PARSS ) to switch the
+		 warning off. 
+        
+       	    
+   - class 'SetIns'
+   
+       now comented out debug prints put in
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4793 | franek | 2014-07-30 14:58:14 +0200 (Wed, 30 Jul 2014) | 8 lines
+
+   Extensive writeup written for some of the utility functions,
+   as well as many comments in the code
+   -----------------------------------------------------------------
+   
+   - folder  src/commonSource
+
+         - utilities.cxx  & .hxx
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4792 | franek | 2014-07-15 15:17:33 +0200 (Tue, 15 Jul 2014) | 33 lines
+
+   Dynamical switching of diagnostic level printing in State Manager
+   -----------------------------------------------------------------
+   
+   - folder  src/commonSource
+
+         - utilities.cxx    function 'int specialCode(...)'
+   
+         This function has been supplying to Translator the SML code
+	 for the special object '&ALLOC'.
+	 From now on it will also supply the SML code for another special
+	 object '&DOMAIN'. This object is intended to be used for communicating
+	 directly with State Manager. At the moment, its code is:
+	 
+	     Object : &DOMAIN
+	     State : READY
+	           action : DIAG (int LEVEL = 0 )
+		          terminate_action / state = READY
+			  
+	 and it will be used to switch the level of diagnostic printing
+	 in State Manager.
+ 
+   - folder src/stateManager
+
+      - class 'Action'  (action.cxx&hxx)
+    
+            new private function 'dealWithDomainCommands(...)'
+       
+           This is called when a command intended for '&DOMAIN' object
+	   is received. At the moment it expects only command 'DIAG'
+	   with an integer parameter 'LEVEL'. 
+           It will set the value of the global flag 'dbg' which controls the
+	   diagnostic printing to the value of parameter 'LEVEL'
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4789 | franek | 2014-06-30 15:20:37 +0200 (Mon, 30 Jun 2014) | 2 lines
+
+modified version and History files with v47 tag
+
+------------------------------------------------------------------------
+=== 30-June-2014:15:16 ==========  v47  =================
+------------------------------------------------------------------------
+r4787 | franek | 2014-06-30 14:17:24 +0200 (Mon, 30 Jun 2014) | 44 lines
+
+   Last run on error/warning messages in Translator
+   ------------------------------------------------
+   
+   - folder  src/translator
+ 
+   all the error/warning messages were reviewed and made
+   more compiler-like, i.e
+   offending line with its number, immediately followed by
+   one line description of the error/warning. The files affected:
+   
+       actionheadblock.cxx
+       attributeblock.cxx
+       condition.cxx
+       createobjectins.cxx
+       doins.cxx
+       ifins.cxx
+       ifunitheadblock.cxx
+       insertins.cxx
+       inslist.cxx
+       isofclassobject.cxx
+       main.cxx
+       parameterblock.cxx
+       parms.cxx
+       setins.cxx
+       sleepins.cxx
+       smiobjectset.cxx
+       smiobjectsetunion.cxx
+       smpcondtyp1.cxx
+       smpcondtyp2.cxx
+       smpcondtyp3.cxx
+       smpcondtyp4.cxx
+       state.cxx
+       termins.cxx
+       waitins.cxx
+       when.cxx
+   
+   Bug? fix
+   --------
+   
+   src/stateManager/ut_sm.cxx  in order to make new compiler happy,
+                              include file '<climits>'
+                              has to be included for non-windows
+			      platforms.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4784 | franek | 2014-06-19 14:41:07 +0200 (Thu, 19 Jun 2014) | 11 lines
+
+   Some changes from Clara
+   -----------------------
+   
+   - folder  src/rtl   2 files
+   
+   - folder src/state_manager   file ut_sm.cxx  & state_manager.cxx
+        small changes to do with idiosyncrasies of Windows
+	
+   - folder Visual
+        quite a few files. Looks like mostly tydiing up.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4783 | franek | 2014-04-20 16:19:50 +0200 (Sun, 20 Apr 2014) | 6 lines
+
+   New time format for diagnostic printing
+   ---------------------------------------
+   
+   This is switched on by option -t on smiSM command line. If supplied it will
+   print '2014.01.31 16:00:52.824' instead of 'Fri Jan 31 16:00:52 2014'
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4782 | franek | 2014-04-17 13:40:19 +0200 (Thu, 17 Apr 2014) | 116 lines
+
+    Cleaning
+    --------
+    folder trunk/src/translator
+    
+   - parameter.hxx and parameter.cxx   deleted. These have never been used.
+   
+    
+   - class Instruction : methods 'translate' and 'outSobj' were changed
+                             prom 'virtual' to 'pure virtual'
+   
+	       
+    - class Parms
+          much of the code was removed. Originally it was intended to use this
+	  class in Translator and State Manager. However an independent class
+	  has been developed in State Manager over the years and consequently
+	  much of the code here is obsolete.     
+    
+    
+   Unified Error/Warning message printing in Translator
+   ----------------------------------------------------
+   
+   This will be used systematically throughout the whole of Translator.
+   
+        in folder trunk/src/commonSource
+        --------------------------------
+     
+   - new class 'ErrorWarning' keeping static method 'printHead' for unified
+     Error/Warning messages.
+     new files: errorwarning.hxx & cxx
+     
+   - 'ParOperand' (paroperand.cxx)
+    
+          method 'initFromSMLcode'
+	      a) added checking error returned from 'getValue' function
+	      
+	      b) converted the existion error prints to the unified format
+	      
+   
+   
+         in folder trunk/src/translator 
+         ------------------------------
+     
+   - usage of 'printErrorWarningHead' and 'printErrorWarningHeadGL' was replaced
+           by 'ErrorWarning::printHead' everywhere.
+	   
+   - ut_tr.cxx&hxx  'printErrorWarningHead' removed
+   
+   - smpcond.cxx&hxx  'printErrorWarningHead' removed
+   
+   - smlunit.cxx&hxx 'printErrorWarningHead' removed
+	
+   - the following modification was applied to some of the classes:
+       in method 'translate'( in some cases could be called 'initialise')
+            replaced the old style of error messages by the new style
+	    i.e using 'ErrorWarning::printHead'.
+		
+	The classes affected are: 
+	    'ActionHeadBlock', 'AttributeBlock', 'CreateObjectIns', 'InsList',
+	     'IfIns', 'IfUnitHeadBlock', 'InsertIns', 'ParameterBlock',
+	     'Parms', 'SleepIns' and 'State'
+	and Main program in main.cxx
+ 
+    - the following modifications were applied to some of the classes:  
+        in method 'translate' (in some cases called 'initialise')
+	    replaced the old style of error messages by the new style
+            i.e using 'ErrorWarning::printHead'.
+		    
+	in method 'examine'
+	    replaced calls 'printErrorWarningHead' by
+		     calls to 'ErrorWarning::printHead'
+		       
+	removed commented out 'printErrorWarningHead' method and put
+		  back method 'outString'. This may become usefull.
+
+        The classes affected:
+	     'DoIns', 'IsOfClassObject', 'SetIns', 'SMIObject', 'SMIObjectSet',
+	     'SMIObjectSetUnion', 'SmpCondTyp1', 'SmpCondTyp2', 'SmpCondTyp3',
+	     'SmpCondTyp4', 'TermIns', 'WaitIns' and 'When'
+     
+   
+   - class Condition 
+    
+          1) new private data:   SMLline _lineBeingTranslated
+	      updated by method 'initialise' and used by the called private
+	      methods. 
+	      
+	  2) method 'handleStack' (called from 'initialise'):
+	  
+	     when it encounters something wrong, it print the new style
+	     error message, end exits Translator (before it returned zero).
+	     The only return codes now are 1 and 2. 2 indicates the end of the
+	     condition.
+	     
+	  3) method 'smpCondTyp'
+	  
+	  4) method 'initialise'
+	  
+	       a) replaced the old style of error messages by the new style
+		i.e using 'ErrorWarning::printHead'. It also instead of
+		returning zero, it exits Translator.
+	     
+	       b) keeps updated _lineBeingTranslated
+	       
+	       c) tydied up the code after calling 'handleStack' a bit
+   
+         
+           in folder trunk
+	   ---------------
+    
+   - makefile_translator   modified to include compilation of errorwarning.cxx
+   
+   - makefile_stateManager modified to include compilation of errorwarning.cxx.
+                           The State manager does not use the unified error
+			   printing, but the class 'ParOperand' does and as it
+			   is used by StateManager ...
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4781 | franek | 2014-03-18 16:15:05 +0100 (Tue, 18 Mar 2014) | 83 lines
+
+    
+       Various tydiing do to with examination
+       --------------------------------------
+	
+
+    folder: src/commonSource
+   
+     - class 'SMLline'
+   
+     implemented method 'int linNum()' ... returns the line number
+          and           'Name lineBody()' ... returns the line itself
+	  
+    
+    	
+   folder: src/translator
+
+   
+     - class 'SMLUnit'
+     
+         new methods 1) 'void printCode()'. This prints the SML code of the unit
+	 
+	             2) 'void printErrorWarningHead(const char* label)'
+		        Prints the label followed by the line number of the
+			first line of the SML code and the line itself
+				    
+     - class 'SmpCond'
+     
+         1) new private data 'SMLlineVector* _pSMLcode'. Contains the first
+	     line of SML code where the condition starts. This enables the
+	     new method (below) to work.
+	     
+	 2) new method 'void printErrorWarningHead(const char* label)'
+		        Prints the label followed by the line number of the
+			first line of the SML code and the line itself.
+			Identical code to the method of the same name in
+			'SMLUnit' class. (SmpCond does not inherit from SMLUnit)
+
+     - in several classes:
+            Method 'outString()'  was deleted
+	    method 'printErrorWarningHead(label)' was deleted. This is now
+	            inherited  from 'SMLUnit' or 'SmpCond' class.
+	    method 'examine()' unifying the format of ERROR?WARNING messages
+	    
+	 Classes affected:  DoIns, IsOfClassObject, SetIns, SMIObject,
+	                    SMIObjectSet, SMIObjectSetUnion, TermIns,
+			    WaitIns, When
+			    SmpCondTyp1, SmpCondTyp2, SmpCondTyp3, SmpCondTyp4
+
+			
+     - class 'DoIns'
+	    a bug fixed: more sophisticated function 'gimeObjectPointer' used
+	    
+     - class 'SMIObjectSet'
+            class definition VOID now indicates, that user can not make it
+	    specific class. This effectively switches off the warning.
+
+     - class 'SmpCondTyp1'
+            constructor instantiates _pSMLCode
+
+     - class 'SmpCondTyp2'
+            constructor instantiates _pSMLCode
+
+     - class 'SmpCondTyp3'
+            constructor instantiates _pSMLCode
+
+     - class 'SmpCondTyp4'
+            constructor instantiates _pSMLCode
+	    
+     - ut_tr.cxx, .hxx
+     
+        3 new global methods:
+	
+	  a) printErrorWarningHeadTop(label)
+	  b) printErrorWarningHeadSrcLine(lnNo,line)
+	  
+	  c) printErrorWarningHead(label,smlline)
+
+      a) and b) are used by 'printErrorWarningHead' method in
+               class SMLUnit / SmpCond respectively
+	       
+       c) is going to be used in casses when SML code is not available 
+          (like in the main program)
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4780 | franek | 2014-02-04 14:46:48 +0100 (Tue, 04 Feb 2014) | 28 lines
+
+    
+       Examination of Terminate and Wait instruction and of When clause
+       ----------------------------------------------------------------
+	
+	
+   folder: src/translator
+
+    
+      - class 'TermIns'
+      
+           implemented method 'examine()'. Checks if the parent object has the
+	   termination state.
+	   
+      - class 'WaitIns'
+      
+           implemented method 'examine()'. Checks if all the reference objects
+	   and sets are declared.
+	   
+      - class 'When'
+      
+          a) added one private data item 'Name _endState'. This equals "" for
+	     'do when' and 'stay_in_state when'. For 'move_to when' it holds the
+	     name of the state where to move.
+	     
+	  b) developed method 'examine()'. 
+	     For 'do when' it checks if the parent state has the action.
+	     For 'move_to when' it checks if parent object has the state.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4779 | franek | 2014-01-29 12:52:51 +0100 (Wed, 29 Jan 2014) | 25 lines
+
+    
+       Examination of DO instruction
+       -----------------------------
+	
+	
+   folder: src/translator
+    
+      - class 'State'
+      
+         new method 'bool hasAction(Name action-name)'
+	 
+      - class 'SMIObject'
+      
+         new method 'bool hasAction(Name action-name)'
+	       checks if any of its states has action action-name.
+	       
+      - class 'DoIns'
+      
+         implemented method 'examine()'.
+	     This checks if the object acted upon is declared and also
+	      if the dispatched action is declared.
+	     In case when DO is dispatching action to all objects of 
+	     an object set (OS), it checks if OS is declared and when OS
+	     is associated with a class, it also checks the action.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4778 | franek | 2014-01-21 15:41:10 +0100 (Tue, 21 Jan 2014) | 16 lines
+
+    
+       More examination
+       ----------------
+	
+	
+   folder: src/translator
+   
+      method 'examine()' implemented for the following classes :
+      
+      'SMIObject'
+      'IsOfClassObject'
+      'SMIObjectSet'
+      'SMIObjectSetUnion'
+      
+      more details see in the History file
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4776 | franek | 2014-01-13 13:22:50 +0100 (Mon, 13 Jan 2014) | 43 lines
+
+    
+       Modifications resulting from tests at CERN at the beg of Dec 2013
+       -----------------------------------------------------------------
+	
+	
+   folder: src/translator
+   
+     - class 'SMIObjectSetUnion'
+     
+       a) new private data 'Name _isOfClass'.  When it is a union of sets that
+                 are associated  with the same class, it becomes associated to
+		 that class also. Tests on states can then be performed.
+		 
+       b) new method Name setClass() that retrieves the above class
+ 
+    
+    - class 'SmpCondTyp1'
+    
+       method 'examine()'
+       
+          a) do not check for DEAD state being declared.
+	  
+	  b) the check weather object has undeclared states is brought forward
+	     before the check for a particular state being declared is made.
+	     This really was a bug because if the first state was not declared
+	     and yet object had undeclared state, the existing code would have
+	     failed it.
+   
+          c) if Object has undeclared state, the warning was removed from here
+	     and will be implemented in examine method for object.
+	
+   - class 'SmpCondTyp2'
+     
+        a) bug fixed in method 'examine()' : the account has to be taken of the
+	                                  fact that SMI sets are of two kinds
+					   1) simple  2) unions
+   
+        b) if Object Set has associated Class and the Class was not declared,
+	   then this warning was taken out of here and will be implemented
+	   in examine method of ObjectSet.
+	
+	c) -dtto- if Object Set is not associated with a Class.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4775 | franek | 2013-11-22 14:29:59 +0100 (Fri, 22 Nov 2013) | 31 lines
+
+    
+       Examination code for SET instruction (typ1, typ2 & typ3)
+       --------------------------------------------------------
+	
+	
+   folder: src/translator
+     
+     - class 'State'
+     
+         new method 'int getAttributes'. Does what it says
+	 
+	 new method 'bool isUndeclared'. If there is the attribute
+	                                 UNDECLARED_STATE, returns true
+     - class 'SMIObject'
+     
+         new method 'int getStates'. Does what it says.
+     
+         new method 'bool  hasState(const Name& stateNm, int& undeclared)'
+	 	 Checks if object has state 'stateNm' declared. 
+                 If such state is declared ... returns true, otherwise false
+                 undeclared is set to 1 if objects has undeclared states,
+		 otherwise 0
+
+   
+     
+     - class 'SmpCondTyp1' 'SmpCondTyp2'  and 'SmpCondTyp3'
+     
+        new method 'examine()'
+	
+        plus a couple of new auxiliary methods
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4766 | franek | 2013-08-15 13:58:25 +0200 (Thu, 15 Aug 2013) | 31 lines
+
+    
+       Examination code for SET instruction (Parameter testing)
+       --------------------------------------------------------
+	
+	
+   folder: src/translator
+	       
+     - class 'SetIns'
+    
+         a) new method 'int examine()'
+      
+         b) 2 new methods for diagnostic printing
+	       1) 'outString()'
+	       2) 'printErrorWarningHead(label)'
+	       
+     - global function 'int getParValueType(...)'  (ut_tr.cxx)
+         BUG fixed
+	 
+     - class 'SmpCondTyp4'
+     
+           method 'examine()'    BUG fixed
+
+    folder:  src/commonSource
+    
+  
+      - class 'ParOperand'
+   
+         a) method 'out(...)' improved
+      
+         b) method 'thisObjPar()'  BUG fixed
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4765 | franek | 2013-07-30 16:26:13 +0200 (Tue, 30 Jul 2013) | 67 lines
+
+       Examination code for Simple Condition Type 4 (Parameter testing)
+       ----------------------------------------------------------------
+ 	     
+	- class 'SmpCondTyp4'
+	
+	     new method 'int examine()'
+	     
+          The following changes were also necessary to facilitate the above:
+	  
+	  
+       - two new files 'ut_tr.hxx' and 'ut_tr.cxx'
+         utility global routines specific for translator
+		
+	- class 'SMLUnit'
+	
+	   a) new private data:   'Name _type'
+	       this is definitely a bodge. At the moment I use it to recognise
+	       that the object that inherited belongs to 'IsOfClassObject' C++
+	       class.
+	       
+	   b) constructor modified to accept '_type' as an argument.
+	   
+	   c) new method 'Name unitType()'  to retrieve the '_type'
+	   
+	   d) new method 'void parents(Name& object, Name& state, Name& action)'
+	         to retrieve the parents of the unit.
+		 
+	   e) new method 'SMLUnit* parentPointer(const Name& id)'
+	        given unit id, it will return the pointer to the first found
+		searching upwards in the hierarchy.
+			 
+	- class 'Action'
+	  
+	   new method 'int getActionParameter(const Name& name, Name& value,
+	                                  Name& typeNm)' 
+	        given the parameter name, it returns its value and type
+		
+	- class 'SMIObject'
+	  
+	    2 new methods:
+	  
+	    1) 'int getObjectParameter(const Name& name, Name& value,
+	                                  Name& typeNm)' 
+	        given the parameter name, it returns its value and type
+		
+	    2) 'bool isClass()'
+	        returns true when the instantion is class (SMI class)
+	- class 'IsOfClassObject'
+	
+	   a) constructor modified to supply to SMLUnit type 'IsOfClassObject'
+	      (see 'SMLUnit' class modification)
+	      
+	   b) new method 'Name& isOfClass()'. Retrieves the name of the class
+	        to which it belongs.
+		
+	- class 'SmpCond'
+	     new method  'bool belongsToIf()'
+	
+ folder  src/commonSource
+ 
+          class 'ParOperand'
+  
+      new method 'setValueType(Name& valueType)'
+      
+      new method 'Name printingName()'
+           prints its name in a convenient format
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4754 | franek | 2013-07-01 14:22:30 +0200 (Mon, 01 Jul 2013) | 154 lines
+
+  
+  folder : src/translator
+  
+ 
+   Preparatory work for the final (after the translation is finished)
+   ------------------------------------------------------------------
+                consistency checking (Examination)
+                ----------------------------------
+
+  Translator recognises 2 main groups of elements of SML code
+  and their associated C++ classes as described in the Apendix II of
+  LANGUAGE DESCRIPTION section in Web manual:
+
+   Group 1  ... chunks of SML code consisting of a number of complete lines.
+                Classes of this group inherit from 'SMLUnit' class. They can
+                refer to other classes of Group 1 through an uniform mechanism.
+                That is, they store the pointers to these internal units
+                in the protected data '_internalSMLUnits' of 'SMLUnit'.
+
+   Group 2 ... chunks of SML code not belonging to Group 1
+
+
+
+  Changes of type I
+  -----------------
+   Examination (or consistency checking) of a particular language element
+  will be achieved by executing method 'examine()' of its C++ class.
+  It is therefore necessary to assure that all these are reached and executed.
+
+     For Group 1 classes this is achieved as follows:
+     -------------------
+
+         - As all these classes inherit from 'SMLUnit' class, this class has
+           for this purpose two new methods implemented:
+
+                 1) protected 'examineUnits()'
+                    This method loops through internal units whose pointers are
+                    stored in '_internalSMLUnits' and for each internal unit
+                    it calls the unit's 'examine()' method.
+
+                 2) public virtual 'int examine()'
+                    This method just simply calls 'examineUnits()'
+
+         - in 'main.cxx' , examination loop is inserted after the translation
+           stage. It loops through the top level units and executes their
+           'examine()' method.
+
+         When an examine() method is invoked then it is either not implemented
+         in which case the base class examine() is executed and the process
+         continues at the lower level, or it is implemented and then it is
+         important that 'examineUnits()' is called before it returns.
+         ------------------------------------------------------------
+
+     This way all the examine methods of all the Group 1 classes are reached.
+
+     For Group 2 classes:
+     --------------------
+        As these classes are always pointed to by a class of Group 1, it is
+        the responsibility of the relevant Group 1 class (let's call it A) to
+        invoke the examine() method of the Group 2 class (let's call it B).
+        That means that if examine method of class B is implemented, then
+        class A's examine method has to be also implemented in order to call
+        examine method of class B.
+        If more than one Group 1 class refer to B, then they all have to have
+        their examine method implemented. This is for example a situation of 
+        class 'When' and class 'IfUnitHeadBlock' (both Group 1) which both
+        refer to class 'Condition' (Group 2).
+
+        NB: the obvious improvement would be if also Group 2 classes inherited
+            from 'SMLUnit' class. 
+
+      As I would like to start writting examination code for simple condition,
+      then
+      
+            - 'examine()' method was implemented for 'SmpCond' class
+
+            - 'examine()' method implemented for 'Condition' class that simply
+                  calls examine() method of 'SmpCond' class
+
+            - 'examine()' method implemented for 'When' class that simply
+                  calls examine() method of 'Condition' class
+
+            - 'examine()' method implemented for 'IfUnitHeadBlock' class that simply
+                  calls examine() method of 'Condition' class
+
+  Changes of type II
+  ------------------
+    In order to facilitate clarity of possible reported errors/warnings
+    generated by any given 'examine()' method, the following changes were
+    implemented:
+
+      For Group 1-1 classes
+      ---------------------
+
+         - in 'SMLUnit' class
+              1) new protected data:   'SMLUnit* _pParentUnit'
+                   will keep the address of the unit that is refering to it
+
+              2) new method:       'void setParentUnit(SMLUnit* parent)'
+
+         - method 'translate()' was modified as
+           follows:
+              Every time an internal code unit is instantiated, its pointer to
+              parent unit is set to the current instantiation of the calling
+              class by calling 'setParentUnit' inherited from SMLUnit class.
+ 
+      Group 2 classes:
+      ----------------
+        
+          - class 'SmpCond':
+
+              1)  new private data 'SMLUnit* _pParentUnit'
+
+              2)  new method 'virtual void setParameterUnit(SMLUnit* parent)'
+
+          - class 'Condition' :
+
+              1) new private data 'SMLUnit* _pParentUnit'
+
+              2) new method 'void setParentUnit(SMLUnit* parent)'
+
+              3) method 'getNextItem(...)'
+                    after instantiating Simple Condition, its pointer to
+                    parent unit is set to the condition's. I.e. the simple
+                    conditions are pointing to the same parent as the condition.
+
+           - class 'When' :
+
+               1) method 'translate()'
+                     Condition's pointer to parent unit is set to the pointer
+                     of the current instantiation of When. 
+                     This has to be done before initialising Condition.
+                     --------------------------------------------------
+
+                2) method 'createTermAction(...)'
+                     When the terminal action of When is instantiated, its
+                     pointer to parent unit is set to the pointer of the
+                     current instantiation of When.
+
+           - class 'IfUnitHeadBlock' :
+
+                 1) method 'translate()'
+                      Condition's pointer to parent unit is set to the pointer
+                      to the current instantiation of IfUnitHeadBlock. This has
+                      to be done before initialising Condition.
+
+     NB: Again, all this would have been so much easier if these guys inherited
+         from 'SMLUnit' class.
+
+  Other Changes
+  -------------
+
+    Number of classes had their constructors improved
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4746 | franek | 2013-01-28 16:41:45 +0100 (Mon, 28 Jan 2013) | 2 lines
+
+modified version and History files with tag v46r3
+
+------------------------------------------------------------------------
+=== 28-January-2013:16:36 ==========  v46r3  =================
+------------------------------------------------------------------------
+r4745 | franek | 2013-01-28 16:17:16 +0100 (Mon, 28 Jan 2013) | 27 lines
+
+   
+  SET instruction  - this should be now finished
+  ----------------------------------------------
+  
+  folder : src/translator
+  
+  -   class SetIns  The code was tydied up
+         - the code of 'newCode' method was incorporated (with minor changes)
+	   into method 'translate'
+	   
+	 - method 'newCode' and the old (type 1,2,3) data structure were deleted
+
+  folder : src/stateManager
+  
+    
+  class 'SetIns' 
+
+    
+    - CLEANING
+        - As there is only type 10 SET instruction, all the code relating to
+          the old types and their data structures was deleted. 
+
+        - 5 global functions that were residing in setins.cxx were moved into
+          ut_sm.cxx (hxx)
+  
+    - SET instruction now accepts % operator
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4743 | franek | 2013-01-23 15:46:21 +0100 (Wed, 23 Jan 2013) | 27 lines
+
+   
+  SET instruction  - old types 1,2 and 3 are now obsolete and there is only 1 type
+  --------------------------------------------------------------------------------
+  
+  folder : src/translator
+  
+  -   class SetIns  private method 'newCode'. Untill now, this method determined
+             whether SET instruction was old type (1,2,3). i.e. just an
+	     assigments, or the new type (type 10, i.e. 2 right hand operands.)
+	     This is now unified so that types 1,2, 3 become also type 10. 
+
+  - the necessary changes in stateManager have already been made.
+  
+  MISC
+  ----
+    
+   folder : src/stateManager
+
+  -class 'Action'   new method 'Name& actionName'
+  		   
+  - setins.cxx  some diagnostic print improvement.
+  
+  folder : src/commonSource
+  
+  - class 'ParOperand' : Bug fixed:  Parameter operand can also be
+                                     delimited by "="
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4735 | franek | 2012-12-19 14:26:49 +0100 (Wed, 19 Dec 2012) | 13 lines
+
+   
+  SET instruction  - handling extended to type 10 with only 1 operand
+  -------------------------------------------------------------------
+ 
+   folder : src/stateManager
+   
+  - setins.hxx  two new private data: 
+  
+                   _numOperands  .. number of operands on the right side
+		   -numOperations  .. not used at the moment
+		   
+  - setins.cxx  the necessary changes in constructor and method execute.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4731 | franek | 2012-11-19 14:40:52 +0100 (Mon, 19 Nov 2012) | 2 lines
+
+modified version and History files with tag v46r2
+
+------------------------------------------------------------------------
+=== 19-November-2012:14:31 ==========  v46r2  =================
+------------------------------------------------------------------------
+r4730 | franek | 2012-11-19 12:53:36 +0100 (Mon, 19 Nov 2012) | 21 lines
+
+    Type mixing implemented in Simple Condition of Typ4
+    ---------------------------------------------------
+
+   folder : src/stateManager
+   
+ 
+   class 'SetIns'   private method 'sortTypeMixing' was made global function
+                    by removing it from 'setins.hxx' and also moving it to the
+		    front in file 'setins.cxx'.
+		    
+		    It was then sufficient to put the header info at the
+		    begining of file smpcondtyp4.cxx to use the function there.
+		    See below.
+		    
+   class 'SmpCondTyp4'    method 'evaluate'
+                    implemented some type mixing:
+		    
+		    int comparing with float, int converted to float first
+		    int comparing with string, if str represents int it is
+		    converted first.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4727 | franek | 2012-10-25 14:37:40 +0200 (Thu, 25 Oct 2012) | 34 lines
+
+ 
+   folder :  src/commonSource
+
+    Bug fixed
+    ---------
+    
+    class 'ParOperand'  all the private data has to be initialised in
+        the class constructor.
+
+
+   folder : src/stateManager
+   
+ 
+  class 'SetIns' (setins.hxx & .cxx)
+  
+  a) Bug fixed in private function 'evalExpr_str'. When two strings are added
+     together, the end string of the first string and beginning string of
+     the second string have to be removed.
+     
+  b) some type mixing is now allowed when performing parameter operations:
+  
+      int,float  --> int converted to float and the result is float
+      int,string --> if str reopresents int, then it is converted to
+                     int and the result is int
+		    
+  c) some type mixing allowed between the resulting parameter and the result of
+      the operation:
+      
+      Res Par     Result
+        int        float    float converted to int (i.e. truncated)
+	int        str      if str represents integer then it is converted
+	float      int      int converted to float
+	str        int      int converted to str
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4723 | franek | 2012-09-26 12:48:07 +0200 (Wed, 26 Sep 2012) | 2 lines
+
+commiting main History file
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4722 | franek | 2012-09-26 12:43:37 +0200 (Wed, 26 Sep 2012) | 2 lines
+
+ commiting modified version and History files for v46r1 tag
+
+------------------------------------------------------------------------
+=== 26-September-2012:12:33 ==========  v46r1  =================
+
+ modified version and History files for the new tag
+------------------------------------------------------------------------
+r4721 | clara | 2012-09-25 17:17:52 +0200 (Tue, 25 Sep 2012) | 2 lines
+
+necessary changes in Visual folder
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4718 | franek | 2012-09-12 14:06:26 +0200 (Wed, 12 Sep 2012) | 18 lines
+
+ 
+   folder :  src/commonSource
+
+  Bug Fixed:  paroperand.cxx  ... not enough space reserved in 'typevch' aray.
+  
+   folder : src/stateManager
+   
+ 
+  -  state_manager.cxx - State Manager version and diagnostic level are always
+         printed. Some other prints removed.
+	 
+  -  smpcondtype4.cxx  -  when comparing floating point numbers,
+                          operators  ==   and  <>  are also allowed
+			  
+  -  setins.cxx  -  'snprintf'  calls replaced  by 'sprintf'. This is because
+                    Windows do not support the call. It almost certainly is not
+		    needed anyway.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4714 | franek | 2012-08-31 11:32:29 +0200 (Fri, 31 Aug 2012) | 20 lines
+
+
+=== 31-August-2012:11:18 ==========  v46r0  =================
+
+            Bug fix and preps for tagging
+            -----------------------------
+ - rare BUG fixed
+  
+   folder :  src/stateManager
+   
+   class 'IfIns'   method 'reportingObjectRemovedFromSet'
+   
+   The situation which I thought could not arrise and so when it did I aborted
+   the program, can arrise. Only warning is now printed.
+   It happens when an object is inserted into a SET and then subsequently
+   removed from the same SET during an execution of the relevant IF instruction.
+   NB: Relevant IF is the one having the SET in one of its conditions.
+   
+  - in preparation for tagging, version and History files were modified with
+    tag v46r0 (4600)
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4713 | franek | 2012-08-14 15:56:03 +0200 (Tue, 14 Aug 2012) | 17 lines
+
+
+   Finished the development of extension of SET instruction.
+   --------------------------------------------------------
+   folder  src/commonSource
+   
+    a small bug fixed in function 'getValue'   file:utilities.cxx
+   
+ 
+ folder   src/stateManager
+
+ 
+   class 'SetIns'
+   
+       a) implemented 'evalExpr_str' and 'evalExpr_float'
+       
+       b) some diagnostic prints put under debugging switch
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4712 | franek | 2012-08-13 14:02:57 +0200 (Mon, 13 Aug 2012) | 19 lines
+
+
+   Continuing development of extension of SET instruction.
+   ------------------------------------------------------
+ 
+ folder   src/stateManager
+  
+   class 'SMIObject'
+         new method:  'setObjectParameter(const Name& name, const Name& value)'
+	 
+   class 'SetIns'
+        a) 3 new methods declared:
+	 
+	 'evalExpr_str(Name& value1, Name& value2, Name& res)'  not implemented
+	 'evalExpr_int(Name& value1, Name& value2, Name& res)'
+	 'evalExpr_float(Name& value1, Name& value2, Name& res)'  not implemented
+	 'setLeftOperand( Name& value)'
+	 
+	b) method 'execute'   finished coding
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4711 | franek | 2012-08-09 14:27:13 +0200 (Thu, 09 Aug 2012) | 19 lines
+
+
+   Continuing development of extension of SET instruction.
+   ------------------------------------------------------
+ 
+ folder   src/stateManager
+ 
+  
+  class 'SetIns'
+  
+    - new private function
+    
+       'int getOperandValue(...' which is an identical copy of the one in
+           SmpCondTyp4
+	 
+   - function 'execute'
+        added some of the code for processing the new type (10). At the moment
+	it just retrieves the values of the two operands without any
+	calculation. The instruction will have no effect.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4710 | franek | 2012-08-09 12:03:03 +0200 (Thu, 09 Aug 2012) | 24 lines
+
+
+   Continuing development of extension of SET instruction.
+   ------------------------------------------------------
+   
+   It will allow:
+   
+   SET 'left operand' = 'operand1' 'operator' 'operand2'
+   
+   e.g.  A = B + OBJ.C
+ 
+  folder src/stateManager
+   
+   class 'SetIns'
+   
+     - new private data:
+     
+         ParOperand _lOperand;
+	 ParOperand _operand1;
+	 ParOperand _operand2;
+	 Name _operator;   
+
+    - extended the constructor to process the new type (type 10)
+       SET instruction
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4709 | franek | 2012-08-07 16:12:36 +0200 (Tue, 07 Aug 2012) | 31 lines
+
+
+   FINAL development of Simple Condition Type 4
+   ----------------------------------------------
+   
+   folder src/commonSource
+
+  class 'ParOperand' : new public method 'void thisObjPar()'
+     it will change operandType to COMPNAME  and set ownerObjName to THIS.
+     Use with caution!
+     
+	Files modified: paroperand.hxx & .cxx   
+   
+  folder src/stateManager
+ 
+    class 'SmpCondTyp4'
+    
+        1) 3 new private methods:
+	
+	    bool compare_str( Name& v1, Name& v2, int& er);
+	    bool compare_int( Name& v1, Name& v2, int& er);
+	    bool compare_float( Name& v1, Name& v2, int& er);
+	    
+	 they compare the values in v1 and v2 using the _operator. If anything
+	 goues wrong, er is non-zero.
+	 
+	2) public method 'int evaluate()' implemented
+	     
+	     Files modified: smpcondtyp4.hxx  &.cxx
+	
+   ----  This should finish Type 4 condition development  ------------
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4708 | franek | 2012-07-31 17:43:59 +0200 (Tue, 31 Jul 2012) | 30 lines
+
+
+   Further development of Simple Condition Type 4
+   ----------------------------------------------
+   
+   folder src/commonSource
+
+   class 'ParOperand' : 4 new public methods to retrieve the private data.
+   
+   	Name& valueType();  Name& value(); Name& parName(); and
+	                                   Name& ownerObjName();
+	Files modified: paroperand.hxx & .cxx   
+   
+  folder src/stateManager
+ 
+     class 'SmpCondTyp4'
+     
+          new private method 
+	     'int getOperandValue(ParOperand& operand, name& value, Name& type)'
+	     
+	     Given operand, it returns its value and type.
+	        - if the operand type is VALUE, it is trivial
+		- if operand is parameter name, it returns the current value of
+		  the parameter of the current action if such parameter exists.
+		  If not, it returns value of the object parameter. If that
+		  does not exist either, it returns failure (0).
+		- if the operand is composite name, ie. object-name.par-name,
+		  it returns value of the parameter par-name of object obj-name.
+	     
+	     Files modified: smpcondtyp4.hxx  &.cxx
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4707 | franek | 2012-07-25 16:13:39 +0200 (Wed, 25 Jul 2012) | 59 lines
+
+
+   Further development of Simple Condition Type 4
+   ----------------------------------------------
+  folder src/stateManager
+  
+   - class 'SMIObject'   new method 'getObjectParameter'
+       (files: smiobject.hxx &cxx)
+   
+   - class 'Action'     new method 'getObjectParameter'
+       (files: action.hxx &cxx)
+	 
+   - method 'evaluate' of class 'SmpCondTyp4' needs info about its
+      parents (object, state, action). In order to supply this info the
+      folowing 4 modifications were made:
+      
+   1) class  'IfIns'  (files:  ifins.hxx & cxx)
+   
+       A) new private data:
+               State*  _pParentState  (the other 2 are already there)
+	       
+       B) the constructor stores the extra pointer. (it was already supplied)
+       
+       C) supplies these 3 pointers to the constructor of 'Condition' class.
+       
+	       
+   
+   2) class  'When'   (files:  when.hxx & cxx )
+  
+       A) new private data:
+               State*  _pParentState  (_pParentObject was already there
+	                               and parent action is meaningless)
+	       
+       B) the constructor stores the extra pointer. (it was already supplied)
+				       
+       
+       C) supplies the 3 parent pointers to the constructor of
+          'Condition' class. Pointer to parent action is supplied as zero.
+				       
+   
+   3) class 'Condition'   (files condition.hxx & cxx)
+         A) new private data:
+                SMIObject* _pParentObject
+		State*     _pParentState
+	        Action*    _pParentAction
+			 
+         B) the constructor accepts the 3 pointers and stores them
+	 
+	 C) supplies these pointers to the constructor of  'SmpCondTyp4'
+   
+   
+   
+   4) class  'SmpCondTyp4'  (files: smpcondtyp4.hxx & cxx)
+         A) new private data:
+                SMIObject* _pParentObject
+		State*     _pParentState
+	        Action*    _pParentAction
+			 
+         B) the constructor accepts the 3 pointers and stores them
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4706 | franek | 2012-07-20 14:14:07 +0200 (Fri, 20 Jul 2012) | 10 lines
+
+
+   Further development of Simple Condition Type 4
+   ----------------------------------------------
+   
+   State Manager  recognizes the type and initialises it. 
+    - Changes in condition.cxx, smpcondtyp4.hxx & cxx
+    
+    At the moment what remains is implementation of 'evaluate'
+    method in 'SmpCondTyp4' class. The result now is 'ghost'.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4705 | franek | 2012-07-19 13:21:22 +0200 (Thu, 19 Jul 2012) | 11 lines
+
+
+			
+      Moved definition of class 'ParOperand' from translator to commonSource
+      ----------------------------------------------------------------------
+   
+    - files paroperand.cxx & .hxx moved from src/translator to 
+                                             src/commonSource
+   
+    - makefile_translator &  makefile_stateManager  modified to take the above
+       move into account
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4704 | franek | 2012-07-18 15:13:29 +0200 (Wed, 18 Jul 2012) | 36 lines
+
+
+			
+    - Further development of Simple Condition Type 4
+      ----------------------------------------------
+   folder   src/translator
+  
+   -  smpcondtyp4.hxx
+         changed 'const int _type' to 'enum {_type = 4 }'
+	 
+   -  smpcondtyp4.cxx
+   
+      1) above change taken into account
+      
+      2) some unused declarations removed, some diagnostic prints removed
+          and other tydiing.
+      
+      3) method 'outSobj' implemented
+      
+   -  paroperand.hxx & .cxx
+   
+      two new methods for initialisation from 'sobj' code:
+      
+      1) 'initFromSobj_firstLine'
+      2) 'initFromSobj_nextLine'
+      
+      These will be used in State Manager
+      
+    folder    src/stateManager
+    
+  
+    - new class 'SmpCondTyp4' for testing on parameter values
+       -> two new files smpcondtyp4.hxx * .cxx at this moment it does nothing
+       
+    - condition.cxx recognises the new class and calls the appropriate
+                    constructor, which at the moment is just dummy.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4663 | franek | 2012-04-02 15:18:23 +0200 (Mon, 02 Apr 2012) | 29 lines
+
+
+			
+    - Further development of SET instruction
+      --------------------------------------
+   folder   src/translator
+   
+   - setins.hxx  
+       In order to make SET instruction to resemble Condition so that it would
+       be relatively easy to upgrade it to general arithmetic expression,
+       I added 2 integers to protected data:
+   
+       _numOperands   at the moment it is either 1 or 2 (this is like number
+                      of simple conditions in the case of Condition class)
+       _numOperations at the moment 0 or 1 	
+   
+    - paroperand.hxx
+        declaration of new function 'void outSobj(ofstream&)'
+   
+     - paroperand.cxx
+     
+       1) some diagnostic prints removed
+       2)code for new function 'void outSobj(ofstream&)'
+	
+     - setins.cxx
+
+       1) some diagnostic prints removed
+       2) 'outSobj' method modified: added code for the new type (10)
+	  SET instruction
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4661 | franek | 2012-03-26 14:01:20 +0200 (Mon, 26 Mar 2012) | 18 lines
+
+    - Bug fixed in src/commonSource/utilities.cxx in the new function
+                        'check_compname'
+			
+    - Further development of SET instruction
+      --------------------------------------
+      
+      folder  src/translator
+      
+        - class 'ParOperand'   new public function 'operandType()' retrieving
+                            the type.
+	  files: paroperand.cxx  & .hxx 
+	  
+        - 'newCode' private function in 'SetIns' class has been developped
+	   and it now parses the new type SET instruction. This is given
+	   _insType = 10.
+	   The old type (1,2 and 3) is parsed by the old code for backward
+	   ccompatibility safety.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4659 | franek | 2012-03-12 13:11:26 +0100 (Mon, 12 Mar 2012) | 28 lines
+
+  
+    More development of Simple condition Type 4
+    -------------------------------------------
+    
+    folder   src/commonSource
+    
+        - file 'utilities.cxx & hxx'
+         1) new function: 'check_compname' checks for composite names
+         2) function  'getValue'   uses the new function
+    
+    folder  src/translator
+    
+    Files modified:   smpcondtyp4.cxx   and   paroperand.cxx
+      
+     - paroperand.cxx  class ParOperan now handles composite names operands
+       Parsing of the simple condition typ4 is now finished. However before
+       I complete it, i.e sobj output, I will do parsing of SET instruction:
+     
+   Development of SET instruction
+   ------------------------------
+   
+     - setins.hxx  & setinc.cxx
+     
+        new data structure added in addition to the existing one and
+	new private function 'newCode' which is called just after SET keyword
+	was found. At the moment it does not do anything and should not
+	affect existing working of the program.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4658 | franek | 2012-02-24 12:51:07 +0100 (Fri, 24 Feb 2012) | 17 lines
+
+
+   Continuing the new Simple Condition Type(4) for parameter testing
+   -----------------------------------------------------------------
+   
+   folder   src/translator
+
+    - some development in 'smpcondtyp4.cxx'     not fully working yet
+    
+    - dtto  for  'paroperand.cxx'
+    
+    folder   src/commonSource
+    
+    - file 'utilities.cxx'  function  'getValue'
+    
+     Bug fixed for the case when string constant value has 'blank' as the
+     only delimitersvn status
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4657 | franek | 2012-02-22 15:56:23 +0100 (Wed, 22 Feb 2012) | 14 lines
+
+
+   Continuing the new Simple Condition Type(4) for parameter testing
+   -----------------------------------------------------------------
+   
+   folder   src/translator
+   
+    - new class 'ParOperand'. This contains  either
+       1) simple parameter value    or
+       2) simple parameter name   or
+       3) composite parameter name    obj-name.par-name   or obj-name<par-name>
+      2 files paroperand.hxx ( & .cxx)
+
+    - some development in smpcondtyp4.hxx & .cxx    not working yet
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4654 | franek | 2012-01-26 16:04:38 +0100 (Thu, 26 Jan 2012) | 15 lines
+
+
+   First Shot at the new Simple Condition Type(4) for parameter testing
+   -----------------------------------------------------------------
+   
+   folder   src/translator
+   
+    
+   - new class 'SmpCondTyp4'. Simple condition for parameter testing
+      2 new files   smpcondtyp4.hxx (&cxx). At the moment they are not
+       doing anything.
+   -  condition.cxx
+      a)  bug fixed  "NOT_EMPTY" replaced by temp == "NOT_EMPTY"
+      b)  Condition class recognises the new simple condition type
+          and takes it properly into account.
+
+------------------------------------------------------------------------
+=== 20-January-2012:14:16 ==========  v45r1  =================
+------------------------------------------------------------------------
+r4649 | franek | 2012-01-20 14:10:54 +0100 (Fri, 20 Jan 2012) | 5 lines
+
+
+ - Bug fix in src/rtl/smiuirtl.c
+ 
+ - some files in 'Visual' subfolder updated to comply with recent developments.
+
+------------------------------------------------------------------------
+=== 15-December-2011:15:36 ==========  v45r0  =================
+------------------------------------------------------------------------
+r4643 | franek | 2011-12-15 15:27:20 +0100 (Thu, 15 Dec 2011) | 17 lines
+
+
+  
+                       Unlocked IFs
+	       Option '-u' on smiSM command
+               ----------------------------
+	       
+     This option will alter IF processing: IF's objects, instead of being locked
+     for the whole duration of IF, are released as soon as IF's conditions are
+     evaluated.
+     
+     Files modified:
+     
+     - state_manager.cxx 
+     - processcommandline.cxx
+     
+     - ifins.cxx:  Class 'IfIns'   method 'execute'
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4638 | franek | 2011-11-29 16:14:12 +0100 (Tue, 29 Nov 2011) | 3 lines
+
+
+  modified version and History files with v44r0 tag
+
+------------------------------------------------------------------------
+=== 29-November-2011:16:00 ==========  v44r0  =================
+------------------------------------------------------------------------
+r4637 | franek | 2011-11-29 15:31:22 +0100 (Tue, 29 Nov 2011) | 54 lines
+
+        Bug fixes
+	---------
+   - smixx/smiuirtl.h   fix to do with BIT64 architecture
+   
+   - src/rtl/smiuirtl.c  bug fixed in 'int get_param_value'
+   
+    
+        New IF instruction handling (ala WAIT instruction)
+        ---------------------------------------------------
+       The following changes will switch IF handling to the new way
+       
+	 (  folder  src/stateManager )
+     
+     - 'IfIns'  method 'execute()'
+         - instead of calling the old 'unlockObjects()', the new
+	 'unlockLockedObjects()' is used.
+	 
+         - case fresh (fresh IF instruction)
+	    a) instead of the old 'lockObjects()', the new
+	    'attemptToLockObjects()' method is called that builds two lists:
+	        _lockedObjects   and  _objectsWaitingForLock
+	    b) if there are objects waiting for lock, then instead of informing
+	       'ifHandler', it will call 'registerSuspendedObject' method of
+	       resumeHandler.
+	    
+     -  'SMIObject' class
+            method 'execute()'
+	       when the locking (&lock) action arrives, ifHandler is not
+	       informed about it anymore. This is reported directly to the
+	       object requesting the lock (see below)
+	       
+	   method 'reportingLockedObject'
+	       it will call method of the same name of the suspended IF.
+	       If all the objects of IF are locked, it will inform resumeHandler
+	       that the object is ready to resume.
+	       This was before allowed only for WAIT instruction 
+	       
+   
+     -  'SMIObjectSetSimple' class  method 'remove'
+                                when object is removed from set, this is no
+				longer reported to ifHandler. It is reported to
+				resumeHandler instead.
+				
+     -  'SMIObjectSetUnion'  class  method 'removedObjectFromOneOfYourSets'
+                                when object is removed from set, this is no
+				longer reported to ifHandler. It is reported to
+				resumeHandler instead.
+   
+    - 'SMIObject' class  method 'reportingObjectRemovedFromSet'
+    
+          this is called by resumeHandler for all suspended objects when 
+	  an object is removed from a set. This will now call method of the
+	  same name of class 'IfIns'
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4633 | franek | 2011-11-09 16:08:10 +0100 (Wed, 09 Nov 2011) | 28 lines
+
+    
+       Preparation for new IF instruction handling (ala WAIT instruction)
+       ------------------------------------------------------------------
+       None of the changes should affect working of the program YET.
+       
+	 (  folder  src/stateManager )
+   
+      IfIns  class:
+      
+         - two new private methods: 
+	     1)'attemptToLockObjects()' and  2) 'unlockLockedObjects()'
+	     
+	 - two new public methods:
+	 
+	     1) 'reportingLockedObject(Name&)
+	     The usage will be as follows: when locking action is executed
+	     on an object, this object informs its client (the object that
+	     requested the lock). The client in turn informs its IF instruction
+	     by calling the new method.
+	     
+	     2) 'reportingObjectRemovedFromSet(Name& obj, Name& set)'
+	     The future usage: 
+	     when an object is removed from a set, all suspended objects are
+	     informed by 'resumeHandler'. Each of them then calls this new
+	     method for its suspended IF to take necessary action (if any).
+	     
+	 - more diagnostic prints in 'execute' method.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4632 | franek | 2011-10-28 14:28:55 +0200 (Fri, 28 Oct 2011) | 41 lines
+
+            FATAL BUG fixed
+	    ---------------
+    In 'InsList' class (folder src/stateManager). 
+    This was recently introduced in r4562 and stopped any IF that
+    had to be suspended from working. 
+    
+       Preparation for new IF instruction handling (ala WAIT instruction)
+       ------------------------------------------------------------------
+       None of the changes should affect working of the program YET.
+       
+	 (  folder  src/stateManager )
+     
+    - Condition  class : new method
+    		'getCurrentRefObjects(NameList& currRefObjects)'
+		will get list of objects that are currently referenced by
+		the condition, directly or indirectly through Object Sets.
+    
+    - IfIns   class
+    
+    	a) 3 new private data all of them type 'NameList':
+	    _refObjectsAtStartExecution  ... holds list of objects referenced
+	                      by IF's condition at the start of it's execution.
+	    _lockedObjects 
+	    _objectsWaitingForLock
+	    
+	b) new private method 'getCurrentRefObjects()'  ... fills in the above
+	    private list
+	    
+	c) method 'execute()
+	   at the begining of execution of IF it calls the above new private
+	   method.
+
+    
+    - TermIns  class :  improved diagnostic prints
+
+
+	 (  folder  src/commonSource )
+	 
+    - Class NameList    new method  'add(NameList& list)' - will add the items
+              from list unless already present.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4631 | franek | 2011-10-18 14:56:59 +0200 (Tue, 18 Oct 2011) | 12 lines
+
+         Continuing tidying up IF instruction handling
+         ---------------------------------------------
+	 (  folder  src/stateManager )
+	 
+   - IfIns class : method 'execute':
+   			
+   		The three sections of code dealing with execution of 'true'
+		instruction block were replaced by
+		 'goto executeInstructionBlock;' statement and
+		the single version of the code itself was placed at the end
+		of the method and labeled executeInstructionBlock:
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4630 | franek | 2011-10-14 13:57:41 +0200 (Fri, 14 Oct 2011) | 18 lines
+
+         Continuing tidying up IF instruction handling
+         ---------------------------------------------
+	 (  folder  src/stateManager )
+	 
+   - IfIns class : method 'execute':
+   			
+		     a) removed unnecessary freezing and unfreezing of IF's
+		     conditions. Once conditions are evaluated they can be
+		     unfrozen untill the IF is executed again from scratch.
+
+                     b) renamed local variable 'returnStat' to 'blockReturnStat'
+		        as in all cases it is the return status of the last
+			instruction executed in an instruction block (list).
+		     
+		     c) added a few redundant lines of code to make three
+		        sections of code,dealing with execution of 'true'
+			instruction block, identical.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4582 | franek | 2011-09-16 14:44:03 +0200 (Fri, 16 Sep 2011) | 11 lines
+
+         Continuing tidying up IF instruction handling
+         ---------------------------------------------
+	 (  folder  src/stateManager )
+	 
+   - IfIns class : method 'execute':
+                     a) converted the main 'if-else' construct into 'switch'.
+		        This is much clearer.
+		       
+		     b) improved spacing and general appearance of the code.
+		        When comparing differences, '-b' option should be used
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4562 | franek | 2011-09-05 15:52:08 +0200 (Mon, 05 Sep 2011) | 23 lines
+
+		 Tydying up execution of If instruction
+		 -------------------------------------- 
+		 (the changes in src/stateManager folder)
+ 
+   -  new file : instruction_return_status.hxx
+            header file holding the definition of 'InstructionReturnStatus_t'
+	    enum type. This the return status of any SMI instruction and the
+	    type provides for better clarity.
+	    
+   - class InsList : method 'execute':
+                     a) returns type 'InstructionReturnStatus_t' instead of int
+		     b) the code tydied up using the new type.
+		     NB: as most instruction still return 'int', their return
+		         is cast into the new type.
+			 
+  
+   - class IfIns :  1) private data _suspend_flag was made enum type for better
+                       clarity.
+
+                    2) method 'execute' :
+		     a) returns type 'InstructionReturnStatus_t' instead of int
+		     b) the two new enum types are used inster of ints
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4513 | franek | 2011-07-28 14:32:22 +0200 (Thu, 28 Jul 2011) | 2 lines
+
+This will be tagged v43r0
+
+------------------------------------------------------------------------
+=== 28-July-2011 ========== Tag: v43r0  ========================
+------------------------------------------------------------------------
+r4512 | franek | 2011-07-27 16:32:10 +0200 (Wed, 27 Jul 2011) | 2 lines
+
+modification to taggingProcedure: different format of the top History file
+ and no more updating README. Also modification to History and version
+ files in preparation for the new tag.
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4509 | franek | 2011-07-26 15:54:29 +0200 (Tue, 26 Jul 2011) | 35 lines
+
+   
+    Implementation of SLEEP instruction in State Manager
+    ----------------------------------------------------
+     ( all changes in src/stateManager )
+    
+    - New class  'SleepIns'    two new files sleepins.hxx and sleepins.cxx
+  
+    - new class 'SleepInsTimer' two new files sleepinstimer.hxx and .cxx
+             .... timer object used by 'SleepIns' class    
+
+    - class  'InsList'  (inslist.cxx) now processes SLEEP instruction.
+
+  
+    - class SMIObject  (smiobject.hxx and cxx)
+          a) new private data   SleepIns*  _pointerToSuspendedSLEEP
+	  
+          b) new method  'void setPointerToSuspendedSLEEP(SleepIns*)'
+  
+          c) method 'resume()'
+             - private data connected with suspension reset
+             - added diagnostic print
+    
+    - logic_engine.cxx ...  there is now a new source of asynchronous events
+           i.e. timer events from SLEEP instruction. They affect the contents
+	    of Resume Queue and so we have to have an extra check on it.
+
+    - waitins.cxx   minor improvements to debug prints
+     
+    Added a few additional header files to pacify some picky compilers in:
+    ----------------------------------------------------------------------
+	 
+       src/translator/waitins.cxx
+       src/utilities/tellMonObjects.cxx and
+       src/utilities/tclTkGUI-Builder.cxx
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4494 | franek | 2011-07-13 16:30:36 +0200 (Wed, 13 Jul 2011) | 26 lines
+
+When object is 'locked', it reports this directly to the client object
+rather then going via 'ResumeHandler' object. Also, it is now the responsibility
+of the object that is ready to resume execution to inform 'ResumeHandler' about
+this fact.
+At the moment this relates only to WAIT handling.
+  
+ - class 'ResumeHandler' :
+         a) new method 'void objectReadyToResume( Name& objName )'
+            this deregisters object from suspended objects list and puts it
+            on 'ready to resume Q'
+	    
+	 b) the obsolete method 'reportingLockedObject' removed.
+  
+	 
+     - class 'SMIObject'  (file smiobject.cxx & hxx) 
+          a) method 'execute'
+           when &lock action is received and the object is locked, this is
+	   now reported directly to the client object (the one requesting
+	   the lock), instead of to the ResumeHandler.
+	   
+	  b) new method 'void reportingLockedObject(Name& lockedObject)'
+	     used by locked object to inform the client object.
+
+          c) the old method 'int reportingLockedObject(Name& lockedObject)'
+	     removed.
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4492 | franek | 2011-07-05 15:55:13 +0200 (Tue, 05 Jul 2011) | 20 lines
+
+- new script 'updateHistory'. It will pick up the latest commited
+  log from svn and put it at the Head of History file.
+
+ The following changes are all in src/stateManager folder:
+   
+- new method in ResumeHandler class :  'isResumeQueueEmpty()'.
+    
+- replaced DISABLE_AST by dim_lock()     and  ENABLE_AST by dim_unlock()
+   in commhandler.cxx, queue_name.cxx, queue_twonames.cxx and 
+           smpcondtyp2.cxx
+   
+- resumehandler.hxx   added dim locking to 'resumeReadyToResumeObjects()   
+
+- scheduler.cxx   resuming objects is taken out of executableObjectQ loop
+        and placed outside. This way all the queues are handled in a similar
+	way. The only difference is that the loop over the resume Q is inside
+	ResumeHandler method.
+
+- state_manager.cxx  added printing diagnostic level
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4491 | franek | 2011-06-29 16:02:37 +0200 (Wed, 29 Jun 2011) | 7 lines
+
+ New  SLEEP instruction. Necessary modifications in 'translator' and
+ one file in 'commonSource'
+ Format:   SLEEP <integer>
+     or    SLEEP $(<par-name>)
+     
+     e.g.    SLEEP 10              or  SLEEP $(seconds)
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r4490 | franek | 2011-06-24 15:50:51 +0200 (Fri, 24 Jun 2011) | 14 lines
+
+- fixed compiler warnings in src/generator/generator.c
+
+- modified the following makefiles to use the common make file 'makefile_common'
+  which was taken over from dim package with minor modifications :
+  
+  makefile_preprocessor, makefile_generator, makefile_translator,
+  makefile_rtl, makefile_stateManager and makefile_utilities
+  
+  NB: makefile_gui was kept the same to avoid copious warnings. Some of these
+      are tricky and might require a minor re-design.
+      
+NB: There is one compiler warning left in 'preprocessor'. This could be a bug
+    and should be addressed later.
+
+------------------------------------------------------------------------
+r4459 | franek | 2011-03-24 16:25:04 +0100 (Thu, 24 Mar 2011) | 2 lines
+
+fixed compiler warnings in src/rtl/smiuirtlcpp.cxx and  src/rtl/smi_kill.c
+
+------------------------------------------------------------------------
+r4458 | franek | 2011-03-23 16:28:59 +0100 (Wed, 23 Mar 2011) | 2 lines
+
+fixed compiler warnings in src/rtl/smirtlcpp.cxx and src/rtl/smiuirtl.c
+
+------------------------------------------------------------------------
+r4457 | franek | 2011-03-22 15:45:54 +0100 (Tue, 22 Mar 2011) | 2 lines
+
+fixed compiler warnings in src/rtl/smirtl.c
+
+------------------------------------------------------------------------
+r4445 | franek | 2011-03-10 16:16:17 +0100 (Thu, 10 Mar 2011) | 2 lines
+
+ fixed compilation warnings in generator.c related to the return type defaults to 'int'
+
+------------------------------------------------------------------------
+r4444 | franek | 2011-03-10 15:08:08 +0100 (Thu, 10 Mar 2011) | 2 lines
+
+ fixed compilation warnings in generator.c related to the absence of parentheses around assignment used as truth value
+
+------------------------------------------------------------------------
+r4422 | franek | 2011-02-24 15:26:35 +0100 (Thu, 24 Feb 2011) | 2 lines
+
+fixing compilation warnings in 'utilities'
+
+------------------------------------------------------------------------
+r4421 | franek | 2011-02-22 16:56:31 +0100 (Tue, 22 Feb 2011) | 2 lines
+
+fixing compilation warnings in Translator
+
+------------------------------------------------------------------------
+r4420 | franek | 2011-02-17 11:35:16 +0100 (Thu, 17 Feb 2011) | 10 lines
+
+File commonsource/utilities.cxx :
+
+ - Bug fixed in function 'process_line_forTrans'. It was uppercasing also
+   inside double quotes. As this function is called only from 'getHeader'
+   of Condition class in order to generate a comment from condition string,
+   it was not very serious. Especially as condition strings do not contain
+   any double quotes.
+
+ -fixing a few compilation warnings
+
+------------------------------------------------------------------------
+r4419 | franek | 2011-02-17 11:19:33 +0100 (Thu, 17 Feb 2011) | 2 lines
+
+compilation warning fixed
+
+------------------------------------------------------------------------
+r4418 | franek | 2011-02-11 15:37:34 +0100 (Fri, 11 Feb 2011) | 2 lines
+
+removing compilation warnings in some of commonSource files
+
+------------------------------------------------------------------------
+r4417 | franek | 2011-02-11 15:07:44 +0100 (Fri, 11 Feb 2011) | 2 lines
+
+2 Bugs fixed in commhandler.cxx of State Manager and also some compilation warnings fixed
+
+------------------------------------------------------------------------
+r4416 | franek | 2011-02-11 14:49:51 +0100 (Fri, 11 Feb 2011) | 2 lines
+
+ removing more compilation warnings in State Manager
+
+------------------------------------------------------------------------
+r4407 | franek | 2011-02-04 15:39:25 +0100 (Fri, 04 Feb 2011) | 2 lines
+
+tagging procedure for v42r1
+
+------------------------------------------------------------------------

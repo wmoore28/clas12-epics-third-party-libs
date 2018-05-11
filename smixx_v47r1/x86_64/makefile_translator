@@ -1,0 +1,48 @@
+include makefile_common
+
+CFLAGS += -I./smixx -I./src/commonSource
+
+ifeq ($(OS),HP-UX) 
+	CXXFLAGS += +a1 -DdefBool
+endif
+
+srcdir := ./src/translator
+srcs := $(wildcard $(srcdir)/*.cxx)
+objstemp := $(srcs:.cxx=.o)
+objs := $(subst $(srcdir),$(ODIR),$(objstemp))
+
+
+comsrcdir = ./src/commonSource
+COMODIR := $(ODIR)
+
+comsrcs := $(comsrcdir)/name.cxx $(comsrcdir)/namevector.cxx \
+          $(comsrcdir)/namelist.cxx \
+          $(comsrcdir)/smlline.cxx $(comsrcdir)/smllinevector.cxx \
+          $(comsrcdir)/utilities.cxx $(comsrcdir)/nmdptnr.cxx \
+          $(comsrcdir)/nmdptnrvector.cxx $(comsrcdir)/registrar.cxx \
+	  $(comsrcdir)/paroperand.cxx $(comsrcdir)/errorwarning.cxx
+	  
+comobjstemp := $(comsrcs:.cxx=.o)
+comobjs := $(subst $(comsrcdir),$(COMODIR),$(comobjstemp))
+
+
+$(ODIR)/%.o: $(srcdir)/%.cxx; $(CXX) -c $(CFLAGS) $< -o $@
+$(COMODIR)/%.o: $(comsrcdir)/%.cxx; $(CXX) -c $(CFLAGS) $< -o $@  
+
+$(ODIR)/smixx_parstring_util.o: $(comsrcdir)/smixx_parstring_util.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
+
+objs += $(comobjs)
+objs += $(ODIR)/smixx_parstring_util.o
+
+all: clean $(objs) 
+	$(CXX) $(CFLAGS) -o $(ODIR)/smiTrans $(objs)  $(EXTRALIBS)
+
+
+
+	
+.PHONY : clean	
+clean :
+	rm -f $(ODIR)/*.o $(ODIR)/smiTrans
+	rm -f $(COMODIR)/*.o	

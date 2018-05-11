@@ -1,0 +1,5 @@
+foreach file (`ll *.cc|awk '{print $9}'`)
+    
+    set new_file = `echo $file|sed s/.cc/.cxx/`
+    mv -v $file  $new_file
+end

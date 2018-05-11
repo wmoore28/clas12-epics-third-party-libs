@@ -1,0 +1,61 @@
+#!/bin/bash
+
+start=$(date +"%s")
+cols=`tput cols`
+
+function printHeader {
+	printf "=%.0s" $(seq 1 $cols)
+	printf "\n"
+}
+
+# build 32-bit
+./configure --prefix=`pwd`/x86
+if [ $? == "0" ]; then
+	make clean
+	make CFLAGS='-O2 -m32'
+	if [ $? == "0" ]; then
+		make check
+		make install
+	else
+		printHeader
+		echo "32-bit make failed"
+		printHeader
+		exit
+	fi
+else
+	printHeader
+	echo "32-bit configure failed"
+	printHeader
+	exit
+fi
+
+# build 64-bit
+./configure --prefix=`pwd`/x86_64
+if [ $? == "0" ]; then
+	make clean
+	make
+	if [ $? == "0" ]; then
+		make check
+		make install
+	else
+		printHeader
+		echo "64-bit make failed"
+		printHeader
+		exit
+	fi
+else
+	printHeader
+	echo "64-bit configure failed"
+	printHeader
+	exit
+fi
+
+end=$(date +"%s")
+tdiff=$(($end-$start))
+
+printHeader
+printf "\nBuild successful\n\n"
+printf "Time Elapsed:  %dm%ds\n" $(($tdiff/60)) $(($tdiff%60))
+printHeader
+
+exit

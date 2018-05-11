@@ -1,0 +1,350 @@
+21-Oct-1998  all files from dev moved to default
+---------------------------------------------------------------------------
+26-Dec-1998  1)name.*  renamed to _old_.name.* ....will use the one in utilities
+                dtto   for utilities.cc &.hh
+
+             2) codeblock.cc   method objectSetPass...  
+                instead   BlockName objectlist     using BlockName* pObjectList
+-------------------------------------------------------------------------------
+27-28-Dec-1998
+             1) codeblock.cc  method objectSetPass...
+                allowing for any number of different Object Sets by using
+                Registrar class
+
+             2) codeblock.cc&hh   the code for generating the actual lines
+                 from lines of type   .....(any_of_.......
+                        or            .....(all_of_.....
+                 transfered to a new private method expandLine. It is also more
+                 general then before when only the lines of type if(any_of_...
+                 or if(all_of_.... were expanded.
+-------------------------------------------------------------------------------
+29-Dec-1998  1) New class Macro....primarilly holding found macros
+
+             2) codeblock.cc&hh   new method macroPass... at the moment just
+                       extracting macros and storing them in the above objects
+
+          NB.   Block_Name class needs bringing up in step with the one 
+                used by State Manager
+-------------------------------------------------------------------------------
+30-Dec-1998  1) codeblock.cc  
+                      a) macro invocation line (@name(par1,par2...parn)) 
+                         is recognised, the macro is located and the new
+                         macro method realiseMacro is invoked
+
+                      b) repeat macro invocation line :
+                           @repeat_macro name(par1,par2...parn)
+                              n.b this can be continued over as many lines
+                                  as necessary, the continuetion indicated by \ 
+                         is recognised, the macro is located and the new
+                         macro method repeatMacro is invoked
+
+
+             2) macro.cc & hh
+                     a)  new method realiseMacro .... will replace the
+                              parameters by the actuall values and append
+                              the macro to codeblock
+
+                     b) new method repeatMacro..... will call realiseMacro
+                        as many times as necessary
+--------------------------------------------------------------------------------
+31-Dec-98    macro.cc&hh  off set for the macro body is taken correctly from
+                          the macro line
+-------------------------------------------------------------------------------
+ 6-Jan-99    main.cc  it calls at the very beginning a new subroutine cpreproc
+                      which will spawn  C Preprocessor that processes the input
+                      file and produces a temporary file which then serves as
+                      an input for the rest
+
+             cpreproc.cc  new subroutine invoking a C Preprocessor. At the
+                          moment it only does it on VMS
+-------------------------------------------------------------------------------
+ 7-Jan-99    cpreproc.cc  does the same on UNIX as on VMS
+--------------------------------------------------------------------------------
+ 9-Jan-99    codeblock.* and macro.*   macros can now be called recursively
+--------------------------------------------------------------------------------
+10-Jan-99    cpreproc.cc  the temporary file name is now based on PID rather
+                          than process name (on VMS)
+
+             codeblock.cc  constructor uses readLine subroutine which allows
+                           to read directly into a Name rather than char string
+
+             incfile.cc same as codeblock
+-------------------------------------------------------------------------------
+11-Jan-99    Character strings of fixed length removed everywhere. This makes
+             parameters.hh obsolete
+             Files affected :
+                   CODEBLOCK.*
+                   main.cc
+                   CPREPROC.CC
+                   INCFILE.CC
+                   incline.*
+--------------------------------------------------------------------------------
+14-Jan-99  The format of defining macros and calling them finalised. This 
+           involved changes to CODEBLOCK.CC  and  MACRO.CC
+           The format is as follows:
+
+             Macro definition :
+             ----------------
+
+                .macro 'Macro-name'('par1',...,'parn')   (can be continued by \)
+                     MACRO-BODY
+                .endmacro
+
+                In MACRO-BODY,   ${'pari'}  will be replaced by the actual value
+                of the parameter. e.g.
+
+                    .macro A(a,b)
+                    xxxx${a}xxxxxxx
+                    xxxxxxxxxx${b}xxxxx
+                    .endmacro
+
+
+             Macro replacement :
+             -----------------
+              1)
+
+                'Macro-name'('val1',...,'valn')       (can be continued by \)
+
+                will be replaced by MACRO-BODY with the actual values of
+                the parameters.  e.g.
+
+                 A(1,2)     will be replaced by
+
+                   xxxx1xxxxxxx
+                   xxxxxxxxxx2xxxxx
+
+                If the MACRO-BODY conains a call to another macro, this will
+                be replaced also and so on
+
+              2)
+                .repeat 'Macro-name'('val1',...,'valn')  (can be continued by \)
+
+                 will be replaced the MACRO-BODY of 'Macro-name' (which must
+                 single parameter macro) n times substituting the parameter
+                 by value 'val1'...,'valn'
+
+                 Macro replacement is fully recursive. It is for example 
+                 possible to do:
+
+                    .macro rt_action(type)
+                    !
+                     action : ${type}
+                    !------
+                        terminate_action / state = ${types}
+                    .endmacro
+
+                    .macro rt_state(type)
+                    !
+                    !-----------------
+                     state : ${type}
+                    !-----------------
+                        .repeat rt_action(types)
+                    .endmacro
+                    !
+                    !--------------------------------------------------------
+                    object : RUN_TYPE
+                    .repeat rt_state(PHYSICS,COSMICS,TEST)
+-------------------------------------------------------------------------------
+21-Jan-99   Deleting preprocessor output after processing on UNIX (non VMS)
+            systems. The change is in the main.cc
+-------------------------------------------------------------------------------
+04-Feb-99  adding a protection to main.cc not to delete input file when it is
+           the same as preprocessor output (which can happen when system 
+           command does not exist)    !!!!! still not feel good about it
+------------------------------------------------------------------------------- 
+21-Feb-1999 See 04-Feb. Put abort in cpreproc.cc when system command does not 
+            exists.
+                     This version taken to SLAC (first copying defaul to work
+                       and then default)
+--------------------------------------------------------------------------------
+07-Mar-1999 Enabled passing c-preprocessor options from the command line.
+            Changes to main.cc & cpreproc.cc. Format:
+
+            Assuming the command is smiPreproc, then the general form is:
+
+            smiPreproc -p"c-preprocessor options" 'input-file' 'output-file' 
+
+e.g.    on VMS:       smiPreproc -p"/include=[-]" A.pre_smi A.smi
+           or smiPreproc -p"/define=""types=physics,cosmics""" A.pre_smi A.smi  
+
+        on UNIX:      smiPreproc -p"I .." A.pre_smi A.smi
+--------------------------------------------------------------------------------
+08-Mar-1999 There are 3 groups of changes :
+
+            1) The changes I had to make at SLAC in order to get it through
+               the native Sun compiler
+
+            2) Testing on the return status from C-preprocessor
+
+            3) If anything goes wrong then calling exit(1) (rather than abort())
+               This is because it is used as a command and it looks real mess
+               when it aborts
+
+            BLOCK_NAME.CC  additional #include <stdlib.h> (changed at SLAC)
+
+            CODEBLOCK.HH method out()  & outToFile(...) are declared now as void
+                         (this was found by Sun native compiler)
+                         (changed at SLAC)
+
+            CODEBLOCK.CC a) additional #include <stdlib.h> (at SLAC)
+                         b) out() & outToFile(...) declared as void (at SLAC)
+                         c) abort()  changed to exit(1) everywhere
+
+            CPREPROC.CC  a) abort()  changed to exit(1) everywhere
+                         b) testing on return status from C-preprocessor and
+                            if not successfull teminating with exit(1)
+
+            INCFILE.HH   method out() declared as void  (at SLAC)
+
+            INCFILE.CC   a) method out() declared as void  (at SLAC)
+                         b) additional #include <stdlib.h> (at SLAC)
+                         c) a few exit(0) changed to exit(1)
+
+            INCLINE.CC   a) additional #include <stdlib.h> (at SLAC)
+                         b) a few exit(0) changed to exit(1)
+
+            MACRO.CC     a) additional #include <stdlib.h> (at SLAC)
+                         b) abort()  changed to exit(1) everywhere
+
+            MAIN.CC      a) abort()  changed to exit(1) everywhere
+                         b) the final and successfull exit(1) changed to exit(0)
+
+            TYPEDEFS.HH is renamed to _OLD_TYPEDEFS.HH and is picked up from
+            [--.utilities] directory
+
+            default and dev directories were at this point independently 
+            backuped to
+            PREPROCESSOR_DEFAULT_8-MAR-1999.BCK
+            PREPROCESSOR_DEv_8-MAR-1999.BCK
+            on rlv2::DATA_DISK1:[FRANEK]
+
+            All files in dev purged and moved to default
+................................................................................
+ 9-Mar-1999  All exit(1)  changed to exit(2) everywhere. This is becuse if
+             one exits with 1 on VMS, the operating system consideres it success
+             (exit(0) is actually converted to terminating status 1.)
+...............................................................................
+12-Mar-1999  A bug corrected in macro.cc in method Macro  and realiseMacro
+             ... dealing correctly with the case when there are no parameters
+................................................................................
+21-May-1999  macro.cc moved to default. The complete source is in default now.
+..............................................................................
+ 6-Apr-2001 From today this directory (delphi$online:[smixx.preprocessor.source]
+            stops being the master. The master is now in CERN lynux directory
+            This file was copied from VMS where it was called 000000.README
+..............................................................................
+17-May-2001  main.cc   added #include <unistd.h>
+..............................................................................
+14-May-2001 -  Windows NT does not need and does not have file unistd.h ... #ifdef
+               applied in the two files that use it : Main.cxx & cpreproc.cxx
+
+            - removed redundant strings.h header file from codeblock.cxx
+              which does not exists on Windows and is not needed anyway as
+              I have my own version of string comparisons (ignoring the case)
+              routines
+
+            - got ridoff getopt subroutine when processing command options
+...............................................................................
+24-March-2004  Finaly getting preprocessor working on Windows:
+
+            - codeblock.cxx ... method expandLine : strcasecmp function does not exists
+                    on windows...doing it differently.
+
+            - cpreproc.cxx ... included new section for windows to invoke C-preprocessor
+                     In particular, the temporary output of the c-preprocessor is
+                      %TEMP%/cpreproc.txt
+
+            - main.cxx ... the way the above temporary file is deleted on windows is
+                          different
+----------------------   v18r2-p1  --------------------------------------------
+----------------------   v19  -------------------------------------------------
+25-March-2004  cpreproc.cxx   bug fixed 
+
+26-March-2004 changed format of version.hxx
+
+31 March 2004 (Boda Franek)
+
+   macro.cxx   (rev :
+   .repeat 'macro-name'()       is allowed and is simply ignored
+=== 02-April-2004:12:21 ==========  v20  =================
+=== 01-June-2004:17:23 ==========  v21  =================
+=== 24-June-2004:12:17 ==========  v21r1  =================
+=== 10-August-2004:13:11 ==========  v22  =================
+20 Sep 2004 (Boda Franek)
+
+    cpreproc.cxx  ... allowing arbitrary lenght of preprocessor options
+    
+=== 20-September-2004:12:06 ==========  v23  =================
+=== 04-October-2004:12:45 ==========  v23r1  =================
+
+27 October 2004 (Boda Franek)
+
+   - iostream migration
+   
+       many files modified. This consisted in replacing
+        #include <iostream.h> by #include <iostream.inc>   and/or
+        #include <fstream.h>  by #include <fstream.inc>
+
+   - cpreproc.cxx   superfluous cout removed
+   
+-------------------------------------------------------------------------------
+28 October 2004 (Boda Franek)
+
+     iostream migration
+     ------------------
+     #include <iostream.inc> &  #include <fstream.inc> replaced by
+           #include "smixx_common.hxx"
+   
+=== 29-October-2004:19:52 ==========  v24r1  =================
+=== 25-November-2004:16:15 ==========  v24r2  =================
+=== 22-December-2004:14:33 ==========  v25  =================
+=== 11-March-2005:15:54 ==========  v26  =================
+=== 20-May-2005:15:58 ==========  v27  =================
+=== 25-May-2005:12:04 ==========  v27r1  =================
+=== 14-July-2005:17:07 ==========  v28  =================
+=== 28-September-2005:15:35 ==========  v28r1  =================
+=== 06-October-2005:15:38 ==========  v29  =================
+=== 20-January-2006:14:46 ==========  v29r1  =================
+=== 31-March-2006:17:27 ==========  v30  =================
+=== 19-May-2006:20:34 ==========  v31  =================
+=== 21-May-2006:21:01 ==========  v31r1  =================
+=== 25-July-2007:14:58 ==========  v32  =================
+=== 07-August-2007:11:55 ==========  v32r1  =================
+=== 25-August-2007:13:31 ==========  v32r2  =================
+=== 28-September-2007:15:29 ==========  v32r3  =================
+=== 07-October-2007:16:50 ==========  v32r4  =================
+=== 12-November-2007:14:40 ==========  v32r5  =================
+=== 31-March-2008:15:41 ==========  v32r6  =================
+=== 11-June-2008:15:51 ==========  v33  =================
+=== 02-July-2008:12:44 ==========  v33r1  =================
+=== 16-July-2008:17:11 ==========  v33r2  =================
+=== 06-October-2008:11:30 ==========  v33r3  =================
+=== 10-October-2008:16:04 ==========  v34  =================
+=== 16-October-2008:15:52 ==========  v34r1  =================
+=== 11-November-2008:12:56 ==========  v34r2  =================
+=== 03-December-2008:13:17 ==========  v35  =================
+=== 11-February-2009:14:48 ==========  v35r1  =================
+=== 07-April-2009:14:07 ==========  v35r2  =================
+=== 31-July-2009:15:49 ==========  v36  =================
+=== 06-August-2009:15:54 ==========  v36r1  =================
+=== 27-August-2009:17:17 ==========  v37  =================
+=== 02-September-2009:14:44 ==========  v37r1  =================
+=== 07-October-2009:12:46 ==========  v37r2  =================
+=== 10-November-2009:18:53 ==========  v37r3  =================
+=== 13-November-2009:14:59 ==========  v37r4  =================
+=== 20-January-2010:16:26 ==========  v38  =================
+=== 21-June-2010:15:54 ==========  v39  =================
+=== 02-September-2010:15:31 ==========  v40  =================
+=== 21-November-2010:13:22 ==========  v41  =================
+=== 06-January-2011:16:18 ==========  v42  =================
+=== 04-February-2011:15:29 ==========  v42r1  =================
+=== 27-July-2011:16:13 ==========  v43r0  =================
+=== 29-November-2011:16:00 ==========  v44r0  =================
+=== 15-December-2011:15:36 ==========  v45r0  =================
+=== 20-January-2012:14:16 ==========  v45r1  =================
+=== 31-August-2012:11:18 ==========  v46r0  =================
+=== 26-September-2012:12:33 ==========  v46r1  =================
+=== 19-November-2012:14:31 ==========  v46r2  =================
+=== 28-January-2013:16:36 ==========  v46r3  =================
+=== 30-June-2014:15:16 ==========  v47  =================
+=== 12-September-2014:11:49 ==========  v47r1  =================

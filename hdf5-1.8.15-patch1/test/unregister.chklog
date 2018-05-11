@@ -1,0 +1,10 @@
+============================
+ unregister  Test Log
+============================
+Testing Unregistering filter                                           PASSED
+All filter unregistration tests passed.
+0.07user 0.04system 0:00.13elapsed 83%CPU (0avgtext+0avgdata 9308maxresident)k
+96inputs+1928outputs (1major+10338minor)pagefaults 0swaps
+
+Finished testing unregister 
+============================

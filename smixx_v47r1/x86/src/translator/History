@@ -1,0 +1,1781 @@
+
+
+
+26 May 1999  - The files in this directory were copied from ..\source and also
+               from ..\..\utilities (VMS)
+
+             - They were then renamed as follows: ren *.cc *.cxx;  
+               ren *.hh *.hxx
+
+             - references to .hh inside all files changed to .hxx
+
+23 June 1999  two new files action.cxx & action.hxx
+
+24 June 1999  The files which were originaly copied from the directory
+              utilities
+              were moved into a new directory utilities/sourceForDevStudio
+
+29 June 1999  main.cxx this should now work correctly separating the
+              individual source units and instantiating relevant classes
+
+              Folder v0.1 is a snapshot of the software
+.............................................................................................
+30 June 1999 
+            1) Constructor for SMIObject SMIObjectSet and State had 1 parameter 
+               (the first line) removed.
+               This is because the first line is input-in later as the rest.
+               This affects: main.cxx,  smiobject.cxx, smiobject.hxx smiobjectset.*
+
+
+            2) smiobject.hxx, .cxx   new method collect() which has similar
+                  function as the main program and is simply collecting code
+                  for parameters and states...collection of code for
+                   attributes is not implemented yet and also recognising
+                  subobject line.
+
+            3) Folder v0.2 is a snapshot at this point
+
+.............................................................................
+1-2 July 1999
+           1) New Class  SMLUnit which is going to be the base class for
+              most of the other classes in the program. It represents
+              a logical chunk of SML code such as SMIObject, state  etc.
+              new files smlunit.cxx, smlunit.hxx
+
+           2) SMIObject class now becomes subclass of SMLUnit. It fully
+              inherits acceptLine method and SMLCode private data
+              files affected : smiobject.cxx & .hxx
+
+           3) SMIObjectSet class  ... same thing; 
+              Files affected  smiobjectset.cxx & .hxx
+
+           4) main.cxx now also registeres the SML units in allUnits
+              Registrar. It means that for example I do not have to print out
+              classes and SMIObjectSets separately
+
+           Folder v0.3 is a snapshot at this point
+...........................................................................
+3-6 July 1999
+           1) New class for attributes    attributes.cxx and attributes.hxx
+
+           2) State class and Parameters class become subclass of SMLUnit
+              Files affected state.hxx, state.cxx,
+                              parameters.hxx, parameters.cxx
+
+           3) Some tydiing up in main.cxx....all SML units are collected
+               in 1 registrar which enables looping over all of them at ones
+
+           4) New features added to SMLUnit class    
+                 files smlunit.hxx  smlunit.cxx
+
+           5) SMIobject now using attributes and parameters classes
+
+          Folder v0.4 is a snapshot at this point
+............................................................................................
+21 September 1999
+
+           1) smlunit.cxx  ... adding endl to a printout
+
+           2) smiobjectset.hxx * .cxx   took out method out() so that 
+              the one in the base class is used
+           3) simple tydiing done in main.cxx
+............................................................................................
+22 September 1999
+
+           1) finalised State class private data   state.hxx
+
+           2) smlunit.hxx & cxx   new protected method  translateUnits()          
+
+           2) smiobject.cxx ... tydied up and added call to translateUnits()
+.............................................................................
+23 September 1999
+
+           1) new class When    ... new files  when.cxx & hxx
+
+           2) action class (action.cxx &hxx) tydied up ...primarily made
+              subclass of SMLUnit
+
+           3) method translate implemented in state.cxx
+
+           4) smiobject.cxx   little tydiing
+............................................................................
+24 September 1999
+
+           1) smlunit.cxx & hxx  .. method out now has an argument, beiing
+               an offset. This is probably making _level redundant.
+
+           2) main.cxx  calls out with an offset
+.............................................................................
+      Folder v0.5 is a snapshot
+.............................................................................
+27 September 1999
+        
+           1) smlunit.hxx  & smlunit.cxx  
+               a) slight improvement to the method out. This now takes as
+                  an input offset.
+
+               b) as the result of a), _level private data is not needed
+                  any more.
+
+               c) additional private data Name _name. This is usefull for some
+                  units such as objects for diagnostic printing. i.e. one can
+                  use the base class method.    
+
+           2) Consequence of 1) are small changes (basicaly simplification) in
+              action.cxx, action.hxx 
+              attributes.cxx, attributes.hxx, parameters.cxx, parameters.hxx,
+              smiobject.cxx, smiobject.hxx, smiobjectset.cxx, smiobjectset.hxx,
+              state.cxx, state.hxx and when.cxx
+.............................................................................
+28 September 1999
+
+           1)  New class Instruction   instruction.cxx and instruction.hxx
+
+           2)  New class InsList   inslist.cxx  and  inslist.hxx
+
+           3)  action.cxx  and  action.hxx   impemented method translate in
+                  action class using the new class InsList
+..............................................................................
+     Folder  v0.6 is a snapshot
+..............................................................................
+29 September 1999
+
+            1)  action.cxx    begining of the instruction block is recognised
+                              by 1st instruction
+
+            2)  inslist.cxx   implemented very rudimentary translate method
+
+            3)  instruction.hxx  because of simplification translate method is not purely
+                                 virtual
+.............................................................................................
+30 September 1999
+
+            1) New classes (inheriting from the instruction class) :
+
+               doins.hxx, doins.cxx,   termins.hxx, termins.cxx,   setins.hxx, setins.cxx
+               ifins.hxx,  ifins.cxx
+
+            2) method translate implemented in IfIns class  (ifins.cxx)
+
+   N.B. At the moment only if instructions not containing another if are 
+        considered and also if without else if or else. Generalisation 
+        should not be too dificult.
+
+        Folder  v0.7  is a snapshot
+..............................................................................
+ 1 October 1999
+
+        1) smiobjectset.cxx  constructor prints a info line
+
+        2) info print "translate not implemented yet" was removed from  
+           attributes.cxx,  parameters.cxx, doins.cxx, termins.cxx, setins.cxx
+           and when.cxx
+
+..............................................................................
+ 3 October 1999
+
+        1) *** There is a bug in reading from a file. The last line is not 
+           read in a comment was put in main.cxx
+
+        2) smiobject.cxx   info print about translating taken out and info
+                  printing about creating the instance put in
+
+        3) action.cxx      dtto
+
+        4) state.cxx       dtto
+
+        5) inslist.cxx   the main change is, that it can handle nested ifs
+..............................................................................
+ 4 October 1999
+
+        1)  new files  ifunit.cxx   and   ifunit.hxx   for the new 
+              class IfUnit
+
+        2) ifins.hxx and ifins.cxx   significantly redesigned. If instruction
+              now simply consists of IfUnits
+
+   At this point we can handle if ifelse and nested to any level
+
+     Folder v0.8 is a snapshot
+.............................................................................
+ 5 October 1999
+
+        1) new files  condition.hxx   and  condition.cxx  for the new class
+                Condition
+
+        2) when.hxx   and  when.cxx   When class is now using Condition class:
+                   a) new private members Condition  and actionName
+
+                   b) translate method implemented picking up the condition
+                      and action name
+
+                   c) out method implemented....must be since this is 
+                      a primitive SMLUnit
+..............................................................................
+ 2 November 1999
+
+        1) New class called  AttributeBlock  --> new files  attributeblock.hxx
+           & cxx
+           this looks identical to Attribute class but has different name
+            reflecting more what it is
+
+        2) smiobject.cxx & hxx changed to use the new class.
+..............................................................................
+ 3 November 1999
+
+        1) Implemented method translate()  and out() in class 
+             AttributeBlock...changes in attributeblock.hxx & cxx
+
+        2) minor mod to out() in when.cxx
+.............................................................................. 
+ 9 November 1999
+
+        1) New class called ParameterBlock --> new files 
+             parameterblock.hxx & cxx
+           This represents the chunk of code containing the object parameters. 
+
+        2) smiobject.cxx & hxx changed to use the new class 
+..............................................................................
+15-16 November 1999
+
+        1) method translate implemented in ParameterBlock. It parses 
+           the block and stores it in Parms _parameters
+
+        2) parms.hxx&cxx  method out now takes offset
+==============================================================================
+   Folder v0.9 is a snapshot at this time
+==============================================================================
+23 November 1999
+
+        1) New class called ActionHeadBlock --> 
+                  new files actionheadblock.cxx & hxx
+           This represents the chunk of code containing action name,
+           parameters and action attributes
+
+        2) action.hxx & cxx changed to use the new class
+
+        3) method translate implemented in ActionHeadBlock...
+             only parameters at the moment
+------------------------------------------------------------------------------
+24 November 1999
+
+        Since parsing of parameters in ActionHeadBlock and ParametersBlock
+        is identical, a new method 'parseParmDeclaration'   was put into
+        the base class SMLUnit and this is then used in the translate method
+        of the two above classes.
+        changes in: smlunit.cxx & hxx,  actionheadblock.cxx and
+        parameterblock.cxx
+..............................................................................
+26 November 1999
+
+        method parseParmDeclaration renamed to parseParameters and
+        distinction is made by an extra argument
+        This implied changes to actionheadblock.cxx, smlunit.hxx and
+         parameterblock.cxx.
+        Also made some changes to    smiobjectset.cxx but forget to document
+        them
+==============================================================================
+   Folder v1.0 is a snapshot
+==============================================================================
+14 January 2000
+         Small bug fixed in method parseParameters of class SMLUnit 
+------------------------------------------------------------------------------
+6-8 February 2000
+         termins.cxx termins.hxx modified ..... translate method implemented 
+------------------------------------------------------------------------------
+14 February 2000
+         doins.cxx  .... translate method implemented
+------------------------------------------------------------------------------
+15-16 February 2000
+ 
+       - setins.cxx & hxx ... translate method implemented
+
+       - small mods to doins.cxx
+
+       - Began to implement parsing of condition:
+            changes to when.cxx and to smlunit.cxx and smlunit.hxx 
+------------------------------------------------------------------------------
+ 20-22 February 2000
+
+     Partial implementing of parsing of condition. This involved changes to:
+
+        when.cxx,   condition.hxx&cxx,  
+        smlunit.cxx&hxx (this was undoing some changes i.e. parsing of
+           condition is done by the condition class itself)
+
+    and a new class SmpCond in smpcond.cxx&hxx
+------------------------------------------------------------------------------
+==============================================================================
+  Folder v1.1 is a snapshot
+==============================================================================
+23-26 February 2000
+
+   - New classes : Stack,  StackItem  and  BoolOperation --> new files:
+                  stack.hxx&cxx,  stackitem.hxx&cxx, booloperation.hxx&cxx
+
+   - modifications to when.cxx, condition.hxx&cxx and smpcond.cxx
+
+   I think that the condition parsing is more or less finished!
+==============================================================================
+  Folder  v1.2 in repository is a snapshot
+==============================================================================
+27 February 2000
+
+  Identifier for Simple condition and BoolOperation necessary for
+   backward compatibility is now held inside the objects. Mods to:
+
+ stack.hxx&cxx , stackitem.hxx&cxx , condition.cxx&hxx , booloperation.cxx&hxx
+ smpcond.cxx&hxx
+------------------------------------------------------------------------------
+28 February 2000
+
+   Class SmpCond   and  BoolOperation  inherit from a common class
+    BoolItem.   This implies changes to:
+
+   smpcond.hxx  booloperation.hxx  and new files boolitem.hxx&cxx
+
+   Class StackItem now has instead 2 pointers just one to a BoolItem
+------------------------------------------------------------------------------
+29 Feb - 4 Mar 2000
+
+  Polishing parsing conditions. It now definitely works. There quite a few
+  changes to:
+
+  smpcond.cxx&hxx, condition.cxx&hxx, boolitem.hxx, booloperation.cxx&hxx
+   stack.cxx&hxx, stackitem.cxx&hxx
+-----------------------------------------------------------------------------
+29 - 30 Apr
+
+   1) Private data  _attributes   and _parameters  removed from SMIObject (and
+      IsOfClass) because this data already exists in the respective blocks.
+      Instead, new methods to retrieve them provided
+
+    changes to : attributeblock.hxx & cxx, isofclassobject.hxx & cxx, 
+                 parameterblock.hxx & cxx, smiobject.hxx & cxx
+
+   2) condition.cxx  adjustments to getHeader method in order to achieve that
+                 the comment condition line output to sobj file is the same
+                 as that output by the fortran translator.(using the new
+                 subroutine from utilities) 
+------------------------------------------------------------------------------
+30 Apr - 2 May
+
+  condition.cxx  adjustments to getHeader method in order to achieve  that
+                 the comment condition line output to sobj file is the same
+                 as that output by the fortran translator.
+------------------------------------------------------------------------------
+ 2 - 4 May 2000
+
+  smiobject.cxx   uses the new method objectKeywordLine in SMLLine class
+
+  condition.cxx  small adjustments to getHeader method in order to achieve that
+                 the comment condition line output to sobj file is the same as
+                 that output by the fortran translator.
+------------------------------------------------------------------------------
+ 4 - 5 May 2000
+
+  main.cxx   the collection loop substantialy changed to make it similar to
+             the collection loop in SMIObject translate method...the patern
+             has clearly emerged.
+
+  smiobject.cxx  method translate. The collection loop made similar to that
+                of the main program
+------------------------------------------------------------------------------
+ 5 - 7 May 2000
+
+  smiobject.cxx   method outSobj  gets the information it needs directly from
+                  the protected data of AttributeBlock and ParameterBlock class
+                  as it is now a friend (see below)
+
+  parameterblock.hxx  SMIObject, Action & DoIns classes made 'friend'
+
+  attributeblock.hxx  SMIObject, State & Action classes made 'friend'
+------------------------------------------------------------------------------
+15-16 June 2000
+
+  state.cxx   method translate() re-written to follow the same pattern as that
+              used in the main program and SMIObject class
+
+              method outSobj gets the information it needs directly from
+                  the protected data of AttributeBlock
+
+  isofclassobject.cxx  method outSobj...same as above
+
+  attributeblock.hxx&cxx  IsOfClassObject class made friend. Redundant methods:
+                          numOfAttributes, attribute and pAttributes removed
+------------------------------------------------------------------------------
+16-17 June 2000
+
+   actionheadblock.hxx   Class Action made friend so that is can access 
+                         the private data directly.
+
+   action.cxx&hxx   the method translate substantially re-hacked to make 
+                    it look like main, smiobject and state
+-----------------------------------------------------------------------------
+18 June 2000
+
+   action.cxx   little tydiing
+-----------------------------------------------------------------------------
+  outSobj method in condition.cxx , ifunit.cxx and inslist.cxx   adjusted
+  so that the output files do not differ even in blank! One only has to trim
+  the ones produced by the fortran translator.
+------------------------------------------------------------------------------
+ 4 July 2000
+
+   inslist.cxx   method translate substantialy re-hacked to make it look like
+   the others
+------------------------------------------------------------------------------ 
+15 July 2000
+
+   ifins.cxx  method translate substantialy re-hacked to make it look like
+              the others
+------------------------------------------------------------------------------
+ 6 August 2000
+
+    The output of units switched of in main program. Also various debug prints
+    removed, so that there is now zero output to stdout. Files changed:
+
+    main.cxx, action.cxx, condition.cxx, isofclassobject.cxx and smiobject.cxx
+------------------------------------------------------------------------------
+
+   First test on VMS !!
+
+  7 August 2000
+
+     smpcond.cxx  switched of a forgotten debug print.  After this it worked
+     on VMS
+------------------------------------------------------------------------------
+
+ 8 August 2000
+
+   ifins.cxx  put in a forgotten error print
+------------------------------------------------------------------------------
+10 August 2000
+
+  1) Removed usage of <static_cast>  because a lot of compilers do not
+     recognise it and using the old c-type casting. files affected:
+
+     action.cxx, condition.cxx, ifins.cxx, inslist.cxx, main.cxx,
+     smiobject.cxx smlunit.cxx and state.cxx
+
+  2) changed DoIns.hxx to doins.hxx in doins.cxx
+     changed TermIns.hxx to termins.hxx in termins.cxx
+        unix did not like that, being the case sensitive
+
+  3) removed method outSobj from SMLUnit class. As the consequence, I had to
+     put casting in the main program before calling outSobj. 
+     Not very nice investigate ******** 
+-----------------------------------------------------------------------------
+11 August 2000
+
+   replaced call to strcasecmp by my_strcasecmp   in termins.cxx
+---------------------------------------------------------------------------------------
+12 August 2000
+
+   booloperations.cxx   an input parameter declared explicitly int. 
+                        Caught by GNU compiler 
+----> copied to super disk
+
+   condition.cxx   a small bug fixed in getNextItem...must not forget trimming things
+                   when needed.
+
+   processcommandline.cxx   switching on reading the options for non window
+                          platforms
+
+============================================================================== 
+at this point ( aprox 16:00), the software was copied to CERN afs, compiled
+ and linked on hpplus  and  lxplus. All Delphi SML code was translated and
+ the results compared
+ They are all identical with exception of trailling blanks !  This is pretty
+ good and justifies another copy to superdisk
+==============================================================================
+27 August 2000
+
+   processcommandline.cxx  rehacked...getting rid of getopt and therefore
+              making it more portable.
+
+   new file  cxxtranslatorversion.hxx   holding the current version number
+           which is then used by processcommandline and is printed when
+           -v option is specified.
+
+  ---------------------------  Version 1.0 --------------------------------------------
+28 August 2000
+
+   ifunit.cxx  method translate substantialy re-hacked to make it look like
+   the others
+
+     also some tydiing done in  ifunit.hxx, ifunitheadblock.cxx&hxx.
+     Primarily class IfUnit made friend of IfUnitHeadBlock so it can access
+     its members directly
+
+------------------------- Version 1.0.1 -----------------------------------
+ 2 September 2000
+
+   - parameterblock.hxx&cxx;  actionheadblock.cxx&hxx;  some obsolete
+            (and ugly) methods removed   
+
+   - attributeblock.hxx ?
+
+   - attributes.hxx&cxx    parameters.hxx&cxx  commented out.  Have to find
+      a way how to remove them from the project before deleting them  ******
+------------------------------ Version 1.0.2 ---------------------------------
+18 January 2001  
+
+   Various unix utilities complain, that the following files do not have
+   newline at the end of the file:
+
+  action.cxx, attributes.cxx, attributes.hxx, parameters.cxx, parameters.hxx
+  and smlunit.hxx
+
+  Looking at the files, they indeed do not have!  One just must not forget
+  to have return key as the last character. Obviously the PC software does not
+  mind this.
+  I obviously have to worry only about action.cxx and smlunit.hxx since the
+  other 4 are obsolete.
+------------------------------------------------------------------------------
+ 4 March 2001
+
+   - Bug (rather an ommission) fixed in booloperation.cxx. It was not correctly
+     outputing 'not' operation
+
+   - also the changes of 18 jan 2001 implemented
+-------------------------------- Version  1.0.3 ------------------------------
+ 8-May-2001
+   This file, which used to be called README.txt on PC renamed to History
+------------------------------------------------------------------------------
+ 17-May-2001
+ 
+   -processcommandline.cxx   added #include <unistd.h>
+-------------------------------------------------------------------------------
+ 31-May-2001
+   - parms.cxx numEntries declared as int
+   
+   - cxxtranslatorversion.hxx marked as version 1.0.4
+-------------------------------------------------------------------------------
+  ->11 June 2001
+
+  Translating of Object Sets implemented:
+
+     - smiobjectset.cxx & hxx...these are essentialy new files
+
+     - smpcond.cxx  it now recognises ( all_in 'object-set'...) or
+                   ( any_in 'object-set ....)
+
+     - doins.cxx  is translating insert and remove and converting it into
+              a do.   it also handles do 'action' all_in 'object-set'
+
+     - main.cxx  unitType changed from Object_Set to ObjectSet
+
+     - cxxtranslatorversion.hxx  2.0
+---------------------------------------------------------------------------------------
+   
+ 14 June 2001
+
+   Windows NT does not have (nor needs) include file unistd.h  ...#ifndef
+   employed in processcommandline.cxx
+----------------------------------------------------------------------------
+ 21 June 2001
+
+   insert and remove can handle object name passed from action param.
+    doins.cxx
+-----------------------------------------------------------------------
+ 2 July 2001
+
+   insert/remove instruction handled as an instruction on its own:
+
+   - new class InsertIns   (new files insertins.hxx & .cxx)
+
+   - inslist recognises this new class
+
+   - code handling insert/remove removed from doins.cxx
+
+     NB  at the moment the insert/remove are still translated into
+     do instruction to keep compatibility with the State Manager
+-------------------------------------------------------------------------------
+ 3 July 2001
+
+    insertins.cxx   it does not translate insert/remove into do &INSERT..
+                 any more, but:
+
+                 insert    (always insert)  
+                     1     (0 for remove)
+                 'object-name'
+                 'set-name'
+.........1.........2.........3.........4.........5.........6.........7.........8
+ 24 July 2001
+
+    names of actions and object set uppercased in smpcond.cxx and when.cxx
+
+--------------------------------------------------------------------------------
+ 3 July 2002
+ 
+       Diferent types of Simple conditions inheriting from abstract SmpCond
+       --------------------------------------------------------------------
+       
+     - the existing SmpCond class  was converted into SmpCondTyp1
+       by copying smpcond.hxx&cxx  into the new files smpcondtyp1.hxx & cxx
+       and changing the name SmpCond to SmpCondTyp1.
+       In adition some other minor changes had to be made. The most important
+       of these is, that it now inherits from the new abstract class SmpCond.
+       Otherwise the body of the code has not changed.
+       
+     - the class SmpCond (in files smpcond.cxx&hxx) has become abstract class.
+       The public interface remains the same (except that the most methods
+       are now purely virtual) with the following exceprions:
+       
+         1) creator now takes idNum and initialises it as const
+	 
+	 2) initialise method does not take idNum anymore
+
+     - Condition Class (condition.cxx & hxx):
+         - new method 'int smpCondTyp()' ... this has a quick look at the
+	   code and determines what type of Simple condition it is. At the
+	   moment it returns 1 or 2
+	   
+	 - when during initialisation a Simple condition is found, the type
+	   is determined and the relevant class is instantiated and initialised.
+================ Version 3.0 =================================================	 
+  4-July-2002 (Boda Franek)
+  
+     - Class SmpCondTyp1 : has a private function getStates. This will be
+        however usefull to other classes....getState made ordinary utility
+	function outside the class definition
+
+     - new class SmpCondTyp2 (files smpcondtyp2.cxx&hxx)
+       appart from changing the name, it is essentially just a copy. This is
+       because the Typ1 could have handled both types
+       
+     - Condition class now distinguishes between the two classes
+     
+     - smpcondtyp2.hxx,cxx & smpcondtyp1.cxx,hxx  simplyfied taking into
+       account their specific properties. Also typ 2 now has different
+       private data.
+============================ Version 3.1 ==================================
+ 11 Oct 2002 (Boda Franek)
+ 
+   - action.hxx, action.cxx   New method name() returning the name of
+      the action.
+      
+ 15 Oct 2002 & 9 Jan 2003 (Boda Franek)
+ 
+    New instruction end_in_state 'state-name'
+    ----------------------------------------
+    termins.cxx
+ 
+    Allowing when of the type: when (....) end_in_state 'state-name'
+    ----------------------------------------------------------------
+     - when.hxx, when.cxx  
+       1) end_in_state is created as terminate_action during construction
+        of when and a pointer to it is is kept as a private data.
+	The action name is invented as X_END_IN_STATE_WHEN'when-id'
+	
+       2) New constructor that takes identification number of when as input
+       
+     - state.hxx, state.cxx  provides when with id number. Also at the end
+       of translation of state it collects the when actions and adds them
+       at the end of 'normal' actions. 
+       
+     - condition.hxx, condition.cxx  end of the condition used to be recognised
+       by 'do' or 'then'. Now it can also be 'end_in_state'.
+       New private variable holding the value of this terminator
+=============================== 4.0 =========================================
+   4 Feb 2003 (Boda Franek)
+   
+     - when.cxx... the special when actions will be called 
+                   &END_IN_STATE_WHEN'when-id'
+   5 Feb 2003 (Boda Franek)
+   
+     New 'removeall from 'set-name'
+     
+   6 Feb 2003
+   
+      end_in_state  -->  endinstate
+      
+   1 May 2003
+   
+     'move_to' is made synonym with 'endinstate'. Files affected:
+     condition.cxx, termins.cxx & when.cxx
+     
+     'remove_all' made synonym with 'removeall'. Files affected:
+      insertins.cxx
+================================ 4.1 ========================================
+  30 July 2003 (Boda Franek)
+  
+    Simple Condition
+    
+   a) Introducing new private data item _type and initialising it in
+      the initialisation list
+    
+       smpcondtyp1.*, smpcondtyp2.*
+ 
+    b) changed the format to output to sobj file. The new format is:
+      Type1
+      
+      type no
+      object-name
+      "in_state"["not_in_state"]
+      no of states
+      state1
+      .
+      
+      Type2
+      
+      type no
+      object-set-name
+      "all_in"["any_in"]
+      "in_state"["not_in_state"]
+       no of states
+       state1
+        ..
+------------------------------------------------------------------------------
+  27 October 2003 (Boda Franek)
+     doins.cxx   improved diagnostics
+     
+     parms.cxx  a) improved diagnostics
+                b) a bug fixed:
+		
+		   parname   ! coment
+	        resulted in parameter name 'parname   ' and therefore failure.
+		This is normal behaviour of getNextToken. The result simply
+		has to be trimmed  
+------------------------------------------------------------------------------
+ 24 March 2004  (Boda Franek)
+
+   condition.cxx ... code added to recognise simple condition of Type 3
+
+--------------------------- v18r2-t1 ----------------------------------------
+
+ 31 March 2004  (Boda Franek)
+ 
+  - doins.cxx  object set name uppercased and trimmed (rev 1.6)
+  
+  - insertins.cxx  same as above (rev 1.5)
+  
+  - smiobjectset.cxx  empty initialisation names are allowed in object sets
+                      and are ignored. E.g. {A,,B,C} is OK (rev 1.4)
+
+  
+  
+=== 02-April-2004:12:21 ==========  v20  =================
+=== 01-June-2004:17:23 ==========  v21  =================
+=== 24-June-2004:12:17 ==========  v21r1  =================
+=== 10-August-2004:13:11 ==========  v22  =================
+=== 20-September-2004:12:06 ==========  v23  =================
+=== 04-October-2004:12:45 ==========  v23r1  =================
+
+ 27-October-2004 (Boda Franek)
+ 
+    - iostream migration
+      many files were modified. This consisted mainly in replacing
+      #include <iostream.h>  by #include <iostream.inc>   or
+      #include <fstream.h>  by  #include <fstream.inc>
+      
+    - new line added to the end of  some files
+---------------------------------------------------------------------------
+ 28-October-2004 (Boda Franek)
+ 
+     iostream migration
+     ------------------
+     usage of iostream.inc & fstream.inc replaced by smixx_common.hxx
+     
+=== 29-October-2004:19:52 ==========  v24r1  =================
+=== 25-November-2004:16:15 ==========  v24r2  =================
+=== 22-December-2004:14:33 ==========  v25  =================
+=== 11-March-2005:15:54 ==========  v26  =================
+----------------------------------------------------------------------------
+ 20-May-2005  (Boda Franek)
+ 
+    New feature: stay_in_state  
+    --------------------------
+    
+    It is possible to say:
+    
+         when (....) stay_in_state
+	
+    Successfull evaluation of the when will have an effect of aborting
+    evaluation of the following whens without taking any action and so
+    the behaviour will be the same like if none of the whens was successfull.
+    
+    - condition.cxx .... condition terminator can now also be stay_in_state
+                         string
+    - when.cxx ... stay_in_state string has an effect like if it was do &NULL
+=== 20-May-2005:15:58 ==========  v27  =================
+=== 25-May-2005:12:04 ==========  v27r1  =================
+=== 14-July-2005:17:07 ==========  v28  =================
+=== 28-September-2005:15:35 ==========  v28r1  =================
+=== 06-October-2005:15:38 ==========  v29  =================
+=== 20-January-2006:14:46 ==========  v29r1  =================
+
+ 31-Mar=2006  (Boda Franek)
+ 
+ isofclassobject.cxx   method outSobj : warning issued when the object has
+            ASSOCIATED attribute declared because this is taken from the class
+	    
+ 
+=== 31-March-2006:17:27 ==========  v30  =================
+=== 19-May-2006:20:34 ==========  v31  =================
+=== 21-May-2006:21:01 ==========  v31r1  =================
+=== 25-July-2007:14:58 ==========  v32  =================
+=== 07-August-2007:11:55 ==========  v32r1  =================
+=== 25-August-2007:13:31 ==========  v32r2  =================
+=== 28-September-2007:15:29 ==========  v32r3  =================
+=== 07-October-2007:16:50 ==========  v32r4  =================
+=== 12-November-2007:14:40 ==========  v32r5  =================
+=== 31-March-2008:15:41 ==========  v32r6  =================
+
+  10-Jun-2008  (Boda Franek)
+  
+  smpcondtyp2.cxx    Bug fixed in method  negate()
+  
+=== 11-June-2008:15:51 ==========  v33  =================
+
+  02-Jul-2008  (Boda Franek)
+  
+   - insertins.cxx   removed a couple of local unreferenced variables.
+
+   - main.cxx   replaced 'exit(0)'  by 'return 0'  at the end, which in
+                C++ is the correct thing to do.
+		
+=== 02-July-2008:12:44 ==========  v33r1  =================
+=== 16-July-2008:17:11 ==========  v33r2  =================
+=== 06-October-2008:11:30 ==========  v33r3  =================
+=== 10-October-2008:16:04 ==========  v34  =================
+=== 16-October-2008:15:52 ==========  v34r1  =================
+=== 11-November-2008:12:56 ==========  v34r2  =================
+=== 03-December-2008:13:17 ==========  v35  =================
+
+  13-Jan-2009 (Boda Franek)
+  
+  - new class WaitIns  in waitins.hxx (cxx)
+  
+  - inslist.cxx  handles now  WAIT instruction
+  
+  
+=== 11-February-2009:14:48 ==========  v35r1  =================
+
+   07-Apr-2009 (Boda Franek)
+   
+   Bug fixed in 'negate' of SmpCondTyp2  class
+=== 07-April-2009:14:07 ==========  v35r2  =================
+=== 31-July-2009:15:49 ==========  v36  =================
+=== 06-August-2009:15:54 ==========  v36r1  =================
+
+  17-Aug-2009  (Boda Franek)
+  
+            New Type 3 Simple condition
+	    ---------------------------
+	    
+	    ( SSS  empty )       or    ( SSS  not_empty )
+	    
+	    where SSS is an Object Set name
+	    
+	1) New Class 'SmpCondTyp3' in new files   smpcondtyp3.hxx & .cxx
+	
+	2) condition.cxx modified to recognize the new type 
+	
+=== 27-August-2009:17:17 ==========  v37  =================
+=== 02-September-2009:14:44 ==========  v37r1  =================
+=== 07-October-2009:12:46 ==========  v37r2  =================
+=== 10-November-2009:18:53 ==========  v37r3  =================
+=== 13-November-2009:14:59 ==========  v37r4  =================
+
+  04-Dec-2009  (Boda Franek)
+  - new Class 'SMIObjectSetUnion'  (new files smiobjectsetunion.hxx & .cxx)
+  
+  - main.cxx
+  	1) Registrar class objects allUnits, allClasses, allObjects and
+	   all ObjectSets are declared outside main program, se that they
+	   can be used elsewhere.
+	2) existence of Object Set unions is taken into account
+
+  - Class 'InsertIns'    method translate (insertins.cxx)
+  	a few checks added:
+	the main of these is preventing insertion/removal of objects into/from
+	 Object Set Union directly  
+
+=== 20-January-2010:16:26 ==========  v38  =================
+
+  7-May-2010  (Boda Franek)
+  
+    - new Class 'CreateObjectIns' representing 'create_object' instruction
+           2 new files: createobjectins.hxx  &  createobjectins.cxx
+	   
+    -  inslist.cxx   modified to take the new instruction into account.
+    
+-----------------------
+
+  18-May-2010  (Boda Franek)    
+
+   - createobjectins.cxx   method 'outSobj'... making the instruction to
+      look on the output like a declaration of an object
+=== 21-June-2010:15:54 ==========  v39  =================
+=== 02-September-2010:15:31 ==========  v40  =================
+=== 21-November-2010:13:22 ==========  v41  =================
+=== 06-January-2011:16:18 ==========  v42  =================
+=== 04-February-2011:15:29 ==========  v42r1  =================
+
+  22-Feb-2011  (Boda Franek)
+  
+  - fixing compilation warnings. These were mostly unused variables. This
+     affected:
+        instruction.cxx
+        termins.cxx
+        condition.cxx
+        parameterblock.cxx
+        processcommandline.cxx
+        attributeblock.cxx
+        smpcondtyp2.cxx
+        smpcondtyp3.cxx
+        state.cxx
+        stackitem.cxx
+        setins.cxx
+        booloperation.cxx
+   
+   29-Jun-2011 (Boda Franek)
+   
+       
+   - new class 'SleepIns' representing 'SLEEP' instruction
+        2 new files  sleepins.hxx  &  sleepins.cxx
+	
+   -  inslist.cxx   modified to take the new instruction into account.
+   
+   21-Jul-2011  (Boda Franek)
+   
+     - waitins.cxx  added a couple of header files to pacify some picky
+                    compilers
+=== 27-July-2011:16:13 ==========  v43r0  =================
+=== 29-November-2011:16:00 ==========  v44r0  =================
+=== 15-December-2011:15:36 ==========  v45r0  =================
+=== 20-January-2012:14:16 ==========  v45r1  =================
+
+   26-Jan-2012  (Boda Franek)
+   
+   - new class 'SmpCondTyp4'. Simple condition for parameter testing
+      2 new files   smpcondtyp4.hxx (&cxx). At the moment they are not
+       doing anything.
+   -  condition.cxx
+      a)  bug fixed  "NOT_EMPTY" replaced by temp == "NOT_EMPTY"
+      b)  Condition class recognises the new simple condition type
+          and takes it properly into account.   
+
+   16-Feb-2012
+   
+     - new class 'ParOperand'. This contains  either
+       1) simple parameter value    or
+       2) simple parameter name   or
+       3) composite parameter name    obj-name.par-name   or obj-name<par-name>
+      2 files paroperand.hxx ( & .cxx)
+      
+   24-Feb-2012
+   
+    More development of Simple condition Type 4
+    -------------------------------------------
+    
+    Files modified:   smpcondtyp4.cxx   and   paroperand.cxx
+    
+   28-Feb-2012
+   
+     - paroperand.cxx  class ParOperan now handles composite names operands
+     
+   08-Mar-2012  (Boda F.)
+   
+     - setins.hxx  & setinc.cxx
+     
+        new data structure added in addition to the existing one and
+	new private function 'newCode' which is called just after SET keyword
+	was found. At the moment it does not do anything.
+	
+   14-Mar-2012 (Boda F.)
+   
+     - class 'ParOperand'   new public function 'operandType()' retrieving
+                            the type.
+	  files: paroperand.cxx  & .hxx 
+	  
+     - 'newCode' private function has been developped and it now parses the new
+        type SET instruction. This is given _insType = 10.
+	The old type (1,2 and 3) is parsed by the old code for backward
+	compatibility safety.
+
+   28-Mar-2012  (Boda F.)
+   
+   - setins.hxx  
+       In order to make SET instruction to resemble Condition so that it would
+       be relatively easy to upgrade it to general arithmetic expression,
+       I added 2 integers to protected data:
+   
+       _numOperands   at the moment it is either 1 or 2 (this is like number
+                      of simple conditions in the case of Condition class)
+       _numOperations at the moment 0 or 1 	
+
+   29-Mar-2012  (Boda F.)
+   
+    - paroperand.hxx
+        declaration of new function 'void outSobj(ofstream&)'
+	
+   30-Mar-2012   (Boda F.)
+   
+     - paroperand.cxx
+     
+       1) some diagnostic prints removed
+       2)code for new function 'void outSobj(ofstream&)'
+	
+     - setins.cxx
+     
+       1) some diagnostic prints removed
+       2) 'outSobj' method modified: added code for the new type (10)
+	  SET instruction
+
+   18-Jul-2012  (Boda F.)
+   
+   -  smpcondtyp4.hxx
+         changed 'const int _type' to 'enum {_type = 4 }'
+	 
+   -  smpcondtyp4.cxx
+   
+      1) above change taken into account
+      
+      2) some unused declarations removed, some diagnostic prints removed
+          and other tydiing.
+      
+      3) method 'outSobj' implemented
+      
+   -  paroperand.hxx & .cxx
+   
+      two new methods for initialisation from 'sobj' code:
+      
+      1) 'initFromSobj_firstLine'
+      2) 'initFromSobj_nextLine'
+      
+      These will be used in State Manager
+      
+  19-Jul-2012  (B. Franek)
+  
+   -  paroperand.cxx and .hxx  moved to 'commonSource' directory
+   
+=== 31-August-2012:11:18 ==========  v46r0  =================
+=== 26-September-2012:12:33 ==========  v46r1  =================
+=== 19-November-2012:14:31 ==========  v46r2  =================
+
+  22-January-2013 (B.Franek)
+  
+  class SetIns  private method 'newCode'. Untill now, this method determined
+             whether SET instruction was old type (1,2,3). i.e. just an
+	     assigments, or the new type (type 10, i.e. 2 right hand operands.)
+	     This is now unified so that types 1,2, 3 become also type 10. 
+	     
+  24-January-2013  (B.Franek)
+  
+  class SetIns   The code was tydied up
+         - the code of 'newCode' method was incorporated (with minor changes)
+	   into method 'translate'
+	   
+	 - method 'newCode' and the old (type 1,2,3) data structure were deleted
+=== 28-January-2013:16:36 ==========  v46r3  =================
+
+  -> 01-Jul-2013  (B. Franek)
+  
+
+   Preparatory work for the final (after the translation is finished)
+   ------------------------------------------------------------------
+                consistency checking (Examination)
+                ----------------------------------
+
+  Translator recognises 2 main groups of elements of SML code
+  and their associated C++ classes as described in the Apendix II of
+  LANGUAGE DESCRIPTION section in Web manual:
+
+   Group 1  ... chunks of SML code consisting of a number of complete lines.
+                Classes of this group inherit from 'SMLUnit' class. They can
+                refer to other classes of Group 1 through an uniform mechanism.
+                That is, they store the pointers to these internal units
+                in the protected data '_internalSMLUnits' of 'SMLUnit'.
+
+   Group 2 ... chunks of SML code not belonging to Group 1
+
+
+
+  Changes of type I
+  -----------------
+   Examination (or consistency checking) of a particular language element
+  will be achieved by executing method 'examine()' of its C++ class.
+  It is therefore necessary to assure that all these are reached and executed.
+
+     For Group 1 classes this is achieved as follows:
+     -------------------
+
+         - As all these classes inherit from 'SMLUnit' class, this class has
+           for this purpose two new methods implemented:
+
+                 1) protected 'examineUnits()'
+                    This method loops through internal units whose pointers are
+                    stored in '_internalSMLUnits' and for each internal unit
+                    it calls the unit's 'examine()' method.
+
+                 2) public virtual 'int examine()'
+                    This method just simply calls 'examineUnits()'
+
+         - in 'main.cxx' , examination loop is inserted after the translation
+           stage. It loops through the top level units and executes their
+           'examine()' method.
+
+         When an examine() method is invoked then it is either not implemented
+         in which case the base class examine() is executed and the process
+         continues at the lower level, or it is implemented and then it is
+         important that 'examineUnits()' is called before it returns.
+         ------------------------------------------------------------
+
+     This way all the examine methods of all the Group 1 classes are reached.
+
+     For Group 2 classes:
+     --------------------
+        As these classes are always pointed to by a class of Group 1, it is
+        the responsibility of the relevant Group 1 class (let's call it A) to
+        invoke the examine() method of the Group 2 class (let's call it B).
+        That means that if examine method of class B is implemented, then
+        class A's examine method has to be also implemented in order to call
+        examine method of class B.
+        If more than one Group 1 class refer to B, then they all have to have
+        their examine method implemented. This is for example a situation of 
+        class 'When' and class 'IfUnitHeadBlock' (both Group 1) which both
+        refer to class 'Condition' (Group 2).
+
+        NB: the obvious improvement would be if also Group 2 classes inherited
+            from 'SMLUnit' class. 
+
+      As I would like to start writting examination code for simple condition,
+      then
+      
+            - 'examine()' method was implemented for 'SmpCond' class
+
+            - 'examine()' method implemented for 'Condition' class that simply
+                  calls examine() method of 'SmpCond' class
+
+            - 'examine()' method implemented for 'When' class that simply
+                  calls examine() method of 'Condition' class
+
+            - 'examine()' method implemented for 'IfUnitHeadBlock' class that simply
+                  calls examine() method of 'Condition' class
+
+  Changes of type II
+  ------------------
+    In order to facilitate clarity of possible reported errors/warnings
+    generated by any given 'examine()' method, the following changes were
+    implemented:
+
+      For Group 1-1 classes
+      ---------------------
+
+         - in 'SMLUnit' class
+              1) new protected data:   'SMLUnit* _pParentUnit'
+                   will keep the address of the unit that is refering to it
+
+              2) new method:       'void setParentUnit(SMLUnit* parent)'
+
+         - method 'translate()' was modified as
+           follows:
+              Every time an internal code unit is instantiated, its pointer to
+              parent unit is set to the current instantiation of the calling
+              class by calling 'setParentUnit' inherited from SMLUnit class.
+ 
+      Group 2 classes:
+      ----------------
+        
+          - class 'SmpCond':
+
+              1)  new private data 'SMLUnit* _pParentUnit'
+
+              2)  new method 'virtual void setParameterUnit(SMLUnit* parent)'
+
+          - class 'Condition' :
+
+              1) new private data 'SMLUnit* _pParentUnit'
+
+              2) new method 'void setParentUnit(SMLUnit* parent)'
+
+              3) method 'getNextItem(...)'
+                    after instantiating Simple Condition, its pointer to
+                    parent unit is set to the condition's. I.e. the simple
+                    conditions are pointing to the same parent as the condition.
+
+           - class 'When' :
+
+               1) method 'translate()'
+                     Condition's pointer to parent unit is set to the pointer
+                     of the current instantiation of When. 
+                     This has to be done before initialising Condition.
+                     --------------------------------------------------
+
+                2) method 'createTermAction(...)'
+                     When the terminal action of When is instantiated, its
+                     pointer to parent unit is set to the pointer of the
+                     current instantiation of When.
+
+           - class 'IfUnitHeadBlock' :
+
+                 1) method 'translate()'
+                      Condition's pointer to parent unit is set to the pointer
+                      to the current instantiation of IfUnitHeadBlock. This has
+                      to be done before initialising Condition.
+
+     NB: Again, all this would have been so much easier if these guys inherited
+         from 'SMLUnit' class.
+
+  Other Changes
+  -------------
+
+    Number of classes had their constructors improved
+  
+   -> 30 July 2013  (Boda Franek)
+   
+       Examination code for Simple Condition Type 4 (Parameter testing)
+       ----------------------------------------------------------------
+ 	     
+	- class 'SmpCondTyp4'
+	
+	     new method 'int examine()'
+	     
+          The following changes were also necessary to facilitate the above:
+	  
+	  
+       - two new files 'ut_tr.hxx' and 'ut_tr.cxx'
+         utility global routines specific for translator
+		
+	- class 'SMLUnit'
+	
+	   a) new private data:   'Name _type'
+	       this is definitely a bodge. At the moment I use it to recognise
+	       that the object that inherited belongs to 'IsOfClassObject' C++
+	       class.
+	       
+	   b) constructor modified to accept '_type' as an argument.
+	   
+	   c) new method 'Name unitType()'  to retrieve the '_type'
+	   
+	   d) new method 'void parents(Name& object, Name& state, Name& action)'
+	         to retrieve the parents of the unit.
+		 
+	   e) new method 'SMLUnit* parentPointer(const Name& id)'
+	        given unit id, it will return the pointer to the first found
+		searching upwards in the hierarchy.
+			 
+	- class 'Action'
+	  
+	   new method 'int getActionParameter(const Name& name, Name& value,
+	                                  Name& typeNm)' 
+	        given the parameter name, it returns its value and type
+		
+	- class 'SMIObject'
+	  
+	    2 new methods:
+	  
+	    1) 'int getObjectParameter(const Name& name, Name& value,
+	                                  Name& typeNm)' 
+	        given the parameter name, it returns its value and type
+		
+	    2) 'bool isClass()'
+	        returns true when the instantion is class (SMI class)
+	- class 'IsOfClassObject'
+	
+	   a) constructor modified to supply to SMLUnit type 'IsOfClassObject'
+	      (see 'SMLUnit' class modification)
+	      
+	   b) new method 'Name& isOfClass()'. Retrieves the name of the class
+	        to which it belongs.
+		
+	- class 'SmpCond'
+	     new method  'bool belongsToIf()'
+	
+	      
+   -> 15 August 2013  (Boda Franek)
+   
+       Examination code for SET instruction (Parameter testing)
+       --------------------------------------------------------
+	       
+     - class 'SetIns'
+    
+         a) new method 'int examine()'
+      
+         b) 2 new methods for diagnostic printing
+	       1) 'outString()'
+	       2) 'printErrorWarningHead(label)'
+	       
+     - global function 'int getParValueType(...)'  (ut_tr.cxx)
+         BUG fixed
+	 
+     - class 'SmpCondTyp4'
+     
+           method 'examine()'    BUG fixed
+
+     25 October 2013 (Boda Franek)
+     
+     - class 'State'
+     
+         new method 'int getAttributes'. Does what it says
+	 
+	 new method 'bool isUndeclared'. If there is the attribute
+	                                 UNDECLARED_STATE, returns true
+     - class 'SMIObject'
+     
+         new method 'int getStates'. Does what it says.
+	 
+     29 October 2013 (Boda Franek)
+     
+     - class 'SMIObject'
+     
+         new method 'bool  hasState(const Name& stateNm, int& undeclared)'
+	 	 Checks if object has state 'stateNm' declared. 
+                 If such state is declared ... returns true, otherwise false
+                 undeclared is set to 1 if objects has undeclared states,
+		 otherwise 0
+
+     30 Oct 2013 (Boda Franek)
+     
+     - class 'SmpCondTyp1'
+     
+        new method 'examine()'
+	
+    -> 08 Nov 2013 (Boda Franek)
+
+     - class 'SmpCondTyp2'  and 'SmpCondTyp3'
+
+        new method 'examine()'
+	
+    17 Dec 2013  (Boda Franek)
+    
+     - class 'SMIObjectSetUnion'
+     
+       a) new private data 'Name _isOfClass'.  When it is a union of sets that are
+                 associated  with the same class, it becomes associated to
+		 that class also. Tests on states can then be performed.
+		 
+       b) new method Name setClass() that retrieves the above class
+       
+    18 Dec 2013  (Boda Franek)
+    
+     - class 'SmpCondTyp2'
+     
+        bug fixed in method 'examine()' : the account has to be taken of the
+	                                  fact that SMI sets are of two kinds
+					   1) simple  2) unions
+
+    06 Jan  2014 (Boda Franek)
+    
+    - class 'SmpCondTyp1'
+    
+       method 'examine()'
+       
+          a) do not check for DEAD state being declared.
+	  
+	  b) the check weather object has undeclared states is brought forward
+	     before the check for a particular state being declared is made.
+	     This really was a bug because if the first state was not declared
+	     and yet object had undeclared state, the existing code would have
+	     failed it.
+
+   10 Jan 2014  (Boda Franek)
+   
+   - class 'SmpCondTyp1'
+   
+        If Object has undeclared state, the warning was removed from here and
+	will be implemented in examine method for object.
+	
+   - class 'SmpCondTyp2'
+   
+        if Object Set has associated Class and the Class was not declared, then
+	this warning was taken out of here and will be implemented in examine
+	method of ObjectSet.
+	
+	-dtto- if Object Set is not associated with a Class.
+	
+   13 -21 Jan 2014  (Boda Franek)
+   
+    - class 'SMIObject'
+    
+       implemented 'examine()'  method.  At the moment it only prints warning
+                        when there is UNDECLARED state.
+			
+			
+    - class 'IsOfClassObject'
+    
+       implemented 'examine()' method. It just check that the class is declared.
+       
+    - class 'SMIObjectSet'
+    
+       implemented 'examine()' method. It warns that it would be good idea to
+       declare the Set belonging to a class if all its objects are and will be
+       of the same class.  It also checks that all objects listed (if any)
+       are declared and if relevant, belong to the correct class.
+       
+    - class 'SMIObjectSetUnion'
+ 
+       implemented 'examine()' method. It check that the listed sets are
+       declared. This is not really necessary, because this test is performed at
+       parsing stage. Important thing is that it makes the union belong to a
+       particular class if all the listed sets do.
+       
+    -> 29 Jan 2014 (Boda Franek)
+    
+      - class 'State'
+      
+         new method 'bool hasAction(Name action-name)'
+	 
+      - class 'SMIObject'
+      
+         new method 'bool hasAction(Name action-name)'
+	       checks if any of its states has action action-name.
+	       
+      - class 'DoIns'
+      
+         implemented method 'examine()'.
+	     This checks if the object acted upon is declared and also
+	      if the dispatched action is declared.
+	     In case when DO is dispatching action to all objects of 
+	     an object set (OS), it checks if OS is declared and when OS
+	     is associated with a class, it also checks the action.
+	     
+    -> 04 Feb 2014 (Boda Franek)
+    
+      - class 'TermIns'
+      
+           implemented method 'examine()'. Checks if the parent object has the
+	   termination state.
+	   
+      - class 'WaitIns'
+      
+           implemented method 'examine()'. Checks if all the reference objects
+	   and sets are declared.
+	   
+      - class 'When'
+      
+          a) added one private data item 'Name _endState'. This equals "" for
+	     'do when' and 'stay_in_state when'. For 'move_to when' it holds the
+	     name of the state where to move.
+	     
+	  b) developed method 'examine()'. 
+	     For 'do when' it checks if the parent state has the action.
+	     For 'move_to when' it checks if parent object has the state.
+	     
+   -> 13 Mar 2014 (Boda Franek)
+   
+     - class 'SMLUnit'
+     
+         new methods 1) 'void printCode()'. This prints the SML code of the unit
+	 
+	             2) 'void printErrorWarningHead(const char* label)'
+		        Prints the label followed by the line number of the
+			first line of the SML code and the line itself
+				    
+     - class 'SmpCond'
+     
+         1) new private data 'SMLlineVector* _pSMLcode'. Contains the first
+	     line of SML code where the condition starts. This enables the
+	     new method (below) to work.
+	     
+	 2) new method 'void printErrorWarningHead(const char* label)'
+		        Prints the label followed by the line number of the
+			first line of the SML code and the line itself.
+			Identical code to the method of the same name in
+			'SMLUnit' class. (SmpCond does not inherit from SMLUnit)
+
+     - in several classes:
+            Method 'outString()'  was deleted
+	    method 'printErrorWarningHead(label)' was deleted. This is now
+	            inherited  from 'SMLUnit' or 'SmpCond' class.
+	    method 'examine()' unifying the format of ERROR?WARNING messages
+	    
+	 Classes affected:  DoIns, IsOfClassObject, SetIns, SMIObject,
+	                    SMIObjectSet, SMIObjectSetUnion, TermIns,
+			    WaitIns, When
+			    SmpCondTyp1, SmpCondTyp2, SmpCondTyp3, SmpCondTyp4
+
+			
+     - class 'DoIns'
+	    a bug fixed: more sophisticated function 'gimeObjectPointer' used
+	    
+     - class 'SMIObjectSet'
+            class definition VOID now indicates, that user can not make it
+	    specific class. This effectively switches off the warning.
+
+     - class 'SmpCondTyp1'
+            constructor instantiates _pSMLCode
+
+     - class 'SmpCondTyp2'
+            constructor instantiates _pSMLCode
+
+     - class 'SmpCondTyp3'
+            constructor instantiates _pSMLCode
+
+     - class 'SmpCondTyp4'
+            constructor instantiates _pSMLCode
+	    
+     - ut_tr.cxx, .hxx
+     
+        3 new global methods:
+	
+	  a) printErrorWarningHeadTop(label)
+	  b) printErrorWarningHeadSrcLine(lnNo,line)
+	  
+	  c) printErrorWarningHead(label,smlline)
+
+      a) and b) are used by 'printErrorWarningHead' method in
+               class SMLUnit / SmpCond respectively
+	       
+       c) is going to be used in casses when SML code is not available 
+          (like in the main program)
+
+ -> 14 April 2014  (B.Franek)
+  
+   - parameter.hxx and parameter.cxx   deleted. These were never used.
+   
+   - ut_tr.cxx&hxx and smpcond.cxx&hxx and  smlunit.cxx&hxx
+             'printErrorWarningHead' removed
+   
+   - the following modification was applied to some classes:
+          method 'translate'( in some cases could be called 'initialise')
+                replaced the old style of error messages by the new style
+	        i.e using 'ErrorWarning::printHead'.
+		
+	The classes affected are: 
+	    ActionHeadBlock, AttributeBlock, CreateObjectIns, InsList, IfIns,
+	    IfUnitHeadBlock, InsertIns, ParameterBlock, SleepIns and State
+ 
+    - the following modifications were applied to some of the classes:  
+          method 'translate' (in some cases called 'initialise')
+	        replaced the old style of error messages by the new style
+		i.e using 'ErrorWarning::printHead'.
+		    
+	  method 'examine'
+	        replaced calls 'printErrorWarningHead' by
+		         calls to 'ErrorWarning::printHead'
+		       
+	  removed commented out 'printErrorWarningHead' method and put
+		  back method 'outString'. This may become usefull.
+
+         The classes affected:
+	     DoIns, IsOfClassObject, SetIns, SMIObject, SMIObjectSet,
+	     SMIObjectSetUnion, SmpCondTyp1, SmpCondTyp2, SmpCondTyp3,
+	     SmpCondTyp4, TermIns, WaitIns and When
+	    		  		      
+   
+    - main.cxx  replaced the old style of error messages by the new style
+		i.e using 'ErrorWarning::printHead'.
+
+ 
+    - class Instruction : methods 'translate' and 'outSobj' were changed
+                             prom 'virtual' to 'pure virtual'
+   
+    - class Condition 
+    
+          1) new private data:   SMLline _lineBeingTranslated
+	      updated by method 'initialise' and used by the called private
+	      methods. 
+	      
+	  2) method 'handleStack' (called from 'initialise'):
+	  
+	     when it encounters something wrong, it print the new style
+	     error message, end exits Translator (before it returned zero).
+	     The only return codes now are 1 and 2. 2 indicates the end of the
+	     condition.
+	     
+	  3) method 'smpCondTyp'
+	  
+	  4) method 'initialise'
+	  
+	       a) replaced the old style of error messages by the new style
+		i.e using 'ErrorWarning::printHead'. It also instead of
+		returning zero, it exits Translator.
+	     
+	       b) keeps updated _lineBeingTranslated
+	       
+	       c) tydied up the code after calling 'handleStack' a bit
+	       
+    - class Parms
+    
+         1) much of the code was removed. Originally it was intended to use this
+	  class in Translator and State Manager. However an independent class
+	  has been developed in State Manager over the years and so much of
+	  the code here is obsolete.    
+	       
+	 2) the remaining code was converted to the new style of Error messages. 
+
+
+   ->30-Jun-2014 (B.Franek)
+   
+   all the error/warning messages were reviewed and made more compiler-like, i.e
+   offending line with its number, immediately followed by one line description of
+   the error/warning. The files affected:
+   
+       actionheadblock.cxx
+       attributeblock.cxx
+       condition.cxx
+       createobjectins.cxx
+       doins.cxx
+       ifins.cxx
+       ifunitheadblock.cxx
+       insertins.cxx
+       inslist.cxx
+       isofclassobject.cxx
+       main.cxx
+       parameterblock.cxx
+       parms.cxx
+       setins.cxx
+       sleepins.cxx
+       smiobjectset.cxx
+       smiobjectsetunion.cxx
+       smpcondtyp1.cxx
+       smpcondtyp2.cxx
+       smpcondtyp3.cxx
+       smpcondtyp4.cxx
+       state.cxx
+       termins.cxx
+       waitins.cxx
+       when.cxx
+   
+=== 30-June-2014:15:16 ==========  v47  =================
+
+ -> 11 August 2014  (B. Franek)
+ 
+  - class 'Condition'
+  
+       - new protected method 
+            'bool castIndicator(SMLlineVector* pSMLcode, int ist, int jst)'
+	   This checks whether (ist,jst) in the pSMLcode is begining of
+	   cast indicator. Used by getNextItem method.
+	    
+       - method getNextItem(...) modified
+            This method is searching forward for 'item'. Possible items are:
+	    ), (, NOT, AND, OR, 'simple condition'. Before, as soon as we found
+	    (, this was it. As we have now allowed for casting, we have to make
+	    sure that this bracket is not a begining of casting indicator
+	    because in this case we would be at the begining of Simple
+	    Condition.
+	    casting, 
+	    
+	    
+  - class  'SmpCondTyp4'
+  
+        - method examine()  modified
+	
+	     this now takes into account the type into which an operand is
+	     to be casted to. At parsing stage, it allows user to switch off
+	     mixing types warnings.
+	     An example: PARSS is type STRING and PARSI is type INT. Simple
+	         condition ( PARSI > PARSS ) would have generate warning.
+		 It is now possible to say ( PARSI > (I)PARSS ) to switch the
+		 warning off. 
+        
+       	    
+   - class 'SetIns'
+   
+        now comented out debug prints put in.
+-------------------------------------------------------
+
+ -> 20-Aug-2014  (B.Franek)
+
+   -  new class 'OperManager'  used for encapsulating various functions 
+                               used for managing operands
+
+          - method 'getParValueType(...)' retrieves the referenced 
+                parameter value type from SML code. (called from examine 
+                method in translator). The code was moved here from 
+                ut_tr.cxx
+
+          -  methods may produce warning/error messages which are stored  
+                 in 'static Name _message' local data.
+
+          -  method 'Name& getMessage()' retrieves the last message.
+
+    - ut_tr.hxx,cxx   ... moved 'getParValueType(...)' to class 
+                          'OperManager'
+
+    - class 'SmpCondTyp4'  ... picks ups 'getParValueType' from 
+                               'OperManager' class
+
+-> 31-Aug-2014 (B.Franek)
+
+    - class 'OperManager'
+    
+         - new method 
+	   ' int getParValueAndOperValueTypes(...)'
+	   This method also issues the standard warnings or errors.
+	   The return is 0 if only warnings, 1 if errors.
+           The code from this method was picked up from examine method
+           of class SmpCondTyp4
+
+         - new method
+           ' int makeOperandsSameType(...)'
+           This also issues the standard warnings and errors.
+           The return is 0 if only warnings, 1 if errors.
+
+         - new private method
+           ' int attemptCasting(...)'   ... used by the above method
+
+    - class 'SmpCondTyp4'
+
+         - method 'examine()' uses the new functions in 'OperManager' class
+
+    - class 'SetIns'
+
+         - method 'examine()' substantially re-written using the two new
+           methods in 'OperManager' class
+	   
+-> 07-Sep-2014 (B.Franek)
+
+    - class 'SetIns'
+         it accepts also right hand side casting. This only switches off
+	 warning message about the right side conversion.
+	      
+	      SET A = (S)( B + C )
+         This required changes in 
+	 
+             1) method 'translate'
+	     2) method 'examine'
+	      and also 
+	      
+	     2 new methods:
+	         'skipSpacesandTabs' & 'checkForRightSideCast'
+		 
+-> 09-Sep-2014 (B.Franek)
+
+       Removing compiler warnings:
+       
+    - smlunit.hxx & cxx  ... put in 'const' specifiers in front of the arguments
+                             in the constructor
+			     
+    - condition.cxx  ... removed declaration of unused variable
+    
+    - attributeblock.cxx ... -dtto-
+    
+-> 10-Sep-2014 (B.Franek)
+
+    - Bug fixed in 'isofclassobject.cxx'
+    
+        statement '_pAttributeBlock->_attributes[i].getString() == "ASSOCIATED"'
+	will be never true because only pointers to strings are compared.
+	corrected to: '_pAttributeBlock->_attributes[i] == "ASSOCIATED"'
+	          
+    - oepmanager.cxx 	a)removed a declaration to unused variable in
+                    	  'getParValueType' method.
+			b) added a print statement after an error message
+			   using one of the arguments and thus removing a
+			   compiler warning about the argument not being used.
+    
+    - setins.cxx   a) used appropriately the argument in 'out' method to remove
+                      compiler warning.
+		   b) first converted strlen to signed integer before comparison
+		      and thus pacified the compiler
+		      
+    - smlunit.cxx  ... called out() method properly with an offset and removed 
+                       a compiler warning.
+
+- 11-Sep-2014 (B.Franek)
+
+    - Bug fixed in method 'castIndicator' of 'Condition' class...
+          have to ignore case.
+	  
+    - Bug fixed in method 'checkForRightSideCast' of 'SetIns' class...
+          have to ignore case.
+	  
+	  
+	  
+=== 12-September-2014:11:49 ==========  v47r1  =================

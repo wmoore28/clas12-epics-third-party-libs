@@ -1,0 +1,16 @@
+#! /bin/tcsh -f
+# takes as input a file containing source statements and assembles
+# all the sourced code on stdout
+#
+set FILE = ${1}
+set GUIdir = ${2}
+set efftcldir = ${3}
+
+foreach item (`cat $FILE`)
+	if ( $item == "source" ) then
+		continue
+	endif
+	eval cat $item
+end
+
+exit

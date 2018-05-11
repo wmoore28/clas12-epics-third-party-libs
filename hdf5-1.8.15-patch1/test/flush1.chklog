@@ -1,0 +1,9 @@
+============================
+ flush1  Test Log
+============================
+Testing H5Fflush (part1)                                               PASSED
+0.03user 0.03system 0:00.09elapsed 81%CPU (0avgtext+0avgdata 6472maxresident)k
+96inputs+560outputs (1major+9237minor)pagefaults 0swaps
+
+Finished testing flush1 
+============================

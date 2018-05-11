@@ -1,0 +1,73 @@
+#! /bin/tcsh -f
+
+setenv DIMDIR /afs/slac.stanford.edu/g/babar/package/dim/v16r13
+
+if ( ${HOST} == bbr-dev20 || ${HOST} == tersk-old ) then
+   setenv OS Solaris
+   setenv BFARCH SunOS58_sparc_WS6U1
+   set CCVAL = /opt/SUNWspro.WS6U1/bin/cc
+   set CXXVAL = /opt/SUNWspro.WS6U1/bin/CC
+else if ( ${HOST} == bbr-dev100 || ${HOST} == noric ) then
+   setenv OS Linux
+   setenv BFARCH Linux24RH72_i386_gcc2953
+   set CCVAL = /afs/slac.stanford.edu/package/gcc/i386_linux2/gcc-2.95.3/bin/gcc
+   set CXXVAL = /afs/slac.stanford.edu/package/gcc/i386_linux2/gcc-2.95.3/bin/g++
+else if ( ${HOST} == bbr-dev101 || ${HOST} == noric-new ) then
+   setenv OS Linux
+   setenv BFARCH Linux24RHEL3_i386_gcc323
+   set CCVAL = /usr/bin/gcc
+   set CXXVAL = /usr/bin/g++
+else if ( ${HOST} == bbr-srv07 || ${HOST} == tersk ) then
+   setenv OS Solaris
+   setenv BFARCH SunOS59_sparc_Studio9
+   set CCVAL = /opt/SUNWspro.Studio9/bin/cc
+   set CXXVAL = /opt/SUNWspro.Studio9/bin/CC
+else if ( ${HOST} == bbr-dev104 || ${HOST} == bbr-dev103 ) then
+   setenv OS Linux
+   setenv BFARCH Linux24SL3_i386_gcc323
+   set CCVAL = /usr/bin/gcc
+   set CXXVAL = /usr/bin/g++
+else if ( ${HOST} == bbt-dev100 ) then
+   setenv OS Linux
+   setenv BFARCH Linux26SL4_i386_gcc346
+   set CCVAL = /usr/bin/gcc
+   set CXXVAL = /usr/bin/g++
+else if ( ${HOST} == shire01 ) then
+   setenv OS Solaris
+   setenv BFARCH SunOS5v10_sparc_Studio10
+   set CCVAL = /opt/SUNWspro.Studio10/bin/cc
+   set CXXVAL = /opt/SUNWspro.Studio10/bin/CC
+else
+   echo Unknown host
+   exit
+endif
+
+
+set LOGFILE = gmake_${BFARCH}.log
+rm -i ${LOGFILE}
+
+echo " OS $OS" |cat > ${LOGFILE}
+echo " BFARCH $BFARCH" |cat >> ${LOGFILE}
+echo " CC $CCVAL" |cat >> ${LOGFILE}
+echo " CXX $CXXVAL" |cat >> ${LOGFILE}
+
+setenv ODIR ${BFARCH}
+source .setup
+
+if ( ${OS} == Linux ) then
+    gmake SHAREABLE=no \
+          CC=${CCVAL} \
+          CXX=${CXXVAL} \
+          X11INC='/usr/X11R6/LessTif/Motif1.2/include' \
+          EXTRAMOTIFFLAGS='-L/usr/X11R6/LessTif/Motif1.2/lib' \
+          all >>& ${LOGFILE}
+else if ( ${OS} == Solaris ) then
+    gmake SHARABLE=no \
+          CC=${CCVAL} \
+          CXX=${CXXVAL} \
+          all >>& ${LOGFILE}     
+else
+    echo Unknown Operating system ${OS}
+endif
+
+exit

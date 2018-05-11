@@ -1,0 +1,280 @@
+ History File for generic SMI GUI using tcl/Tk
+---------------------------------------------------------------------------
+21-Mar-2006 (Boda Franek)
+ This is not even the first version. It is just a bunch of usefull code
+ which I 'hacked' during the last Christmas and that will serve as a good start.
+============================  tclTkGUI-v00 ====================================
+=== 31-March-2006:17:27 ==========  v30  =================
+=== 19-May-2006:20:34 ==========  v31  =================
+=== 21-May-2006:21:01 ==========  v31r1  =================
+19-Jan-2007 (Boda Franek)
+ This is the first usable version of the GUI
+============================  tclTkGUI-v01  ==================================
+
+ 25-Jan-2007
+ 
+ 1) objectParPanel_create.tcl ...
+ 	a) procedure 'objectParHeadingPanel_create' removed, as it creates just
+	   one label and the label creation was put directly into
+	   procedure 'objectParInfoPanel'
+	   
+	b) procedure 'objectParInfoPanel' now takes an extra argument 'title'
+	
+	c) new procedure 'objectParPanel_display' that displays the panel as
+	   a top level window.
+	   
+ 2) objectParPanel_create.tcl
+        procedure 'objectParPanel_create' and  'objectParPanel_display'
+	take extra argument 'title'
+	
+ 3) main.tcl
+     procedure paramPanel_display modified in such a way, that it is possible
+     to display parameter panel either as a part of object window, or as
+     a toplevel window.This is achieved by a simple switch. It is left so that
+     panels are displayed as toplevels.
+==============================  tclTkGUI-v02 ===================================
+ 26-Jan-2007 (Boda Franek)
+ 
+   - new file canvasObjects.tcl ... suite of procedures for managing objects
+        on canvas
+	
+   - main.tcl  & and  actionParPanel_display.tcl ... quick hack to display
+       objects on canvas rather than as independent windows
+       
+ it appears reasonably functional --> tag
+=============================  tclTkGUI-v03  ===================================
+ 31-Jan-2007 (Boda Franek)
+ 
+    Added some baloon help. Files affected : 
+           canvasObjects.tcl, main.tcl, mainPanel.tcl
+	   
+================================================================================
+ 5-Feb-2007 (Boda Franek)
+ 
+   - new files  A.gif, P.gif and X.gif  containing small letter A,P and X to be
+      used on some object buttons.
+      
+   - topbar.tcl ... taking font from options
+   
+   - parametersGroups.tcl ... 
+   	a) making sure, that entry widget turns white once it receives input
+	
+	b) lining up parameters on the display on the right
+	
+   - main.tcl ...
+   	a) adding some options
+	b) creating images from the new gif files..see above
+	
+   - canvasObjects.tcl ... 'pasting' the new images on 'action', 'parameters' 
+        and remove buttons
+	
+   - mainPanel.tcl ... allowing the GUI Logo to adjust itself
+=============================  tclTkGUI-v04  ===================================
+=============================  tclTkGUI-v05  ===================================
+ 5-Feb-2007 (Boda Franek)
+ 
+            State Colors (file main.tcl & canvasObjects.tcl)
+	    -----------
+  - These are defined in the array stateColor('object name')
+  
+  - some defaults are defined  in main.tcl
+
+  - state DEAD and &DEAD are special cases 
+=============================  tclTkGUI-v06  ===================================  
+13-Feb-2007 (Boda Franek)
+
+    New, integrated way to browse for objects which also allows changing their
+    --------------------------------------------------------------------------
+    order.
+    -----
+    
+    - new file objectSelectionPanel.tcl containing the necessary software
+
+    - new file Scrolled_Listbox.tcl containing generic code for scrollable lists
+      picked up from B.B.Welch book
+      
+    - the above uses the 3 new gif files for its buttons : 
+         downArrow.gif, upArrow.gif and rightArrow.gif  
+    
+    - main.tcl  sourcing the new software
+    
+    - mainPanel.tcl new procedure 'browseForObjects' using the new software
+    
+    - canvasObjects.tcl fixed a minor bug
+=============================  tclTkGUI-v07  ===================================
+    - mainPanel.tcl ... obsolete procedures 'findAndAddObjects' and 'getDomains'
+                       removed
+		       
+    - main.tcl ... adjusting options
+    
+    
+    - objectSelectionPanel.tcl  ...  warning messages made childern of the 
+              corresponding widget. This preserves correct stacking order
+=============================  tclTkGUI-v08  ===================================	      
+   16-Feb-2007 (Boda Franek)
+   
+    - Allowing to save and retrieve object configuration
+      --------------------------------------------------
+        necessary changes to mainPanel.tcl, topbar.tcl
+	
+    - objectSelectionPanel.tcl ... objects deleted on click of 3rd mouse button
+            rather than 2nd
+	    
+    - parameterGroups.tcl  ... no value represented by zero length string
+ =============================  tclTkGUI-v09  ===================================
+   18-Feb-2007  (Boda Franek)
+   
+   - listBox_create.tcl  changed format from DOS to Unix
+   
+   - canvasObjects.tcl ... bug fixed in  'proc updateObjectOnCanvas'
+            before a state of an object is updated, check is made wheather
+	    the object is displayed
+	    
+   - objectSelectionPanel.tcl ... option '-activestyle' taken out, because older
+            versions of Tcl/Tk do not support it
+	    
+  12-July-2007  (Boda Franek)
+  
+    - convertHEXtoEASCII.tcl  allowing to input single and double quote either
+                              escaped or un-escaped
+    - canvasObjects.tcl  ... Bug fixed. Once state foregroung color was white,
+                                 it stayed that way.
+
+  16-Jul-2007  (Boda Franek)
+  
+    - convertHEXtoEASCII.tcl  procedure convertEASCIItoHEX now returns a list
+                             consisting of 2 elements. The first is an error
+			     message, the second is the result
+			     
+    - tcl-smi.tcl ...  procedure dispatchAction : when convertEASCIItoHEX
+                       returns error, the command is not sent
+
+  17-Jul-2007  (Boda Franek)
+  
+    -actionParPanel_display.tcl ..
+    	    1) parameter correctness checking extended to integers and floating
+	       points
+	    2) the checking is moved to the point before the panel is dismissed
+	       thus allowing instant correction.
+	       
+     -tcl-smi.tcl  integer parameters are converted to decimal form and
+            floating poinbt into scientific notation before sending off
+	    the action       
+
+  18-Jul-2007  (Boda Franek)
+  
+      -actionParPanel_display.tcl .. for floating poin parameters insisting that
+      			there is either . or e or E present
+			
+  19-Jul-2007  (Boda Franek)
+  
+      - textPanel_show.tcl ... new procedures to display 'text Panel'. Details
+                           see comments
+			   
+      - parameterHelp_show.tcl ... new procedure to display help on inputting
+                           parameters into the GUI
+			   
+			   
+	- main.tcl ... adding sourcing of the new files above
+	 
+	-actionParPanel_display.tcl .. when user inputs a incorrect parameter,
+	         he is given an option to display parameter help
+		 
+=== 25-July-2007:14:58 ==========  v32  =================
+
+  2-Aug-2007  (Boda Franek)
+  
+    - parameterGroups.tcl   for parameters with a value, value field is made
+                            sunken.
+
+  3-Aug-2007  (Boda Franek)
+  
+    - tcl-smi.tcl   procedure   'processParameters'  ... if a parameter does not
+                           have a value, no value is assigned. Before, this used
+			   to be "".
+			   
+    - parameterGroups.tcl   absence of a value used to be indicated by value
+                            '&noval' which is obviously crap. No value is simply
+			    represented by no value.
+			   
+    - actionParPanel_display.tcl &
+      objectPar_panel_create ... the changes in tcl-smi.tcl and parameterGroups.tcl
+                                 were taken into account
+				 
+   7-Aug-2007  (Boda Franek)
+   
+   - parameterGroups.tcl   parameter plotted left justified 
+     
+    
+=== 07-August-2007:11:55 ==========  v32r1  =================
+=== 25-August-2007:13:31 ==========  v32r2  =================
+=== 28-September-2007:15:29 ==========  v32r3  =================
+=== 07-October-2007:16:50 ==========  v32r4  =================
+=== 12-November-2007:14:40 ==========  v32r5  =================
+=== 31-March-2008:15:41 ==========  v32r6  =================
+=== 11-June-2008:15:51 ==========  v33  =================
+=== 02-July-2008:12:44 ==========  v33r1  =================
+=== 16-July-2008:17:11 ==========  v33r2  =================
+=== 06-October-2008:11:30 ==========  v33r3  =================
+=== 10-October-2008:16:04 ==========  v34  =================
+=== 16-October-2008:15:52 ==========  v34r1  =================
+=== 11-November-2008:12:56 ==========  v34r2  =================
+=== 03-December-2008:13:17 ==========  v35  =================
+=== 11-February-2009:14:48 ==========  v35r1  =================
+=== 07-April-2009:14:07 ==========  v35r2  =================
+=== 31-July-2009:15:49 ==========  v36  =================
+=== 06-August-2009:15:54 ==========  v36r1  =================
+=== 27-August-2009:17:17 ==========  v37  =================
+=== 02-September-2009:14:44 ==========  v37r1  =================
+=== 07-October-2009:12:46 ==========  v37r2  =================
+=== 10-November-2009:18:53 ==========  v37r3  =================
+=== 13-November-2009:14:59 ==========  v37r4  =================
+=== 20-January-2010:16:26 ==========  v38  =================
+=== 21-June-2010:15:54 ==========  v39  =================
+
+  24-June-2010  (Boda Franek)
+  
+  -  main.tcl
+
+      a) efftcldir hardwired-in in terms of relative position to GUIdir.
+         This makes more sense when the so called 'production' file is
+	  built as then only $GUIdir has a meaning.
+	  
+      b) some commands reordered into more logical order	  
+	  
+      c) some diagnostic prints commented out
+      
+        
+      d) many comments added
+      
+  - actionParPanel_display.tcl   ... some diagnostic prints commented out
+  
+  19-August-2010  (Boda Franek)
+  
+   New file : objectSetDisplayPanel.tcl   software for displaying Object Sets and
+                     their contents 
+
+   1-September-2010  (Boda Franek)
+   
+     - main.tcl ... the new file objectSetDisplayPanel.tcl sourced in
+     
+     - topbar.tcl ...  new button 'Tools' added to the top bar. This brings up
+                     a menu whose first item will invoke 'Object Set Panel'
+		     
+     - objectSetDisplayPanel.tcl  ... small number of code lines commented out
+                    to make it possible to incorporate the file into the
+		    main.tcl 
+=== 02-September-2010:15:31 ==========  v40  =================
+=== 21-November-2010:13:22 ==========  v41  =================
+=== 06-January-2011:16:18 ==========  v42  =================
+=== 04-February-2011:15:29 ==========  v42r1  =================
+=== 27-July-2011:16:13 ==========  v43r0  =================
+=== 29-November-2011:16:00 ==========  v44r0  =================
+=== 15-December-2011:15:36 ==========  v45r0  =================
+=== 20-January-2012:14:16 ==========  v45r1  =================
+=== 31-August-2012:11:18 ==========  v46r0  =================
+=== 26-September-2012:12:33 ==========  v46r1  =================
+=== 19-November-2012:14:31 ==========  v46r2  =================
+=== 28-January-2013:16:36 ==========  v46r3  =================
+=== 30-June-2014:15:16 ==========  v47  =================
+=== 12-September-2014:11:49 ==========  v47r1  =================

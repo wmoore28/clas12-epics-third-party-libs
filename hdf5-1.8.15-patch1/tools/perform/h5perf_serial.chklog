@@ -1,0 +1,56 @@
+============================
+ h5perf_serial  Test Log
+============================
+HDF5 Library: Version 1.8.15-patch1
+==== Parameters ====
+IO API=posix hdf5 
+Number of iterations=1
+Dataset size=100 200 
+Transfer buffer size=10 20 
+Dimension access order=1 2 
+HDF5 data storage method=Contiguous
+HDF5 file driver=sec2
+Env HDF5_PREFIX=not set
+==== End of Parameters ====
+
+Transfer Buffer Size (bytes): 200
+File Size(MB): 0.02
+        IO API = POSIX
+            Write (1 iteration(s)):
+                Maximum Throughput:  11.51 MB/s
+                Average Throughput:  11.51 MB/s
+                Minimum Throughput:  11.51 MB/s
+            Write Open-Close (1 iteration(s)):
+                Maximum Throughput:   7.07 MB/s
+                Average Throughput:   7.07 MB/s
+                Minimum Throughput:   7.07 MB/s
+            Read (1 iteration(s)):
+                Maximum Throughput:  23.75 MB/s
+                Average Throughput:  23.75 MB/s
+                Minimum Throughput:  23.75 MB/s
+            Read Open-Close (1 iteration(s)):
+                Maximum Throughput:  17.43 MB/s
+                Average Throughput:  17.43 MB/s
+                Minimum Throughput:  17.43 MB/s
+        IO API = HDF5
+            Write (1 iteration(s)):
+                Maximum Throughput:  27.88 MB/s
+                Average Throughput:  27.88 MB/s
+                Minimum Throughput:  27.88 MB/s
+            Write Open-Close (1 iteration(s)):
+                Maximum Throughput:   7.53 MB/s
+                Average Throughput:   7.53 MB/s
+                Minimum Throughput:   7.53 MB/s
+            Read (1 iteration(s)):
+                Maximum Throughput:  46.08 MB/s
+                Average Throughput:  46.08 MB/s
+                Minimum Throughput:  46.08 MB/s
+            Read Open-Close (1 iteration(s)):
+                Maximum Throughput:  16.67 MB/s
+                Average Throughput:  16.67 MB/s
+                Minimum Throughput:  16.67 MB/s
+0.04user 0.03system 0:00.09elapsed 77%CPU (0avgtext+0avgdata 7084maxresident)k
+616inputs+456outputs (1major+8840minor)pagefaults 0swaps
+
+Finished testing h5perf_serial 
+============================

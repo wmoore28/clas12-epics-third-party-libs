@@ -1,0 +1,57 @@
+Pezca, the Perl-ezca module.
+
+license:
+--------
+The software license is documented in the file LICENSE. 
+
+compiling the module (an EPICS base and ezca must be installed):
+----------------------------------------------------------------
+
+You should have set EPICS_BASE to the location of your EPICS base and
+EPICS_EXTENSIONS to the location where ezca is installed. Alternatively you may
+edit file "platform.pm". 
+
+Enter:
+
+"perl Makefile.PL"
+"make"
+
+
+testing:
+--------
+"make test"
+The test-program asks for the name of a process variable and makes a 
+read-access to that variable.
+
+installing:
+-----------
+"make install"
+
+documentation:
+--------------
+There is a man-page in the man-directory. In the examples directory there 
+are 2 examples of a perl ca-gateway (the client reads the data via a 
+raw socket connection).
+
+create html documentation with:
+"./make_html.sh"
+
+Support of other platforms:
+---------------------------
+Currently supported are HP-UX, Solaris, Linux and Windows NT.
+For other platforms you have to figure out the defines that the compiler 
+call needs (e.g. '-DUNIX') and apply the changes to the file platform.p.
+
+This file uses the perl Config-Module to determine the platform. 
+
+Bugs and Problems:
+------------------
+For the Windows NT version, only Pezca::GetDouble() is tested. For 
+all other platforms, all functions have been tested. 
+
+Suggestions or improvements are welcome !
+
+mail address:
+-------------
+
+Goetz Pfeiffer <Goetz.Pfeiffer@helmholtz-berlin.de>

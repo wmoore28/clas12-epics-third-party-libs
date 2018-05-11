@@ -1,0 +1,433 @@
+April-2007 (Boda Franek)
+
+         String Parameters Handling
+	 --------------------------
+	 
+smirtlcpp.cxx
+-------------
+This RTL is used by SMI Proxies written in C++. As far as parameters are
+concerned, there are 2 types of parameters:
+
+	1) action parameters comming from DIM-SMI world
+	2) object parameters published by the proxy.
+	
+	 	Up to tag v31r1
+	 	---------------
+
+	ParInfo class holds information on the both types of parameters.
+	-------------
+	char *itsName       param name
+	int itsType      
+	char *itsData       param value
+
+	These values are filled in by two methods
+
+		setInfo     and  setStrInfo
+	
+		setStrInfo is called from SmiProxy::commandHandler via
+		           storeCmndPar() when a command is received from
+			    DIM layer
+	   
+		setInfo  is called from SmiProxy::addPar which in turn is
+		         called from	SmiProxy::setParameter. This is called
+			 by a user when he wants to set object paramerer.
+	  
+	The values are retrieved by method
+
+		getDataSize and getData
+	 
+		Both are called from 
+		a)  SmiProxy::getCmndPar  which is called from 
+                    SmiProxy::getParameterString used by a user to retrieve
+		    a string action parameter
+	  
+		b) SMIProxy::getStateLen   and SmiProxy::formState . These are
+		   called from SmiProxy::setState when the full state string
+		   for shipping to DIM is built
+
+	From tag v32 on
+	
+Parameter strings comming from (and going to) DIM-SMI world are now
+'smi-escaped'. On the other hand they are delivered to (and taken from) user
+unescaped (i.e original value). This is achieved as follows:
+
+- ParInfo class is given another private data item i.e.
+	char* itsEscData	holding parameter escaped value
+	also 2 new methods:
+	1) getEscDataSize()  and 2) getEscData() retrieving the escaped data
+	
+- setInfo method when accepting value (unescaped) from user and storing it in
+          itsData, also escapes it and stores it in itsEscData
+	  
+- setStrInfo method when accepting value (escaped) from command handler
+             stores it now in itsEscData and then it also unescapes it and
+	     stores the result in itsData (while before it just stored it in
+	     itsData)
+	     
+- SmiProxy::getStateLen  and SmiProxy::formState now use getEscDataSize and
+	     getEscData instead of getDataSize and getData.	     
+	     
+
+smiuirtl.c
+----------
+This RTL is used by a software written in C requiring various information about
+SMI world. As far as parameters are concerned, there are 2 types of parameters:
+
+	1) default values of action parameters 
+	   of querried objects comming from DIM-SMI world
+	2) object parameters 
+	   of querried objects also comming from DIM-SMI world
+
+
+		Up to tag v31r1
+		---------------
+
+	Parameters of type 1 are retrieved by user using:
+		smiui_get_next_param(id,param,type,default_value_size)	
+			this calls get_next_param
+		smiui_get_param_default_value(id,default_value)	
+			this calls get_param_value
+
+	Parameters of type 2 are retrieved by user using:
+		smiui_get_next_obj_param(id,param,type,value_size)
+			this calls get_next_param
+		smiui_get_obj_param_value(id,value)
+			this calls get_param_value
+
+
+		From tag v32 on
+		----------------
+	 
+	The parameters are now comming in from SMI world 'escaped' and have
+        to be delivered to user unescaped.
+
+ 	They are retrieved from the incomming string in get_next_param and
+ 	get_param_value. So these two are modified to pass on the unescaped
+	 value
+ 
+ 
+smiuirtlcpp.cxx
+---------------
+This RTL is used by a software written in C++ requiring various information about
+SMI world. As far as parameters are concerned, there are 3 types of parameters:
+
+	1) default values of action parameters 
+	   of querried objects comming from DIM-SMI world
+	2) object parameters 
+	   of querried objects also comming from DIM-SMI world
+	3) parameters sent by a user with actions
+
+		Up to tag v31r1
+		---------------
+
+	Class SmiParam holds parameter data for all 3 types in
+	--------------
+		void *itsValue         
+		int itsValueSize	
+	
+	These values are filled :
+
+	Type 1
+		when querried object changes its state, 
+		'obj_change_rout' is called
+		-----------------.
+		 	this then calls 
+			SmiObject::getObjActions(id)
+			----------------------------
+				which in turn calls					
+				SmiAction:getPars() 
+				-------------------  
+				this then uses 
+					smiui_get_next_param and
+					--------------------
+					smiui_get_param_default_value
+					-----------------------------
+					to retrieve the parameters from the incomming
+					string and accesses directly the private data
+					of SmiParam (naughty)
+		
+	Type 2
+			'obj_change_rout' also calls
+			SmiObject::getObjPars(id)
+			-------------------------
+			this then uses
+				 smiui_get_next_obj_param   and
+				 ------------------------
+				 smiui_get_obj_param_value
+				 -------------------------
+				to retrieve the parameters from the incomming 
+				string and accesses directly the private data
+			        of SmiParam (naughty)
+				
+	Type 3
+		Before user initiates sending a command, which requires parameters, to 
+		SMI object, it has to set its value in SMIParam by calling
+		SmiAction::setParam(name,val)
+		-----------------------------
+		this then calls
+			SmiParam::setValue(char *val) that sets its value in SmiParam
+			------------------
+			
+		(NB. They are also set in SmiAction::askParams(), called from
+		 SmiObject::sendCommand(), but this is for debugging)
+		
+
+
+	The values in SmiParam are retrieved by:
+	
+		- char* SmiParam::getValueString() used by user to retrieve 
+		        ------------------------
+		  parameters of Type 1 and 2
+		  It is also used by ostream operator
+		
+		- SmiAction::send() which is called by user to send a command
+		  -----------------.
+			This is where a command string is built and
+			sent using  smiui_send_command.  The send method accesses
+				    ------------------	
+			the data of SmiParam directly (naughty)
+				    
+		(NB. They are also used by SmiAction::askParams(), but this is
+		     for debugging)	
+
+
+
+		After tag v31r1
+		---------------
+	
+Parameter strings comming from (and going to) DIM-SMI world are now
+'smi-escaped'. On the other hand they have to be delivered to (and taken from) user
+unescaped (i.e original value). This is achieved as follows:		
+
+	- SmiParam class is given two more private data items i.e.
+	  --------------
+	void* itsEscValue	holding parameter escaped value
+	int itsEscValueSize
+	
+	also 2 new methods:
+	1) char* getEscValueString() retrieving the escaped data
+	2) void convertToEsc()    will escape itsValue and store it in itsEscValue 
+
+	- SmiAction:getPars() and SmiObject::getObjPars(id)  
+	  	because these functions are using the new smiui_get... functions
+		 (see above), they will pick up unescaped value and this is
+		  stored into itsValue.
+	  	But in addition, the escaped value is immediately calculated
+		 using the new method convertToEsc()
+  
+	-setValue ..when called, then also itsEscValue is calculated and saved
+
+	-SmiAction::send() will now use the escaped values for building the 
+	          command string
+
+	-osstream operator will use getEscValueString
+
+-------------------------------------------------------------------------------	
+
+smirtl.c
+--------
+		up to tag v31r1
+		---------------
+The parameters we are concerned about are:
+
+	1) object parameters of the associated object
+	
+	set by user calling 
+		smi_set_par(par,value,type)
+			calls
+				store_par_value	
+					stores the value in Pars array of
+					PAR structures
+		
+	they are then sent together with state string when user calls
+		smi_set_state(state) or
+		smi_terminate_command or
+		smi_terminate_action
+			all 3 call
+				form_state
+					this retrieves parameter from Pars
+				
+	
+	2) action parameters comming with incomming command
+	
+	retrieved by user using
+		 	smi_get_next_par(param,type,size)
+				calls
+					get_next_param
+						picks the info from the
+						incomming string
+						
+		and	smi_get_par_value(param,value)
+				calls
+					get_param_value
+						picks up the value from the
+						incomming string
+					
+	
+		After tag v31r1
+		---------------
+		
+	1) parameters comming from user are the original strings. They have
+	    to be escaped when sent to DIM/SMI. This is done as follows:
+	    - structure PAR is given extra 2 variables
+	       1) char *esc_value;  to hold escaped value
+	       2) int esc_size;  to hold escaped value size;
+	       
+	    - in function  store_par_value which accepts par value from user,
+	       the value is also escaped and the escaped value is stored
+	       
+	    - in function form_state which prepares state string for shipping
+	      to DIM/SMI, escaped value is used
+	    
+	    
+	2) parametere are comming escaped from DIM/SMI. 
+	   user expects to get unescaped size and value. This is done
+	   in get_next_param and get_param_value in an identical fashion
+	   as in smiuirtl.c
+=== 25-July-2007:14:58 ==========  v32  =================
+
+  3-Aug-2007  (Boda Franek)
+  
+  - smirtlcpp.cxx    bug fixed : STRING replaced by SMI_STRING
+ 
+  6-Aug-2007  (Boda Franek)
+   
+  - smiuirtlcpp.cxx  bug fixed: default empty string for action parameters is
+                      now handled properly.
+		     also some tydiing
+		     
+=== 07-August-2007:11:55 ==========  v32r1  =================
+
+  23-Aug-2007  (Boda Franek)
+  
+  - smirtl.c  bug fixed... the values of par data have to be initialised to zero
+  
+=== 25-August-2007:13:31 ==========  v32r2  =================
+
+ 29-Aug-2007  (Boda Franek)
+ 
+  - smirtl.c (revision 1.18)  replaced char SMI_state[MAX_BUFFER} by
+ 		char* SMI_state  and  using malloc to allocate the necessary
+		space. Also some tydying like removing code handling multiple
+		subobjects.
+		
+  - smiurtl.c  removed. Obsolete file
+
+ 30-Aug-2007  (Boda Franek)
+ 
+  - smiuirtl.c  (revision  1.24)  Function smiui_current_state  ...
+       updating Get_obj_state_busy structure only from callback 
+       (get_state_busy_rout)
+       
+ 31-Aug-2007  (Boda Franek)
+ 
+  - smiuirtl.c  (revision 1.25)
+          a) In structure BUSY replaced char action[MAX_BUFFER] 
+              by char* action
+	      
+	  b) purely for 'casting' purposes in function 'get_state_busy_rout'
+	     introduced a new structure CASTBUSY
+	     
+	  c) In 'get_state_busy_rout' the incomming address is cast into
+	     CASTBUSY* and that way the two pieces of data (integer followed
+	     by string) can be picked up. Because of the change 1), malloc
+	     has to be used to allocate the space for the sction string.
+ 
+           d) the allocated space is feed when the action string is picked up
+	   
+  20-Sep-2007 (Boda Franek)
+  
+  - smiuirtl.c  rev 1.26 is a mistake,  1.27 is a copy of 1.25
+  
+       1.28  :  Bug in smiui_current_state fixed (non dynamical retrieving
+             state of an object)
+       
+         object state is now picked up in the callback and stored dynamically 
+	 on the heap. Global pointer 'state_for_smiui_current_state' points
+	 to this. This is then subsequently picked up in smiui_current_state
+	 function and copied into the user parameter. This is similar to the
+	 way busy action is picked up.
+	 
+   27-Sep-2007 (Boda Franek)
+   
+   - smiuirtl.c  rev 1.29  Removing dependence on MAX_BUFFER from
+                           struct STATECHANGE
+			   
+	some tydying...removed some sections of code that were already commented
+	                out. Found it difficult to read the code.
+			
+	in STATECHANGE structure, the two variables ( busy_state and
+	         busy_action[MAX_BUFFER] ) were replased by one variable
+		 'busyData' of type BUSY.
+		 
+	function 'busy_change_rout' is the callback booked in smiui_book_change by
+	      /BUSY service. This now has to take care of updating 'busyData' variable.
+	
+	function 'state_change_rout' and 'actions_change_rout' ... minor changes 
+	     relevant to busy flag.
+	     
+	function 'smiui_book_statechange' 
+	        a) busyData   initialisation
+		b) non-dynamical updateing taken out of 'dic_info_service' call for /BUSY
+		  service
+		  
+        function 'smiui_get_action_in_progress' and 'smiui_get_state'  ...minor changes
+	      relevant to busy data
+	      
+=== 28-September-2007:15:29 ==========  v32r3  =================
+ 
+  7-Oct-2007  (Clara Gaspar & Boda Franek)
+  
+  - smiuirtl.c   protection against non-delivery of action string added to 
+                 'busy_change_rout' routine.
+		 
+=== 07-October-2007:16:50 ==========  v32r4  =================
+
+  29-Oct-2007  (Boda Franek)
+  
+  - smirtl.c  removed a debug print
+  
+=== 12-November-2007:14:40 ==========  v32r5  =================
+=== 31-March-2008:15:41 ==========  v32r6  =================
+=== 11-June-2008:15:51 ==========  v33  =================
+=== 02-July-2008:12:44 ==========  v33r1  =================
+=== 16-July-2008:17:11 ==========  v33r2  =================
+=== 06-October-2008:11:30 ==========  v33r3  =================
+=== 10-October-2008:16:04 ==========  v34  =================
+=== 16-October-2008:15:52 ==========  v34r1  =================
+=== 11-November-2008:12:56 ==========  v34r2  =================
+=== 03-December-2008:13:17 ==========  v35  =================
+=== 11-February-2009:14:48 ==========  v35r1  =================
+=== 07-April-2009:14:07 ==========  v35r2  =================
+=== 31-July-2009:15:49 ==========  v36  =================
+=== 06-August-2009:15:54 ==========  v36r1  =================
+=== 27-August-2009:17:17 ==========  v37  =================
+=== 02-September-2009:14:44 ==========  v37r1  =================
+=== 07-October-2009:12:46 ==========  v37r2  =================
+=== 10-November-2009:18:53 ==========  v37r3  =================
+=== 13-November-2009:14:59 ==========  v37r4  =================
+=== 20-January-2010:16:26 ==========  v38  =================
+=== 21-June-2010:15:54 ==========  v39  =================
+
+   1-September-2010
+   
+   smiuirtl.c  bug fix in 'smiui_book_objectsetchange'
+   
+=== 02-September-2010:15:31 ==========  v40  =================
+=== 21-November-2010:13:22 ==========  v41  =================
+=== 06-January-2011:16:18 ==========  v42  =================
+=== 04-February-2011:15:29 ==========  v42r1  =================
+=== 27-July-2011:16:13 ==========  v43r0  =================
+
+  23-November-2011
+  
+  smiuirtl.c  bug fixed in 'int get_param_value'
+=== 29-November-2011:16:00 ==========  v44r0  =================
+=== 15-December-2011:15:36 ==========  v45r0  =================
+=== 20-January-2012:14:16 ==========  v45r1  =================
+=== 31-August-2012:11:18 ==========  v46r0  =================
+=== 26-September-2012:12:33 ==========  v46r1  =================
+=== 19-November-2012:14:31 ==========  v46r2  =================
+=== 28-January-2013:16:36 ==========  v46r3  =================
+=== 30-June-2014:15:16 ==========  v47  =================
+=== 12-September-2014:11:49 ==========  v47r1  =================

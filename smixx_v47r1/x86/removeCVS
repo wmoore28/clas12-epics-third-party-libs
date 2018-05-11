@@ -1,0 +1,14 @@
+#! /bin/tcsh -f
+#                           B. Franek 31-January-2005
+#-------------------------------------------------------
+foreach dir (`find . -name CVS`)
+    echo " "
+    echo " Removing  contents of $dir"
+    find $dir -exec rm {} \;
+end
+
+foreach dir (`find . -name CVS`)
+    echo " "
+    echo " Removing  $dir"
+    find $dir -exec rmdir {} \;
+end

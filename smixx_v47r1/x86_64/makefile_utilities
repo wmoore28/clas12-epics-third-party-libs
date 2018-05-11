@@ -1,0 +1,126 @@
+include makefile_common
+
+CFLAGS +=  -I./smixx 
+
+ifeq ($(OS),HP-UX) 
+	CFLAGS += +a1 -DdefBool
+endif
+ifeq ($(OS),Solaris)
+	CFLAGS += -xs
+	EXTRALIBS = -lpthread -lposix4 -lsocket -lnsl
+endif
+ifeq ($(OS),Linux) 
+	EXTRALIBS = -lpthread
+endif
+
+srcdir = ./src/utilities
+
+all: clean $(ODIR)/listDomain  $(ODIR)/domainExists \
+     $(ODIR)/proxyExists $(ODIR)/dnsExists $(ODIR)/dnsDebugging \
+     $(ODIR)/shellcmd $(ODIR)/getDimVersions $(ODIR)/getSmiVersions \
+     $(ODIR)/dnsRunning $(ODIR)/getDomains \
+     $(ODIR)/getObjectState $(ODIR)/monObjectState $(ODIR)/monObjects \
+     $(ODIR)/tellMonObjects $(ODIR)/getDomainObjects \
+     $(ODIR)/getDomainObjectSets $(ODIR)/getSetObjects \
+     $(ODIR)/monObjectsServiceName \
+     $(ODIR)/tclTkGUI-Builder
+
+$(ODIR)/listDomain: $(srcdir)/listdomain.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/listdomain.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/listDomain 
+
+$(ODIR)/domainExists: $(srcdir)/domainexists.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/domainexists.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/domainExists 
+
+$(ODIR)/proxyExists: $(srcdir)/proxyexists.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/proxyexists.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/proxyExists 
+
+$(ODIR)/dnsExists: $(srcdir)/dnsexists.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/dnsexists.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/dnsExists
+
+$(ODIR)/dnsDebugging: $(srcdir)/dnsdebugging.cxx
+	$(CXX) $(CFLAGS) $(srcdir)/dnsdebugging.cxx -L$(DIMDIR)/$(ODIR) \
+        -ldim $(EXTRALIBS) -o $(ODIR)/dnsDebugging 
+
+$(ODIR)/shellcmd: $(srcdir)/shellcmd.c 
+	$(CC)  $(CFLAGS) $(srcdir)/shellcmd.c -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmi -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/shellcmd 
+
+$(ODIR)/getDimVersions: $(srcdir)/getDimVersions.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/getDimVersions.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/getDimVersions 
+
+$(ODIR)/getSmiVersions: $(srcdir)/getSmiVersions.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/getSmiVersions.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/getSmiVersions 
+
+$(ODIR)/dnsRunning: $(srcdir)/dnsRunning.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/dnsRunning.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/dnsRunning
+
+$(ODIR)/getDomains: $(srcdir)/getDomains.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/getDomains.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/getDomains 
+
+$(ODIR)/getObjectState: $(srcdir)/getObjectState.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/getObjectState.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/getObjectState 
+
+$(ODIR)/monObjectState: $(srcdir)/monObjectState.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/monObjectState.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/monObjectState 
+
+$(ODIR)/monObjects: $(srcdir)/monObjects.cxx
+	$(CXX)  $(CFLAGS) $(srcdir)/monObjects.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/monObjects 
+
+$(ODIR)/tellMonObjects: $(srcdir)/tellMonObjects.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/tellMonObjects.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) -o $(ODIR)/tellMonObjects
+
+$(ODIR)/getDomainObjects: $(srcdir)/getDomainObjects.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/getDomainObjects.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) \
+	 -o $(ODIR)/getDomainObjects	
+
+$(ODIR)/getDomainObjectSets: $(srcdir)/getDomainObjectSets.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/getDomainObjectSets.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) \
+	 -o $(ODIR)/getDomainObjectSets	
+	 
+$(ODIR)/getSetObjects: $(srcdir)/getSetObjects.c 
+	$(CC)  $(CFLAGS) $(srcdir)/getSetObjects.c -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) \
+	 -o $(ODIR)/getSetObjects
+ 	 
+
+$(ODIR)/monObjectsServiceName: $(srcdir)/monObjectsServiceName.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/monObjectsServiceName.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) \
+	 -o $(ODIR)/monObjectsServiceName
+	 
+
+$(ODIR)/tclTkGUI-Builder: $(srcdir)/tclTkGUI-Builder.cxx 
+	$(CXX)  $(CFLAGS) $(srcdir)/tclTkGUI-Builder.cxx -L$(SMIRTLDIR)/$(ODIR) \
+        -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(EXTRALIBS) \
+	 -o $(ODIR)/tclTkGUI-Builder	
+	
+
+ 
+
+
+.PHONY : clean
+clean:
+	rm -f $(ODIR)/*.o
+	rm -f $(ODIR)/listDomain  $(ODIR)/domainExists \
+              $(ODIR)/proxyExists $(ODIR)/dnsExists $(ODIR)/dnsDebugging \
+              $(ODIR)/shellcmd $(ODIR)/getDimVersions $(ODIR)/getSmiVersions \
+              $(ODIR)/dnsRunning $(ODIR)/getDomains \
+              $(ODIR)/getObjectState $(ODIR)/monObjectState $(ODIR)/monObjects \
+              $(ODIR)/tellMonObjects $(ODIR)/getDomainObjects $(ODIR)/getDomainObjectSets \
+              $(ODIR)/monObjectsServiceName $(ODIR)/getSetObjects\
+	      $(ODIR)/tclTkGUI-Builder
+

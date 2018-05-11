@@ -1,0 +1,14 @@
+============================
+testh5repart.sh  Test Log
+============================
+Testing h5repart -m 20000 family_file%05d.h5 /usr/clas12/third-party-l PASSED
+Testing h5repart -m 5k family_file%05d.h5 /usr/clas12/third-party-libs PASSED
+Testing h5repart -m 20000 -family_to_sec2 family_file%05d.h5 /usr/clas PASSED
+Testing repart_test                                                    PASSED
+
+All h5repart tests passed.
+0.08user 0.13system 0:00.42elapsed 49%CPU (0avgtext+0avgdata 6572maxresident)k
+232inputs+320outputs (0major+32579minor)pagefaults 0swaps
+
+Finished testing testh5repart.sh 
+============================

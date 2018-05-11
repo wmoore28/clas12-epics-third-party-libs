@@ -1,0 +1,9 @@
+all:	clean $(ODIR)/smiGUI.tcl
+
+$(ODIR)/smiGUI.tcl: 
+	$(SMIDIR)/$(ODIR)/tclTkGUI-Builder
+	chmod a+x $(SMIDIR)/$(ODIR)/smiGUI.tcl
+	
+.PHONY : clean
+clean :
+	rm -f $(ODIR)/smiGUI.tcl $(ODIR)/*.gif

@@ -1,0 +1,13 @@
+============================
+ test_dset_opt  Test Log
+============================
+Testing basic functionality of H5DOwrite_chunk                         PASSED
+Testing skipping compression filter for H5DOwrite_chunk                PASSED
+Testing skipping compression filters but keep two other filters        PASSED
+Testing data conversion for H5DOwrite_chunk                            PASSED
+Testing invalid parameters for H5DOwrite_chunk                         PASSED
+0.03user 0.03system 0:00.08elapsed 82%CPU (0avgtext+0avgdata 6764maxresident)k
+80inputs+96outputs (1major+9016minor)pagefaults 0swaps
+
+Finished testing test_dset_opt 
+============================

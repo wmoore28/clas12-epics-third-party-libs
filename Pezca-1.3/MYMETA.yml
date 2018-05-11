@@ -1,0 +1,22 @@
+---
+abstract: unknown
+author:
+  - 'Goetz Pfeiffer <Goetz.Pfeiffer@helmholtz-berlin.de>'
+build_requires:
+  ExtUtils::MakeMaker: 0
+configure_requires:
+  ExtUtils::MakeMaker: 0
+dynamic_config: 0
+generated_by: 'ExtUtils::MakeMaker version 6.86, CPAN::Meta::Converter version 2.120351, CPAN::Meta::Converter version 2.120921'
+license: unknown
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Pezca
+no_index:
+  directory:
+    - t
+    - inc
+requires: {}
+version: 1.3
+x_HASH(0x8331898): ~

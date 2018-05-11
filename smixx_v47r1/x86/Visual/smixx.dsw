@@ -1,0 +1,227 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "UtilDnsRunning"=.\UtilDnsRunning.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name smirtl
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name smiuirtl
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "UtilDomainExists"=.\UtilDomainExists.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name smirtl
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name smiuirtl
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "UtilGetDomainObjects"=.\UtilGetDomainObjects.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name smirtl
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name smiuirtl
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "UtilGetDomains"=.\UtilGetDomains.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name smirtl
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name smiuirtl
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "UtilMonObjects"=.\UtilMonObjects.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name smirtl
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name smiuirtl
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "UtilTclTkGUIBuilder"=.\UtilTclTkGUIBuilder.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "UtilTellMonObjects"=.\UtilTellMonObjects.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name smirtl
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name smiuirtl
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "generator"=.\generator.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "preprocessor"=.\preprocessor.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "smi_send_command"=.\smi_send_command.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name smirtl
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name smiuirtl
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "smirtl"=.\smirtl.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "smiuirtl"=.\smiuirtl.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "state_manager"=.\state_manager.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "translator"=.\translator.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

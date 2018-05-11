@@ -1,0 +1,83 @@
+include makefile_common
+UILC = uil
+SDIR = ./src/gui
+#
+
+CFLAGS = -g -I./source -I./smixx -I$(DIMDIR)/dim -I$(MOTIFINC) -I$(X11INC) $(EXTRAMOTIFFLAGS)
+
+LFLAGS = -L$(MOTIFLIB) -L$(X11LIB)
+
+EXTRALIBS =
+MORE_FLAGS = -lMrm 
+GUI_EXTRALIBS = $(EXTRALIBS)
+EXTRAMOTIFFLAGS = 
+
+ifeq ($(OS),SunOS)
+	MOTIFINC = /usr/motif/include
+	MOTIFLIB = /usr/motif/lib
+	X11INC = /usr/X11R5/include/X11
+	X11LIB = /usr/X11R5/lib
+	UILC = /usr/motif/bin/uil
+	override CFLAGS += -Dsunos 
+endif
+ifeq ($(OS),Solaris)
+	MOTIFINC = /usr/dt/include
+	MOTIFLIB = /usr/dt/lib
+	X11INC = /usr/openwin/include
+	X11LIB = /usr/openwin/lib
+#	UILC = /usr/local/motif/bin/uil
+#	UILC = /usr/dt/bin/uil
+	override CFLAGS += -mt -Dsolaris 
+	MORE_FLAGS = -R$(MOTIFLIB):$(X11LIB) -lMrm
+	GUI_EXTRALIBS += -lpthread -lposix4 -lsocket -lnsl
+endif
+ifeq ($(OS),HP-UX)
+	MOTIFINC = /usr/include/Motif1.2
+	MOTIFLIB = /usr/lib/Motif1.2
+	X11INC = /usr/include/X11R5
+	X11LIB = /usr/lib/X11R5
+	MORE_FLAGS = -l:libMrm.a
+	override CFLAGS += -Dhpux
+endif
+ifeq ($(OS),OSF1)
+	MOTIFINC = .
+	MOTIFLIB = .
+	X11INC = .
+	X11LIB = .
+	CFLAGS = -g -I. -I$(DIMDIR) -Dosf
+endif
+ifeq ($(OS),AIX)
+	MOTIFINC = /usr/include/Motif1.2
+	MOTIFLIB = /usr/lib/Motif1.2
+	X11INC = /usr/include/X11R5
+	X11LIB = /usr/lib/X11R5
+	override CFLAGS += -Dunix -D_BSD -Daix
+endif
+ifeq ($(OS),Linux)
+	MOTIFINC = /usr/local/include
+	MOTIFLIB = /usr/local/lib
+	X11INC = /usr/X11R6/include
+ifeq ($(X64),yes)
+	X11LIB = /usr/X11R6/lib64
+else
+	X11LIB = /usr/X11R6/lib
+endif
+	MORE_FLAGS = -lXp -lXext -lMrm
+	GUI_EXTRALIBS += -lpthread
+	override CFLAGS += -Dlinux
+endif
+
+all:	clean $(ODIR)/smiGUI
+
+$(ODIR)/dui_util.o:	$(SDIR)/dui_util.c $(SDIR)/dui_util.h
+	$(CC) $(CFLAGS) -o $(ODIR)/dui_util.o -c $(SDIR)/dui_util.c
+
+$(ODIR)/smid.o:	$(SDIR)/smid.c $(SDIR)/smid.h
+	$(CC) $(CFLAGS) -o $(ODIR)/smid.o -c $(SDIR)/smid.c
+
+$(ODIR)/smiGUI: $(ODIR)/smid.o $(ODIR)/dui_util.o 
+	$(CC) $(CFLAGS) $(ODIR)/smid.o $(ODIR)/dui_util.o -L$(SMIDIR)/$(ODIR) -lsmiui -L$(DIMDIR)/$(ODIR) -ldim $(LFLAGS) $(MORE_FLAGS) -lXm -lXt -lX11 $(GUI_EXTRALIBS) -o $(ODIR)/smiGUI
+
+.PHONY : clean
+clean :
+	rm -f $(ODIR)/*.o $(ODIR)/smiGUI

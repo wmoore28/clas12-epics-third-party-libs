@@ -1,0 +1,9 @@
+============================
+ ttsafe  Test Log
+============================
+Test skipped because THREADSAFE not enabled
+0.03user 0.02system 0:00.07elapsed 87%CPU (0avgtext+0avgdata 6612maxresident)k
+24inputs+32outputs (0major+7905minor)pagefaults 0swaps
+
+Finished testing ttsafe 
+============================

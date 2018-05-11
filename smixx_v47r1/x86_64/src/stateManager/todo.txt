@@ -1,0 +1,44 @@
+13-Jul-2001  Combine Set_Name  and  NameList class (they are allmost
+            identical) and keep NameList class
+	 
+19-May-2006 The dimension of the input record (MAXRECL) should be dynamized
+
+19-May-2006  initiator to be re-designed
+	NB: 26-Jun-2008  In particular the constructors for SMIObject,
+	    SMIClass and SMIObjectSet classes should accept directly NameVector,
+	    so that the redundant copying of pObjectCode to lines can be avoided
+
+ 1-June-2006 extend &val_of concept in particular to 'if'. Also in addition to
+             &val_of,   $name should be used
+
+ 1-June-2006 Objects with variable states
+ 
+ 1-June-2006 State manager should always check for object existence before
+             blindly using 'null' pointer.
+	    
+ 1-June-2006 !check: Is there a limit on parameter values? In particular, can
+             DIM handle this?
+
+26-June-2008 urgent! Fix the memory leak in all lists in commonSource...see
+             the fix in nmdptnrlist.cxx
+
+15-July-2008 Rewrite smiobject.cxx In particularly subobjects should be
+             eradicated 
+
+21-July-2008 when remote object goes spontaneously busy, it should be reported
+             by DIM to State Manager.
+	     
+21-July-2008  Translator! condition.cxx could do with going over. In particular
+              stack is fixed size (1000) and not even checks on it.
+
+25-Sep-2008  completely re-design the IF handling
+
+25-Sep-2008   There is still limit 100 on simple conditions...see Condition
+              class
+	     
+25-Sep-2008   pointer to objects should be used instead of name everywhere that
+              is possible
+	      
+	      
+15-Jul-2011  pointers to suspended instruction should be reset to zero when
+             object resumes execution.

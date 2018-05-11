@@ -1,0 +1,129 @@
+/*****************************************************************************/
+/*                                                                           */
+/*                  --- CAEN SpA - Computing Division ---                    */
+/*                                                                           */
+/*   CAEN HV Control Software Release Notes                                  */
+/*                                                                           */
+/*   Rel. 2.0.1 - March	     2013					     */
+/*   Rel. 2.0   - March	     2013					     */
+/*   Rel. 1.3   - December   2012					     */
+/*   Rel. 1.2.1 - October    2012					     */
+/*   Rel. 1.2	- October    2012					     */
+/*   Rel. 1.1.2 - August     2012					     */
+/*   Rel. 1.0   - March      2012                                            */
+/*                                                                           */
+/*****************************************************************************/
+ 
+
+  Description
+  -----------
+
+  This document is updated for every official release of the CAEN HV Control Software
+  and it contains various information specific to this software which 
+  can not be found in the User's Manual, available together with the software 
+  or on the CAEN web site: www.caen.it.
+
+
+  System Requirements
+ -------------------
+ 
+ - CAEN HV Power Supply System SY4527 / SY5527, V65XX, NIM /DESKTOP HV
+ - Windows Xp/Vista/7 32bit and 64bit
+ - Linux 32bit and 64bit
+ - glibc 2.9 or higher
+
+
+ What's New in Rel. 2.0.1
+ --------------------------
+
+   Bug Fixes  
+   ---------
+   - resolved a bug in custom view creation
+   - resolved a bug which does not display any parameter in group creation
+
+
+ What's New in Rel. 2.0
+ --------------------------
+
+   New Features and Important Notes
+   --------------------------------
+   - Support for V65xx HV
+   - Support for NIM /DESKTOP HV
+
+   Bug Fixes  
+   ---------
+   - resolved some minor bugs
+
+
+ What's New in Rel. 1.3
+ --------------------------
+
+   New Features and Important Notes
+   --------------------------------
+   - fast parameters selection
+
+   Bug Fixes  
+   ---------
+   - eliminates bug with A1676A with a large number of channels
+   - resolved some minor bugs
+
+
+ What's New in Rel. 1.2.1
+ --------------------------
+
+   Bug Fixes  
+   ---------
+   - fixed some minor bugs
+
+
+ What's New in Rel. 1.2
+ --------------------------
+
+   New Features and Important Notes
+   --------------------------------
+   - added advanced features (with license key)
+
+
+ What's New in Rel. 1.1.2
+ --------------------------
+
+   New Features and Important Notes
+   --------------------------------
+
+   - added button to get direct access to sy4527/sy5527 web settings
+   - added nim/ttl selection
+
+   Bug Fixes  
+   ---------
+   - fixed some minor bugs
+   - fixed some bad graphical behaviours
+        
+
+ What's New in Rel. 1.0
+ --------------------------
+
+   New Features and Important Notes
+   --------------------------------
+   - First Release
+
+
+ 
+ 
+
+  
+
+  Determining Your Software Release
+  ---------------------------------
+
+  To determine the complete software release of the CAEN HV Wrapper Library
+  installed in your machine, you can use the relevant menu choice of the
+  program.
+
+
+  How to get support
+  ------------------
+
+  Our Software Support Group is available for questions, support and any other 
+  software related issue concerning CAEN Power Supplies; for software support
+  visit the page www.caen.it/computing/support.php.
+

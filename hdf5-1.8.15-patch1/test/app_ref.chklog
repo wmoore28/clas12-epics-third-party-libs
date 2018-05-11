@@ -1,0 +1,9 @@
+============================
+ app_ref  Test Log
+============================
+Testing library shutdown with reference count > 1                      PASSED
+0.03user 0.03system 0:00.07elapsed 87%CPU (0avgtext+0avgdata 6484maxresident)k
+80inputs+88outputs (1major+8684minor)pagefaults 0swaps
+
+Finished testing app_ref 
+============================

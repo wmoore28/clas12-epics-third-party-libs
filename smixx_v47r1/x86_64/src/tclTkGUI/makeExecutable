@@ -1,0 +1,47 @@
+#! /bin/tcsh -f
+
+# It will take the main.tcl and replace the source statements by
+# the actual code
+
+
+set GUIdir = $SMIDIR/src/tclTkGUI
+set efftcldir = $SMIDIR/src/utilities/efftcl
+
+set MAIN = $GUIdir/main.tcl
+set PART1 = /tmp/PART1$$
+set PART2 = /tmp/PART2$$
+set PART3 = /tmp/PART3$$
+
+set SOURCEINS = /tmp/SOURCEINS$$
+
+set FINALGUI = /tmp/smiGUI.tcl$$
+
+set first = `grep -n sourced-files-beg $MAIN| sed 's/:/ /' |awk '{print $1}'`
+set last = `grep -n sourced-files-end $MAIN| sed 's/:/ /' |awk '{print $1}'`
+
+set first1 = $first
+set last1 = $last
+
+@ first1++
+@ last1--
+
+#echo $first
+#echo $last
+
+$GUIdir/extract-section $MAIN 1 $first > $PART1
+$GUIdir/extract-section $MAIN $first1 $last1 > $SOURCEINS
+$GUIdir/extract-section $MAIN $last end > $PART3
+
+
+$GUIdir/assemble $SOURCEINS $GUIdir $efftcldir > $PART2
+
+cat $PART1 > $FINALGUI
+cat $PART2 >> $FINALGUI
+cat $PART3 >> $FINALGUI
+
+chmod a+x $FINALGUI
+cp $FINALGUI ${SMIDIR}/${ODIR}/smiGUI.tcl
+cp $GUIdir/*.gif  ${SMIDIR}/${ODIR}/.
+
+exit
+

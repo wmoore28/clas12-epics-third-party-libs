@@ -1,0 +1,13 @@
+ 9-May-2000 compared the source with that on VMS to make sure it is the same
+            and softwarerot has not taken place
+
+ 6-April-2001  The same excercise as above and it is identical....this is now
+            becomming the master
+
+ 9-April-2001  All .hh files renamed to .hxx   All .cc files renamed to cxx and also
+              modified to point to .hxx rather than .hh
+
+ 10-April-2001  After common files were renamed, #include lines had to be changed
+                accordingly
+
+   tested and giving the same results as before 6-April-2001

@@ -1,0 +1,33 @@
+  9-Apr-2001 The following files were copied from smixx/utilities directory
+             because they are used by preprocessor:
+
+             name.cc name.hh nmdptnr.cc nmdptnr.hh nmdptnrvector.cc
+             nmdptnrvector.hh registrar.cc registrar.hh utilities.cc
+             utilities.hh & typedefs.hh
+---------------------------------------------------------------------------
+ 10-Apr-2001 Compared with $BFROOT/package/smixx/v6.6 and as expected found
+             identical
+
+            .cc & .hh renamed to cxx & hxx  and of course 
+            all the #include lines modified
+----------------------------------------------------------------------------
+ 11-Apr-2001 Files in this directory were compared with 
+             ../smixx/utilitiesxx and it looks like the ones which are
+             different could be safely taken over.
+           The existing ones were first renamed to _old_... (deleted 8 May)
+
+           The remaining files which are only in utilitiesxx/source can now be safely
+           brought over as they are only used by CXXTranslator: namevector.hxx & cxx
+            smlline.cxx&hxx  smllinevector.cxx&hxx
+
+          The same bug as in nmdptnrvector.cxx in method append found in 
+          namevector and smllinevector  and corrected !  This means that
+         the template on VMS is wrong. Forget the VMS. When needed,
+         use differen templates.
+------------------------------------------------------------------------------
+ 17-April-2001  utilities.cxx copied over from master from RAL PC
+                README.txt    -dtto-
+------------------------------------------------------------------------------
+ 27-April-2001  Copyright notices added
+-----------------------------------------------------------------------------
+  8-May-2001  README.txt renamed to History

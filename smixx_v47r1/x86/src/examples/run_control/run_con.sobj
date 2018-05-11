@@ -1,0 +1,506 @@
+*CLASS
+&ALLOCATION_OBJECT
+    1    1
+ASSOCIATED
+*SUBOBJECT
+&DUMMY
+*STATE
+NOT_ALLOCATED
+    0
+*ACTION
+ALLOCATE
+    0    0
+*END_ACTION
+*END_STATE
+*STATE
+&VARIABLE
+    0
+*ACTION
+RELEASE
+    0    0
+*END_ACTION
+*END_STATE
+*STATE
+NOT_THERE
+    1
+DEAD_STATE
+*END_STATE
+*END_SUBOBJECT
+*END_CLASS
+*OBJECT
+&ALLOC
+    0    0    0
+*STATE
+NOT_ALLOCATED
+    1
+INITIAL_STATE
+*ACTION
+ALLOCATE
+    1    0
+STRING
+ID
+&nodefault
+*BLOCK
+  0  0
+terminate
+&VARIABLE
+*END_ACTION
+*END_STATE
+*STATE
+&VARIABLE
+    0
+*ACTION
+RELEASE
+    0    0
+*BLOCK
+  0  0
+terminate
+NOT_ALLOCATED
+*END_ACTION
+*END_STATE
+*END_OBJECT
+*OBJECT
+AUTO_PILOT
+    0    0    0
+*STATE
+OFF
+    0
+*ACTION
+ACTIVATE
+    0    0
+*BLOCK
+  0  0
+do
+RECOVER
+    0
+RUN
+do
+START_RUN
+    0
+RUN
+terminate
+ON
+*END_ACTION
+*END_STATE
+*STATE
+ON
+    0
+*WHEN
+ (RUN NOT_IN_STATE RUNNING)
+    1    0
+    1
+RUN
+not_in_state
+    1
+RUNNING
+do
+X_ACTIVATE
+    0
+&THIS_OBJECT
+*ACTION
+DISACTIVATE
+    0    0
+*BLOCK
+  0  0
+terminate
+OFF
+*END_ACTION
+*ACTION
+X_ACTIVATE
+    0    0
+*BLOCK
+  0  0
+do
+RECOVER
+    0
+RUN
+do
+START_RUN
+    0
+RUN
+terminate
+ON
+*END_ACTION
+*END_STATE
+*END_OBJECT
+*OBJECT
+RUN_TYPE
+    0    0    0
+*STATE
+TEST
+    0
+*ACTION
+PHYSICS
+    0    0
+*BLOCK
+  0  0
+do
+LOG
+    0
+LOGGER
+if
+  1
+ (LOGGER IN_STATE LOGGING)
+    1    0
+    1
+LOGGER
+in_state
+    1
+LOGGING
+  1  1
+terminate
+TEST
+*BLOCK
+  1  1
+terminate
+PHYSICS
+*END_ACTION
+*END_STATE
+*STATE
+PHYSICS
+    0
+*ACTION
+TEST
+    0    0
+*BLOCK
+  0  0
+do
+NOLOG
+    0
+LOGGER
+if
+  1
+ (LOGGER IN_STATE NOT_LOGGING)
+    1    0
+    1
+LOGGER
+in_state
+    1
+NOT_LOGGING
+  1  1
+terminate
+PHYSICS
+*BLOCK
+  1  1
+terminate
+TEST
+*END_ACTION
+*END_STATE
+*END_OBJECT
+*OBJECT
+RUN
+    0    0    0
+*PARAMETERS
+INT
+NUMBER_T
+0
+INT
+NUMBER_P
+0
+*END_PARAMETERS
+*STATE
+STOPPED
+    0
+*ACTION
+START_RUN
+    0    0
+*BLOCK
+  0  0
+set
+    3
+NUMBER_T
+EVT_BUILDER
+NUMBER_T
+set
+    3
+NUMBER_P
+EVT_BUILDER
+NUMBER_P
+if
+  1
+ (NOT EVT_BUILDER IN_STATE READY)
+    1    0
+    1
+EVT_BUILDER
+not_in_state
+    1
+READY
+  1  1
+if
+  1
+ (RUN_TYPE IN_STATE PHYSICS)
+    1    0
+    1
+RUN_TYPE
+in_state
+    1
+PHYSICS
+  2  1
+if
+  1
+ (LOGGER IN_STATE LOGGING)
+    1    0
+    1
+LOGGER
+in_state
+    1
+LOGGING
+  3  1
+if
+  2
+ (RUN_TYPE IN_STATE PHYSICS)
+    1    0
+    1
+RUN_TYPE
+in_state
+    1
+PHYSICS
+  4  1
+else
+    0    0
+  5  1
+if
+  1
+ (EVT_BUILDER IN_STATE RUNNING)
+    1    0
+    1
+EVT_BUILDER
+in_state
+    1
+RUNNING
+  6  1
+terminate
+STOPPED
+*BLOCK
+  1  1
+terminate
+STOPPED
+*BLOCK
+  2  1
+do
+LOG
+    0
+LOGGER
+if
+  1
+ (NOT LOGGER IN_STATE LOGGING)
+    1    0
+    1
+LOGGER
+not_in_state
+    1
+LOGGING
+  7  2
+*BLOCK
+  3  1
+do
+X_OPEN_FILE
+    0
+LOGGER
+*BLOCK
+  4  1
+do
+START
+    2
+TYPE
+"PHYSICS"
+NR
+NUMBER_P
+EVT_BUILDER
+*BLOCK
+  5  1
+do
+START
+    2
+TYPE
+"TEST"
+NR
+NUMBER_T
+EVT_BUILDER
+*BLOCK
+  6  1
+terminate
+RUNNING
+*BLOCK
+  7  2
+terminate
+STOPPED
+*END_ACTION
+*END_STATE
+*STATE
+RUNNING
+    0
+*WHEN
+ (EVT_BUILDER IN_STATE ERROR)
+    1    0
+    1
+EVT_BUILDER
+in_state
+    1
+ERROR
+do
+X_SET_ERROR
+    0
+&THIS_OBJECT
+*ACTION
+STOP_RUN
+    0    0
+*BLOCK
+  0  0
+do
+STOP
+    0
+EVT_BUILDER
+if
+  1
+ (LOGGER IN_STATE WRITING)
+    1    0
+    1
+LOGGER
+in_state
+    1
+WRITING
+  1  1
+terminate
+STOPPED
+*BLOCK
+  1  1
+do
+X_CLOSE_FILE
+    0
+LOGGER
+*END_ACTION
+*ACTION
+X_SET_ERROR
+    0    0
+*BLOCK
+  0  0
+if
+  1
+ (LOGGER IN_STATE WRITING)
+    1    0
+    1
+LOGGER
+in_state
+    1
+WRITING
+  1  1
+terminate
+ERROR
+*BLOCK
+  1  1
+do
+X_CLOSE_FILE
+    0
+LOGGER
+*END_ACTION
+*END_STATE
+*STATE
+ERROR
+    0
+*ACTION
+RECOVER
+    0    0
+*BLOCK
+  0  0
+do
+RECOVER
+    0
+EVT_BUILDER
+terminate
+STOPPED
+*END_ACTION
+*END_STATE
+*END_OBJECT
+*OBJECT
+LOGGER
+    0    1    1
+ASSOCIATED
+*SUBOBJECT
+&DUMMY
+*STATE
+DEAD
+    1
+DEAD_STATE
+*END_STATE
+*STATE
+NOT_LOGGING
+    0
+*ACTION
+LOG
+    0    0
+*END_ACTION
+*END_STATE
+*STATE
+LOGGING
+    0
+*ACTION
+NOLOG
+    0    0
+*END_ACTION
+*ACTION
+X_OPEN_FILE
+    0    0
+*END_ACTION
+*END_STATE
+*STATE
+WRITING
+    0
+*ACTION
+X_CLOSE_FILE
+    0    0
+*END_ACTION
+*END_STATE
+*END_SUBOBJECT
+*END_OBJECT
+*OBJECT
+EVT_BUILDER
+    0    1    1
+ASSOCIATED
+*PARAMETERS
+INT
+NUMBER_T
+&nodefault
+INT
+NUMBER_P
+&nodefault
+*END_PARAMETERS
+*SUBOBJECT
+&DUMMY
+*STATE
+DEAD
+    1
+DEAD_STATE
+*END_STATE
+*STATE
+READY
+    0
+*ACTION
+START
+    2    0
+STRING
+TYPE
+&nodefault
+INT
+NR
+&nodefault
+*END_ACTION
+*END_STATE
+*STATE
+RUNNING
+    0
+*ACTION
+STOP
+    0    0
+*END_ACTION
+*END_STATE
+*STATE
+ERROR
+    0
+*ACTION
+RECOVER
+    0    0
+*END_ACTION
+*END_STATE
+*END_SUBOBJECT
+*END_OBJECT

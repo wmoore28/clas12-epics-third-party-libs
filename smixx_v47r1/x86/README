@@ -1,0 +1,1210 @@
+    Creation of smixx_new tree before it's installation into CVS
+    ------------------------------------------------------------
+       6-Apr-2001  -->  16-May-2001  (Boda Franek)
+
+
+  6-Apr-2001
+
+  - Preprocessor source files and the makefile copied from
+    ../smixx/preprocessor
+    Source files compared with VMS and are identical
+
+  - the source is also identical with that at slac  in
+ 
+   .../package/smixx/v6.6/preprocessor/source
+
+  - New directory "common_source" created. The aim is to migrate the 
+    common source in utilities and utilitiesxx into this directory.
+
+  - files used by preprocessor  .../smixx/utilities were copied to 
+                                   /smixx_new/common_source
+
+  - checked that they are identical to those at slac in v6.6  and also on vms.
+    Only difference on vms was typedefs.hh but the one on vms is obsolete
+------------------------------------------------------------------------------
+ 10-Apr-2001  All the files in precessor/source  and common_source  renamed
+               cc->cxx and hh->hxx , makefiles changed accordingly and 
+              tested...giving the same results.
+------------------------------------------------------------------------------
+ 11-Apr-2001  The next question is, why could not preprocessor be using
+              the corresponding files in .../smixx/utilitiesxx/source . 
+              These in principle are just renamed files (cc->cxx hh->hxx)
+              for PC. If any differences, then the ones in utilitiesxx should
+              be more uptodate:
+
+          Comparison brings the following result:
+
+             - name.cxx, name.hxx, nmdptnr.cxx, nmdptnr.hxx  and
+               nmdptnrvector.hxx are identical
+
+             - nmdptnrvector.cxx different. The one in utilitiesxx had a bug
+               in method append corrected .... take the one from utilitiesxx
+
+             - registrar.cxx & registrar.hxx different. The one in utilitiesxx
+               has an extra method (addRegardless).... take it
+
+             - utilities.cxx & utilities.hxx are very different. The ones in
+               utilitiesxx has basicaly a lot of extra methods used in
+               CXXTranslator...take it
+
+             - The remaining files which are only in utilitiesxx/source can
+               now be safely brought over as they are only used by
+               CXXTranslator. These are: namevector.hxx & cxx
+               smlline.cxx&hxx  smllinevector.cxx&hxx
+
+    If preprocessor works, then merging of utilities&utilitiesxx was achieved!
+
+   It produces indentical results on the files in SMLCode directory
+    ...this is probably enough for now
+------------------------------------------------------------------------------
+12-April-2001 h:\SMI directory at RAL franek's directory was copied to 
+              /afs.cern.ch/lhcb/online/control/PCatRAL directory.
+              It contains the master source for:
+              utilitiesxx (.../PCatRAL/utilities/sourceForDevStudio) and
+              CXXTranslator (.../PCatRAL/CXXTranslator/sourceForDevStudio)
+------------------------------------------------------------------------------
+17-April-2001 directory common_source compared with the Master for utilitiesxx (see above)
+              Differences are as follows:
+
+      namevector.cxx ... the one in common_source has a bug in 
+                         method append fixed
+      smllinevector.cxx ... as above
+      typedefs.hxx ... the one in common_source is better
+      utilities.cxx ... the one in .../PCatRAL/utilities/sourceForDevStudio
+                       is more developed all changes are relevant to
+                       CXXTranslator
+                       This is therefore taken and copied to common_source
+      readme.txt from  .../PCatRAL/utilities/sourceForDevStudio copied to
+                       common_source
+
+   - created directories
+        /afs/cern.ch/lhcb/online/control/smixx_new/cxxtranslator/source
+     and copied over the master source in
+     .../PCatRAL/CXXTranslator/sourceForDevStudio
+---------------------------------------------------------------------------- 
+18-April-2001 
+     gmade translator on HP and it does not work!!!
+
+     gmade translator on Linux and it produces identical results for all files
+          in .../PCatRAL/SMLcode
+----------------------------------------------------------------------------		    
+23-April-2001  cxxtranslator/makefile and preprocessor/makefile modified:
+               object files from common_source are put into the same directory
+	       as the main body....common_source now only has the source and
+	       not object directories.
+
+      - state_manager & state_manager/source copied from ../smixx
+          the source was then compared with that in $BFROOT at SLAC and
+	   only one difference found in logic_engine.cc (pause replaced
+	   by dim_wait)
+----------------------------------------------------------------------------
+25-April-2001  rtl & rtl/source  copied from ../smixx
+
+          - *.cc and *.hh renamed to *.cxx and *.hxx,  necessary mods made
+	    to point to .hxx files and the makefile modified accordingly
+-----------------------------------------------------------------------------
+ 8-May-2001
+
+    - gui, generator, and xgui tree copied from smixx to smixx_new
+
+    - 'cxxtranslator' directory renamed to translator
+
+    - all binary directories deleted
+
+    - new file makeDir  creates a binary directory if it does not exists
+
+    - makefile modified: makeDir is called everytime before gmake
+      The main reason for this is because we do not want to put
+      the binary directories into CVS
+--------------------------------------------------------------------------------
+15-May-2001
+
+   The directory tree was restructured to conform to a standard LHCb apperance
+   ---------------------------------------------------------------------------
+   
+   - new directory 'smixx' created and all the externally visible header
+     files copied into it. These are the rtl header files and 
+     smixx_version.h file (renamed to version.h)
+     
+   - new directory 'src' created and the source from source directories
+     copied into it. For example  preprocessor/source --> src/preprocessor
+     
+   - makefiles were copied to the top level
+        (e.g preprocessor/makefile --> makefile_preprocessor)
+	and tidied up (such as using only ODIR)
+
+   - making bin directory put into .setup file and makeDir file removed
+   
+   - src/state_manager renamed to src/stateManager and
+     src/common_source renamed to src/commonSource
+-------------------------------------------------------------------------------     
+16-May-2001
+   Finally in CVS and tagged v7. It was checked by checking it out and comparing
+   with smixx_new
+------------------------------------------------------------------------------
+17-May-2001
+   Small changes in stateManager preprocessor & translator  ... 
+   see individual History files.
+   
+==========================   v7r1   ===========================================
+   --> 11 June 2001
+   Implementing Object Sets. see History files in translator & commonSource
+   Translator is now capable to translate them.
+==========================  Jun11-2001  ======================================
+
+  --> 13 June 2001
+    Object Sets instantiated in State Manager see History in commonSource
+    and stateManager
+=========================  Jun13-2001  ======================================
+
+ 14 June 2001  unistd.h include file not used on Windows NT. Affected:
+              preprocessor  stateManager and translator
+=========================  Jun14-2001  ======================================
+
+ 15-16-17 June 2001 Implemented usage of Object sets in do instruction
+                   and insert/remove instruction.
+=========================  Jun17-2001 =======================================
+ 18-19 June 2001 Implemenmted usage of Object Sets in if and when. 
+=========================  Jun19-2001 =======================================
+ 19-20 June 2001 insert and remove instruction can handle object names
+                 taken from action parameter
+=========================  Jun21-2001 ======================================
+  2 July 2001  Insert and Remove instruction are treated as an instruction
+               on its own.  See commonSource and translator. At the moment
+               still translated into do instruction to keep compatibility
+               with the state manager
+=========================  Jul02-2001  ===================================
+ 3-5 July 2001 Treatment of insert/remove instruction completely 
+               redesigned. 
+                  Until now, it was translated into &INSERT/&REMOVE action.
+               The idea behind this was, that this way, execution of whens
+               will be automatically triggered by inserting/removing
+               objects from sets. This however had some undesirable behaviour
+               in cases when several objects were inserted (removed) in/(from)
+               a set during an execution of one action.
+                  This philosophy is now changed:
+               insert/remove instructions are executed immediately, i.e have
+               immediate effect. They will however schedule an additional when
+               execution that will take place immediatelly after the current
+               action (containing insert/remove) is either finished or
+               suspended. For the details of the changes, see History file of
+               stateManager
+================================  Jul05-2001  =================================
+12-13 July 2001 Proper treatment of empty Object Sets implemented. For details
+             see History file of stateManager
+===============================  Jul13-2001  ==================================
+20 July 2001 trivial bug but with large consequences fixed in State Manager
+================================ Jul20-2001 ===================================
+21-24 July 2001
+
+   Object sets are now properly (I hope) treated in If conditions. The secret
+  is that when If has to be suspended, then transiting sets are 'frozen'
+  so that even when their contents changes, the original will be used when
+  if execution is resumed. This can be now released in production.
+===============================  v8 ==========================================
+23-August-2001
+  Bug fixed in State Manager
+===============================  v8r1 =========================================
+ The version of smixx has been so far incompatible with the version of dim
+ in CVS....going to make it compatible:
+  
+  - references to .hh files in dim changed to .hxx files referenced 
+  
+  - include files are now in $DIMDIR/dim this affects a few makefiles
+..............................................................................
+24-August-2001
+
+  utilities.hxx&cxx in stateManager now taken from commonSource. This makes
+  it easier to build it on a PC
+smixx should now be compatible with the latest CVS dim
+===============================  v9  =========================================  
+
+Calculation of server objects and server object sets lists added. see
+stateManager and commonSource History files
+=============================== v9-srvLists ==================================
+
+31-Jan-2002 
+
+  - Modifications for Solaris 8 (Clara Gaspar):
+    New GUI without UIL files (merged GUI and XGUI directories)
+    Modifications in the makefiles for the GUI
+    Some include files added
+    
+  - Unlimited number of instructions allowed by using dynamical
+    allocation (Boda Franek)
+    see state manager History file. Effect was tested on the current ALICE
+    Run Control:
+    
+  Before the change:    
+  3:44pm  up 23 days, 11:11, 61 users,  load average: 2.63, 1.97, 1.24
+1 processes: 1 sleeping, 0 running, 0 zombie, 0 stopped
+CPU states: 15.7% user, 10.1% system,  0.0% nice, 74.0% idle
+Mem:  523868K av, 517688K used,   6180K free,      0K shrd,  20868K buff
+Swap: 2104432K av, 187148K used, 1917284K free                 87596K cached
+
+  PID USER     PRI  NI  SIZE  RSS SHARE STAT  LIB %CPU %MEM   TIME COMMAND
+11926 franek     0   0  321M 271M   708 S       0  0.0 53.1   2:00 smiSM
+
+
+  After the change:
+ 10:51am  up 24 days,  6:17, 60 users,  load average: 1.89, 1.64, 1.24
+1 processes: 1 sleeping, 0 running, 0 zombie, 0 stopped
+CPU states: 68.4% user, 20.0% system,  0.0% nice, 11.4% idle
+Mem:  523868K av, 518968K used,   4900K free,      0K shrd,  43920K buff
+Swap: 2104432K av, 170464K used, 1933968K free                135308K cached
+
+  PID USER     PRI  NI  SIZE  RSS SHARE STAT  LIB %CPU %MEM   TIME COMMAND
+23417 franek     0   0  108M 108M   880 S       0  0.0 21.2   1:52 smiSM
+
+  Looks like factor 3 on memory  
+===============================  v10 =========================================      
+  7 February 2002 (Boda Franek)
+  
+    Removed unnecessary diagnostic prints from State Manager...this reduced
+    the size of the current size of ALICE State Manager logfile by factor 12
+    
+===============================  V10r1 =======================================
+  7 May 2002 (Clara Gaspar)
+
+    Fixed RTL: removed solaris 8 warnings and a few bugs in the C++ version.
+	Added the "in_state" and "executing" prints in the C++ version.
+    Updated generator.c (smiGen) to the new .cxx and .hxx format
+    Fixed some bugs in smiGUI and in makefile_gui
+    Changed version.h to 1002 (v10r2)
+
+===============================  V10r2 =======================================
+  3-4 July 2002 (Boda Franek)
+
+    translator   (see the History file)
+    -----------
+       Diferent types of Simple Condition are now inheriting from abstract class
+       SmpCond. At the moment there are only 2 types:
+         1) ('object' in_state 'state')   and
+         2) (any_in 'object set' in_state 'state') 
+
+  10 July 2002 (Boda Framek)
+
+    commonSource (see History file)
+    -------------
+       including missing typedefs
+
+    some improvements to .setup   this is mainly to allow to set one's own ODIR
+
+  11 July 2002 (Boda Franek)
+
+    -  New subdirectory src/utilities
+       --------------------------
+         - programs which have been used at SLAC and are of general use were
+           copied here from slac .../smixx/v6.6.6/utilities
+
+         - references to .hh files changed to .hxx
+
+    -  new makefile_utilities
+
+    - global  makefile updated to include the above
+
+    1 August 2002 (Boda Franek)
+    
+      minor change to commonSource/utilities.cxx (see the History file)
+      
+=============================== v11 ========================================== 
+  -> 6 February 2003 (Boda Franek)
+  
+     - new instruction 'endInState state-name'
+     
+     - when extension using 'endInState'
+     
+     - new instruction 'removeAll from set-name'
+=============================== v12 ==========================================
+   18 March 2003 (Boda Franek & Clara Gaspar )
+   
+      Publishing Object Sets
+      
+   20 March 2003 (Clara Gaspar)
+   
+      Bug fixed in RTL      
+=============================== v13 ===========================================
+    1 May 2003 (Boda Franek)
+    
+      'remove_all' is now synonym with 'removeall'      also
+       'move_to' is synonum with 'endinstate'
+       
+       see commonSource  & translator
+=============================== v13r1 ==========================================
+   13 May 2003 (Boda Franek)
+   
+    The latest version at Slac (v11s2-...) was compared to v11 to find out what
+    changes were made to it at Slac. There was a change in commhandler.cxx
+    (usleep -> my_sleep) but this is already incorporated in cvs.
+    Then there was a minor change to makefile_rtl, makefile_stateManager,
+    and makefile_utilities. This was adding -xs to CFLAGS and CXXFLAGS on
+    Solaris which enables using dbx without object files. These changes
+    were incorporated.
+=============================== v13r2 ========================================= 
+   17 July 2003 (Boda Franek)
+   
+    State Manager : SmpCond class cleaning...see the History file
+                    commited and tagged Jul17-2003
+
+   27 July 2003 (Clara Gaspar)
+
+    SMIUIRTL : smiui_connect_domain() sometimes returned the wrong number of
+               objects (0), fixed.
+    SMIGUI   : The smiGUI only accepted 512 objects in a domain, 
+               increased to 1024
+  
+   27 July 2003 (Boda Franek)
+     State Manager : Further cleaning of SmpCond class... see History file
+     
+================================ v14 ==========================================
+   01 August 2003 (Boda Franek)
+   
+   - translator  ... new sobj format for Simple condition
+   
+   - commonSource/namevector.cxx  .... (dynamical increment)   
+
+   - stateManager  ....a) new sobj format for simple condition
+                       b) using the modified NameVector class
+
+   - utilities ... #include <iostream.h>
+   
+   - smixx/version.h   set to 1500
+================================= v15 =========================================
+   04 August 2003 (Clara Gaspar)
+   
+   - (Clara Gaspar) bug fix in src/rtl/smiuirtl.c   this is
+                      a temporary bodge ******
+		      
+   - (Boda Franek) minor mods to .setup. Most important: .setup must be
+                   ran in smixx package directory
+		   
+   - smixx/version.h   set to 1501
+================================= v15r1 ====================================== 
+
+ 05 August 2003 (Boda Franek)
+       Speeding things up
+       ------------------
+     Using the profiling flags (-pg) and analysing with gprof.
+     SML used : ~franek/public/smixx/tests/Speed/DemoDet1_domain.sml
+     
+    a) Program run for 6mins 18secs real tim
+       Sampling time was 43.44 secs.
+       Out of that 28.65 secs was spent in ObjectRegistrar::gimePointer()
+       
+    - objectregistrar.cxx modified (not instantiating temp name inside the loop)
+    
+    b) Program run for 1 min 55 secs real time
+       Sampling time was 25.46 secs
+       Out of that 12.82 spent in operator==(Name const &, Name const &)
+       
+    - name.cxx modified ... some redundant code taken out of == method
+    
+    c) Program run for 2mins 26 secos
+       Sampling time was 22:09 ... worth saving but not big deal
+       8.42 secs (38%) is still taken by ObjectRegistrar::gimePointer()
+=================================== v15r2 ====================================
+ ->16 August 2003 (Boda Franek)
+ 
+    commonSource:  new class added 'NmdPtnrList'
+    
+    stateManager : a) SMIObjectSet class  keeps not only list of object names
+                   but also their pointers using the NmdPtnrList class
+
+                   b) SmpCond class when evaluating simple condition does not
+		      have to retrieve object pointers from Object Registrar
+		      because SMIObjectSet supplies them directly.
+	
+==================================== v15r3 ====================================
+ The speed was tested with the same program as above :
+ 
+      Program run for   25 secs
+       Sampling time was 2.28 secs
+..............................................................................
+  27 October 2003 (Boda Franek)
+  
+    utilities:  due to the new compiler, #include <iostream.h> added
+    
+    src/utilities: improved diagnostics
+    
+    src/stateManager: small changes to SmpCond class
+    
+    src/translator : improved diagnostics and a small bug fixed
+================================= v16 =========================================
+
+  08 November 2003 (Boda Franek)
+  
+    src/commonSource : new method in NameVector class
+    
+    src/stateManager : mainly more changes to SmpCond class
+    
+=================================  v17  =====================================
+
+  14 November 2003 (Boda Franek)
+  
+    - makefile_stateManager : added option '-O0' to CXXFLAGS to suppress
+                             optimization completely
+
+    - src/stateManager : mainly changes to SmpCond class. This now ready
+                    for major developments i.e. new types of simple condition
+
+=================================  v18  ======================================	
+   
+   20 November 2003 (Boda Franek)
+   
+    - src/commonSource : speeding things up a bit...in the end it did not
+                        seem to make much difference
+	
+    -src/stateManager : same as above	
+================================  v18r1 ======================================	
+   
+   15 December 2003 (Clara Gaspar)
+   
+    - src/rtl : Made smirtl and smiuirtl dynamic, got rid of parameters.h
+	
+    - src/stateManager : commhandler.cxx
+			 tested for action: &END_IN_STATE_WHEN
+			 ! got rid of usleep !!!!
+
+    - smixx include: version.h - set SMIXX_VERSION to 1802 (for 18.2)
+
+    - smixx top level: 
+	changed .setup:
+		- first checks if in the smixx directory, if yes sets SMIDIR
+		- otherwise if SMIDIR defined, ok, leave it as is.
+		- otherwise setup fails
+	This allows running .setup in a diferent directory if SMIDIR defined.
+	changed makefile_rtl:
+		User can choose if smirtl and smiuirtl are SHAEREABLE or not
+		for Linux only. Default is SHAREABLE.
+	In order to make smixx for Linux RedHat 7.3 gcc 3.2:
+		gmake FLAGS=-Wno-deprecated [SHAEREABLE=no] all 
+================================  v18r2 ======================================	
+ 24 March 2004 (Boda Franek)
+
+    - smi Preprocessor is working on Windows
+
+    - minor improvement to common source
+
+    - intitial work on the translator to recognise Type 3 simple instruction
+
+=================================  v19 =======================================
+ 25 March 2004 (Boda Franek)
+ 
+     - Added Visual directory with all the Project files
+     
+     - little bug corrected in preprocessor
+
+ 26 March 2004 (Clara Gaspar)
+
+     -  ctime -> ctime_r   in src/rtl
+     -  permitted size of name increased to 65   in state_manager
+     -  ctime -> ctime_r in src/state_manager/commhandler.cxx
+     
+ 26 March 2004 (Boda Franek)
+ 
+     - ctime - ctime_r  in state_manager/ut_sm.cxx
+     
+     - new (common & simpler) version of version.hxx in state_manager
+       and preprocessor    
+
+ 29 March 2004 (Boda Franek)
+ 
+    New script  'taggingProcedure'  to be run just before tagging. It
+    will make sure, that all version and History files are properly updated
+ 
+ 31 March 2004 (Boda Franek)
+ 
+   - translator : 1) capitalisation of Object Set names
+                  2) allowing empty names in object set initialisation
+		  
+   - preprocessor : allowing (ignoring)   .repeat 'macro-name'()
+   
+=== 02-April-2004:12:21 ==========  v20  =================
+
+ 24-26 May 2004 (Boda Franek)
+ 
+    State Manager
+    -------------
+    Round of changes aiming at removing char declarations of names. Starting
+    with object names. It has resulted in some tydiing up to do with passing
+    pointers to parents for various language elements.
+    Details see History file in src/stateManager
+    
+    
+=== 01-June-2004:17:23 ==========  v21  =================
+  24 June 2004 (Clara Gaspar)
+  
+  - src/rtl fixed bug in handling ctime on Solaris
+  
+  - src/stateManager/commhandler.cxx  as above
+=== 24-June-2004:12:17 ==========  v21r1  =================
+
+  - src/rtl 
+       Bug fixed related to capitalize function overwriting input argument
+       
+  - src/utilities
+        new utilities getDimVersions & getSmiVersions   
+	this required a change in makefile_utilities
+	
+  - src/stateManager/ut_sm.cxx  ... fixed bug in handling ctime on Solaris	
+
+  - src/utilities
+      new utility  dnsrunning.cxx    outputs YES or NO
+      
+      new utility  getDomains.cxx  outputs a list of all State Managers
+                                   belonging to a given dns (DIM_DNS_NODE)
+				   
+      requires new version of makefile_utilities
+=== 10-August-2004:13:11 ==========  v22  =================
+ 20 September 2004
+ 
+    - src/gui  & -src/rtl   support for 64 bit architectures
+    
+    - makefile_rtl ...
+    
+    - makefile_gui & slacMake consolidated with changes made at SLAC
+    
+    - src/preprocessor/cpreproc.cxx  ... limit on C preprocessor command line
+                                         removed
+				     
+    - src/stateManager/ptrvector.cxx ...  small change to do with casting
+=== 20-September-2004:12:06 ==========  v23  =================
+  04 October-2004 (Boda Franek)
+  
+    Bug in when handling in State Manager fixed
+    
+=== 04-October-2004:12:45 ==========  v23r1  =================
+
+  27 October 2004 (Boda Franek)
+  
+     iostream migration:
+     -------------------
+     this affected   commonSource, preprocessor, translator and stateManager
+   
+  28 October 2004 (Boda Franek)
+  
+      iostream migration:
+      -------------------
+      - files src/commonSource/iostream.inc & fstream.inc replaced by
+               smixx/smixx_common.hxx
+	       
+      - preprocessor  uses smixx_common.hxx instead of iostream.inc and
+                                                       fstream.inc   
+      - translator    -dtto-
+      
+      - stateManager  -dtto-
+      
+      - commonSource  -dtto-
+      
+      - some makefiles were modified so that smixx_common.hxx is found
+      
+      - rtl iostream migrated
+      
+      - utilities -dtto-
+            
+=== 29-October-2004:19:52 ==========  v24r1  =====================
+ 
+   11 November 2004 (Boda Franek)
+   
+     stateManager ... allowing input of dns node on smiSM command line
+                      see History file
+		      
+     src/rtl/smi_send_command.c ... accept dns node
+     		      
+   16 November 2004 (Clara Gaspar)
+     smixx/smixx_common.hxx   ... added #ifdef USE_OLD_STYLE_CPP
+     
+     
+   24 November 2004  (Boda Franek)
+   
+     state_manager ... introducing levels of diagnostic printing. This
+            is input on the command line as -d option. Not present will
+	    imply -d 3
+	    
+   25 November 2004 (Boda Franek)
+   
+     further improvements of diagnostic printing in state manager
+     
+=== 25-November-2004:16:15 ==========  v24r2  =================
+
+  25 November 2004 (Boda Franek)
+  
+   Incorporation of changes done to the latest version at SLAC
+   -----------------------------------------------------------
+  - modifications done to slacMake script 
+  
+  - new trivial, but usefull script makeSlacLinks
+  
+  - two new utilities  src/utilities/getObjectState.cxx & monObjectState.cxx
+    plus the necessary change to makefile_utilities
+    
+  29 November 2004 (Boda Franek)
+  
+     improvements to diag. prints in state_manager
+      
+=== 22-December-2004:14:33 ==========  v25  =================
+
+ 22-Dec-2004 -->  11-March-2005  (Boda Franek)
+ 
+   - Development of State Manager
+     ---------------------------
+   
+   1) limitation on num of whens removed
+   2) limitation on num of actions removed
+   3) limitations on num of states removed
+   
+    - slacMake   inc Scientific Linux
+    
+=== 11-March-2005:15:54 ==========  v26  =================
+
+ 20-May-2005 (Boda Franek)
+  
+    New feature: stay_in_state  
+    --------------------------
+    
+    It is possible to say:
+    
+         when (....) stay_in_state
+	
+    Successfull evaluation of the when will have an effect of aborting
+    evaluation of the following whens without taking any action and so
+    the behaviour will be the same like if none of the whens was successfull.
+    
+    translator   &  stateManager
+    
+=== 20-May-2005:15:58 ==========  v27  =================
+
+ 24-May-2005 (Clara Gaspar)
+  
+    Bug fix in commhandler  
+    --------------------------
+    Reported by valgrind: was overwriting a memory location
+    (could be responsible for crashes in Alice)
+        
+    commhandler
+    
+=== 25-May-2005:12:04 ==========  v27r1  =================
+
+  23-Jun-2005 --> 14-Jul-2005 (Boda Franek)
+  
+  - src/state_manager  ... many changes mostly to do with 'dynamisation' of
+       object items and character arrays. The latter has not been completed yet.
+       The changes can be followed in the History file and state_manager tags
+       v27r1-sm1 -> v27r1-sm9
+
+  - two new files in src/utilities
+  
+  
+=== 14-July-2005:17:07 ==========  v28  =================
+
+  15-Aug-2005 (Clara Gaspar)
+  
+  - Bug fix in smiuirtl.c: it sometimes reported "No link" for a dead object
+    instead on an empty string
+
+  - Bug fix in commhandler: was still overwriting another memory location
+
+  - Commented out some prints in: scheduler.cxx, doins.cxx and insertins.cxx
+    They are marked with: //CG
+
+  28-Sep-2005 (Boda Franek)
+  
+     modified stateManager/scheduler.cxx, doins.cxx and insertins.cxx
+     to handle 'suspension' of some prints properly in order to make it
+     compatible with BaBar
+=== 28-September-2005:15:35 ==========  v28r1  =================
+
+ 28-Sep-2005 --> 06-Oct-2005 (Boda Franek)
+ 
+     Many various changes to State Manager described in detail in the History
+     file. Mostly to do with removing fixed declarations. Unfortunately
+     this is not finished yet. It has become more important to have a release
+     for SLAC at the end of the months.
+ 
+=== 06-October-2005:15:38 ==========  v29  =================
+
+      Many various changes to State Manager described in detail in the History
+     file. Mostly to do with removing fixed declarations. 
+=== 20-January-2006:14:46 ==========  v29r1  =================
+
+ 31-Mar-2006  (Boda Franek)
+ 
+    - slacMake updated from SLAC
+    
+    - src/commonSource   changes to NmdPtnr class
+    
+    - src/stateManager  changes to instantiation of is_of_class type objects
+    
+    - src/translator minor changes to is_of_class type objects
+            
+    - src/tclTkGUI  new directory with an embryonic version
+
+=== 31-March-2006:17:27 ==========  v30  =================
+
+ 19-May-2006  (Boda Franek)
+ 
+  -src/stateManager  various changes to State Manager described in detail
+        in History file. Mostly to do with removing fixed declarations.
+	This concludes the removal of the important fixed declarations.
+	This justifies to have a new major tag.
+=== 19-May-2006:20:34 ==========  v31  =================
+
+ 21-May-2006 (Boda Franek)
+ 
+  -src/stateManager/ifhandler.cxx  made diagnostic prints conditional on the 
+                 value of dbg
+ 
+  -src/utilities/monObjects.cxx minor change to satisfy SLAC compiler
+  
+=== 21-May-2006:21:01 ==========  v31r1  =================
+
+ May 2006  --->  July 2007  (Boda Franek)
+ 
+  - src/commonSource  
+  	1) new file 'smixx_parstring_util.c'  with a suite of funcions for
+	    processing parameter strings.
+	    the header file is in smixx/smixx_parstring_util.h
+	    
+	2) utilities.cxx  subroutine getString used by Translator to extract
+	   parameter strings updated in order to pass on the strings properly
+	   escaped
+	   
+	3)  small change in Name class
+	
+  - src/stateManager 
+        1) small changes to action.cxx, doins.cxx and parms.cxx in order to
+	   allow parameter values to have spaces and equal signs even when not
+	   enclosed in "
+	   
+	2) commandhandler.cxx ... method setDnsNode also accepts port number
+	
+  - src/rtl   smirtl.c, smirtlcpp.cxx, smiuirtl.c and smiuirtlcpp.cxx
+        1)  Changes to do with parameters comming from and going to SMI world
+	   escaped
+	   There are also relevant changes to header files:
+	       smixx/smirtl.hxx, smiuirtl.h  and  smiuirtl.hxx	
+	   
+	2) some bug fixes
+	
+	3) some tydiing
+
+   - src/tclTkGUI   new directory containing tcl/Tk SMI GUI
+   
+   - src/utilities  changes and new files todo with tcl/Tk GUI
+   
+   - Visual  some new project files associated with new files in src/utilities
+   
+   - .setup   alias SMIGUI to Tcl/Tk GUI
+   
+   - new file makefile_tclTkGUI for making the Tcl/Tk unix in bin(linux) directory
+           makefile modified accordingly
+	   
+    - makefile_preprocessor, makefile_rtl, makefile_stateManager and 
+      makefile_translator .... changes to do with the usage of 
+                               smixx_parstring_util.cxx and some tydiing
+			     
+    - makefile_utilities ... same as above plus new utilities need making
+    
+
+    
+			       
+			       
+=== 25-July-2007:14:58 ==========  v32  =================
+
+  ----> 6 Aug 2007  (Boda Franek)
+  
+     - bug in smixx_parstring_util.c fixed (correct handling of empty strings
+       and some tydiing)
+       
+     - rtl/   bug in smirtlcpp.cxx and smiuirtlcpp.cxx fixed
+     
+     - tclTkGUI/ minor changes to do with empty strings
+     
+     - utilities/  minor changes to do with empty strings
+
+=== 07-August-2007:11:55 ==========  v32r1  =================
+
+    makefile_tclTkGUI ...  for building the GUI in ODIR area, new C++ executable
+    	is used instead of the script file (makeExecutable)
+                   
+    makefile_utilities ... added building of  tclTkGUI-Builder
+    
+    Visual/ This folder is now being seriously checked-in into CVS see History
+    
+    src/rtl ... bug in smirtl.c fixed
+    
+    src/utilities ...
+       1) new utility for TclTk GUI building
+       
+       2) some mods to make the GUI work on Windows
+       
+       3) a few files had to be converted from DOS to UNIX format before
+          checked-in from UNIX.
+	  Well known problem when copying between UNIX and Windows.
+
+       
+    
+    
+=== 25-August-2007:13:31 ==========  v32r2  =================
+
+  --->28-Sep-2007  (Boda Franek)
+  
+     src/rtl  removed the dependence on MAX_BUFFER constant. For details see
+              the History file in rtl folder
+	     
+=== 28-September-2007:15:29 ==========  v32r3  =================
+
+   07-Oct-2007  (Clara Gaspar & Boda Franek)
+   
+     src/rtl minor bug fixed...see History file
+     
+=== 07-October-2007:16:50 ==========  v32r4  =================
+
+   09-Nov-2007 (Boda Franek)
+   
+    Minor changes made at SLAC incorporated:
+    
+    - slacMake   ... adding more platforms
+    
+    -src/rtl/smirtl.c  ... removed a debug print
+    
+    - src/stateManager/commhandler.hxx,.cxx ... removed a const qualifier to
+        get it through a 'picky' compiler.
+	
+  12-Nov-2007 (Boda Franek)
+  
+    - makefile_rtl ... clean before making
+    
+    	
+=== 12-November-2007:14:40 ==========  v32r5  =================
+
+   20-Feb-2008  (Clara Gaspar)
+   
+     Fixed smiuirtl, sending commands was not working properly
+
+   27-March-2008  (Clara Gaspar)
+   
+     Fixed smirtl and smiuirtl, there was a still a limit in smiuirtl getActionInProgress()
+     Fixed the blocking calls, introduced independent wait flags for different functions
+     
+   31-March-2008  (Boda Franek)
+   
+     
+  "<class name>::" removed from some of the method names in 
+                   src/commonSource/namelist.hxx 
+                   src/commonSource/nmdptnrlist.hxx  and
+		   src/stateManager/smiobjectset.hxx
+    The new compilers do not tolerate this any more (quite right).
+
+
+=== 31-March-2008:15:41 ==========  v32r6  =================
+ 
+ --> 10-Jun-2008  (Boda Franek)
+ 
+ -  Redesigning of 'When Handling' in State Manager. See details in the
+     History file in src/stateManager and also the independent Microsoft
+     document
+  
+  -  commonSource ... small bug fixed
+  
+  -  translator
+         Bug fixed in negating type 2 simple condition. Negating is
+	 interchanging
+	        'in_state '   <--->   'not_in_state'     and
+		'any_in'      <--->   'all_in'
+
+     
+=== 11-June-2008:15:51 ==========  v33  =================
+
+ -->  02-Jul-2008  (Boda Franek)
+ 
+   - commonSource
+           fixed memory leak in NmdPtnrList class
+	   
+   - stateManager
+          a) fixed a trivial memory leak in initiator
+	  b)  fixed redefinitions ov variables to pacify Windows compiler
+	  
+   -  translator
+          a couple of fixes of a cosmetic nature
+
+   - Visual
+          minor updates
+=== 02-July-2008:12:44 ==========  v33r1  =================
+
+  --> 16-Jul-2008 (Boda Franek)
+  
+  -stateManager
+       Bug fixed: object is stopped executing whens when hp action is already
+       queued
+       
+=== 16-July-2008:17:11 ==========  v33r2  =================
+
+ --> 06-Oct-2008 (Boda Franek)
+ 
+   stateManager
+      Upgrading IF handling, so that it is possible to include/exclude 
+      SMI objects in/from SMI sets even when IF's are suspended.
+      
+=== 06-Oct-2008:11:00 ==========  v33r3  =================
+=== 06-October-2008:11:30 ==========  v33r3  =================
+
+ --> 10-Oct-2008 (Boda Franek)
+ 
+   stateManager
+       small old bug fixed plus tydiing debug prints
+=== 10-October-2008:16:04 ==========  v34  =================
+
+ --> 16-Oct-2008 (Boda Franek)
+ 
+   stateManager
+       a few warnings put under 'dbg' control
+    
+
+=== 16-October-2008:15:52 ==========  v34r1  =================
+
+ -->  11-Nov-2008 (Boda Franek + Clara Gaspar)
+ 
+   Picking up message function from smiSMrtl
+   -----------------------------------------
+   
+   - makefile_statemanager  extra flag
+   
+   - src/stateManager ... a few files modified
+   
+   
+=== 11-November-2008:12:56 ==========  v34r2  =================
+
+ -->  03-Dec-2008  (Clara Gaspar)
+ 
+   - mods to files in Visual/ folder. This has to do with going over to the
+     latest version of Visual Studio
+     
+      Fixing a bug in smirtl  & smiuirtl. 
+      -----------------------------------
+      modified files:
+      smixx/smirtl.h, smitrl.hxx, smiuirtl.h, smiuirtl.hxx, smixx_common.hxx
+      src/rtl/smirtl.c, smirtlcpp.cxx, smiuirtl.c,
+      src/stateManager/cpmmhandler.cxx
+      
+ -->  03-Dec-2008  (Boda Franek)     
+      obscure bug fixed in ifins.cxx
+      
+=== 03-December-2008:13:17 ==========  v35  =================
+
+ -->  11-Feb-2009 ( Boda Franek )
+
+      New instruction WAIT
+      --------------------
+
+   Example:   WAIT (A, B, all_in S)
+        will wait untill objects A, B and the objects in set S are not busy
+
+  This required changes and additions in:
+
+     src/commonSource
+     src/stateManager   and
+     src/translator
+
+  For details see the respective History files
+
+=== 11-February-2009:14:48 ==========  v35r1  =================
+
+  07-April-2009  (Boda Franek)
+  
+  Small but important bug fixed in Translator to do with negating simple
+  conditions of Type 2.
+  
+=== 07-April-2009:14:07 ==========  v35r2  =================
+
+  31-July-2009  (Boda Franek)
+  
+    1) Propagating 'busy' state through State Managers
+    Let's have an  associated object PROXY in domain A. This object could be
+    declared in domain B as A::PROXY / associated. If object A goes to 'busy'
+    either spontaneously or because A sent it a command, the 'busy' will now
+    be passed also to B and 'busy' subsequently broadcasted by B. This is
+    particularly usefull for GUIs.
+     
+    2) Allowing associated objects to go into a state that was not declared
+=== 31-July-2009:15:49 ==========  v36  =================
+
+  06-Aug-2009   (Clara Gaspar)
+  
+  small new bug in State Manager fixed
+=== 06-August-2009:15:54 ==========  v36r1  =================
+
+  27-August-2009  (Boda Franek)
+  
+     New Simple Condition Type 3 ( test on empty sets)
+     -------------------------------------------------
+     
+     see Translator and State Manager. Also some mods in CommonSource
+     
+ 
+=== 27-August-2009:17:17 ==========  v37  =================
+
+   02-Sep-2009  (Clara Gaspar)
+   
+    a couple of bugs fixed in State Manager
+    
+    
+=== 02-September-2009:14:44 ==========  v37r1  =================
+
+  07-Oct-2009  (Clara Gaspar)
+  
+   a bug fixed in State Manager
+   
+=== 07-October-2009:12:46 ==========  v37r2  =================
+
+   --->  10-Nov-2009  (Boda Franek)
+   
+     stateManager   preparatory work before introducing unions of sets
+     
+ 
+=== 10-November-2009:18:53 ==========  v37r3  =================  Broken!
+
+   11-Nov-2009  (Boda Franek)
+   
+      stateManager  Bug fixed
+=== 13-November-2009:14:59 ==========  v37r4  =================
+
+
+  -->  20-Jan-2010
+  
+    Introduction of unions of sets. It now possible to declare a set U as
+    
+    ObjectSet : U  union  {A,B}
+    
+    where A and B are simple sets
+    
+    changes in commonSource,   translator,  stateManager   see the corresp
+    History files
+    
+=== 20-January-2010:16:26 ==========  v38  =================
+
+  -->  21-Jun-2010  (Boda Franek)
+ 
+    New instruction 'create_object'
+    -------------------------------
+    
+    create_object  $(<parameter-name>) of_class  <class-name>
+    
+    will create object whose name is the value of the action parameter
+    <parameter-name>.     The object will belong to class <class-name>
+     
+    changes in commonSource,   translator,  stateManager   see the corresp
+    History files  
+=== 21-June-2010:15:54 ==========  v39  =================
+
+  -->  02-Sep-2010   (Boda Franek)
+
+   -  src/utilities ... new utilities 
+   
+   -  src/rtl ...  bug fixed
+   
+   -  src/TclTkGUI
+            ...  new display panel for displaying Object Sets and their contents
+	    
+    details see in the corresponding History files
+
+=== 02-September-2010:15:31 ==========  v40  =================
+
+  --> 18-Nov-2010   (Boda Franek)
+  
+     Bug associated with 'when handling' of special whens fixed.
+     The special whens aro those with 'stay_in_state'.
+     
+     All the necessary changes were done in src/stateManager. 
+     For details see src/stateManager/History file.
+     
+
+=== 21-November-2010:13:22 ==========  v41  =================
+
+
+    21-November-2010  (Clara Gaspar)
+ 
+     updated Visual/state_manager.vcproj  and translator.vcproj
+
+
+======24-November-2010=====  Beginning of the  SVN era  === v4300 ============
+
+    
+    25-November-2010 (Clara Gaspar)
+    
+    removed /smixx/trunk/src/EXAMPLES       r4306
+    
+    NB (Boda Franek):
+      There were 3 directories in CVS which I was not aware of:
+      
+      src/examples,  src/EXAMPLES  and src/xgui
+      
+      This is because they were put into repository after my innitial
+      checkout. In this case to get them into the working directory
+      one has to do 'cvs update -dA'. I has been doing only 'cvs update -A'
+      
+     01-December-2010  (Clara Gaspar)
+   
+   - most of the files were added property 'svn:eol-style' of value 'native'  
+     
+     NB (Boda Franek):
+     As some files were by mistake checked into CVS with CRLF EOL, then after
+     the property addition they will show differences on every line when
+     checked out on linux. The following files are thus affected:
+     
+   Visual/getDomains.dsp, Visual/domainExists.dsp, Visual/generator.dsp
+   Visual/monObjects.dsp, Visual/getdomainobjects.dsp,Visual/tellMonObjects.dsp
+   
+      In addition, there are 2 files,
+              src/preprocessor/cpreproc.cxx
+          and src/utilities/tclTkGUI-Builder.cxx      
+      that had CRLF EOL in CVS but only on a couple of lines.
+  
+  
+  --> 20-December-2010  (Boda Franek)
+  
+    - .setup  will also update the environmental variable path on
+              Linux
+	      
+    -  bug fixed in class State of State Manager  see the History file
+    
+  --> 06-January-2011 (Clara Gaspar)
+  
+    - Visual/state_manager.vcproj   and  smixx.sln   modified
+    
+    
+=== 06-January-2011:16:18 ==========  v42  =================
+
+  19 -Jan-2011  (Boda Franek)
+  
+    - added -Wall -Wextra to compiler options in makefile_preprocessor
+                                           and   makefile_stateManager
+					  
+    - added virtual destructor to a few classes in State Manager
+    
+rev 4372
+
+    - replaced vector<short> with vector<int> everywhere in State Manager
+    
+   
+  24-Jan-2011  (Boda Franek)
+  
+     - more little mods in state manager to remove compiler warnings
+     
+rev 4378
+
+  28-Jan-2011  (Boda Franek)
+  
+     - mere mods in state manager to remove compiler warnings
+       see the History file
+       
+  01-Feb-2011  (Clara Gaspar + Boda Franek)
+  
+     Bug fixed in State Manager       
+
+
+     
+    
+=== 04-February-2011:15:29 ==========  v42r1  =================
+
+ From today, this file is going to be replaced by 'History' file

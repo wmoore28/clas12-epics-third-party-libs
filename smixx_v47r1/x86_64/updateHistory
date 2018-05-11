@@ -1,0 +1,12 @@
+#! /bin/bash
+
+tempfile=/tmp/tmp$$
+rm -f $tempfile
+
+svn log -r COMMITTED > $tempfile
+
+cat History >> $tempfile
+
+mv $tempfile History
+
+exit

@@ -1,0 +1,9 @@
+if (! -d $SMIDIR/src/examples/run_control/$ODIR) then
+   echo Created Directory : $SMIDIR/src/examples/run_control/$ODIR
+   mkdir $SMIDIR/src/examples/run_control/$ODIR
+endif
+
+alias Logger "$SMIDIR/src/examples/run_control/$ODIR/logger MINI_RUN"
+alias Evt_builder "$SMIDIR/src/examples/run_control/$ODIR/evt_builder MINI_RUN"
+alias Run_con "smiSM MINI_RUN $SMIDIR/src/examples/run_control/run_con"
+alias Run_con_ui "smiGUI MINI_RUN $SMIDIR/src/examples/run_control/config_MINI_RUN.dat"

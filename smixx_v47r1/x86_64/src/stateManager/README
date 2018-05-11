@@ -1,0 +1,45 @@
+24-Mar-1998   The source copied from Delphi$online area.
+                State Manager version 3.0.2
+                
+17-May-1998   state_manager.cc copied from D$onl_dev area...allowing input
+              files to be 256 chars long
+               version 3.0.3
+
+16-Jun-1998   The complete source copied from delphi$online area
+              State Manager version 4.0
+              copying went via work (first default, then development and then
+              commhandler.* from clara develop.)
+              
+25-Aug-1998   The complete source copied from delphi$online area
+              State Manager version 5.1
+              copying went via work (first default, then development and then
+              commhandler.* and dis.hh from clara develop.)
+              
+26-Aug-1998   Small mods made to commhandler.*, dis.hh and dic.hh
+              These were also done in VMS
+              
+21-Oct-1998   The complete source copied from d$onl_default area (there is
+              nothing in development at this time). This is
+              State Manager Version 5.3
+              
+20-Feb-1999   The complete source copied from d$onl_default area (there is
+              nothing in development at this time). This is
+              State Manager Version 6.0.  The main changes are in the
+              communication part
+
+              after getting compilation warnings in smiobject.cc, small
+              declaration omission was corrected on delphi$online and the
+              copied over again.
+
+16-Jan-2000   The complete source copied from d$onl_default area (there is 
+              nothing in development at the moment). This is version 6.3
+	   
+ 9-May-2000   the source was compared with VMS to make sure that it is the
+              same and no softwarerot has taken place
+	      This exists at slac in 
+	      $BFROOT/package/smixx/v6.2/state_manager/source
+
+ 1-Dec-2000   the source was compared with VMS to make sure that it is the
+              same and no softwarerot has taken place. There was only one
+	      trivial difference in commhandler.cc namely a spelling mistake
+	      corrected in one of the prints. This was updated her as well.	   	   

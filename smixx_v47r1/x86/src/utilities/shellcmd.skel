@@ -1,0 +1,8 @@
+Object : SHELLCMD / associated
+State : READY
+
+   action : EXECUTE ( COMMAND, PARAMETER )
+   
+State : NOT_THERE / dead_state
+   
+   

@@ -1,0 +1,17 @@
+============================
+ bittests  Test Log
+============================
+Testing bit search operations                                          PASSED
+Testing bit set operations                                             PASSED
+Testing bit clear operations                                           PASSED
+Testing bit copy operations                                            PASSED
+Testing bit shift operations                                           PASSED
+Testing bit increment operations                                       PASSED
+Testing bit decrement operations                                       PASSED
+Testing bit negate operations                                          PASSED
+All bit tests passed.
+0.22user 0.04system 0:00.48elapsed 54%CPU (0avgtext+0avgdata 6596maxresident)k
+1080inputs+56outputs (11major+8186minor)pagefaults 0swaps
+
+Finished testing bittests 
+============================

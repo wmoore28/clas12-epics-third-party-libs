@@ -1,0 +1,35 @@
+==============================
+HDF5 & SZIP
+==============================
+synApps_5_8+ and areaDetector-R2-0+ now require a seperate build for HDF5 and 
+SZIP.  More details can be found in the READMEs for areaDetector.  Here's what 
+was done on RHEL7 to build the associated 32-bit and 64-bit libraries:
+
+  # TIFF and JPEG packages
+  yum install libtiff-devel libjpeg-devel
+    
+  # HDF5 and SZIP
+  Inside each of these our build script (build_all.sh).  This script will 
+  compile and install the associated 32-bit and 64-bit libraries.  Note that 
+  HDF5 takes awhile to build and check.  The relevant paths after the build 
+  will be:
+	<package>/x86/include
+	<package>/x86/lib
+	<package>/x86_64/include
+	<package>/x86_64/lib
+
+  These paths will need to be set in:
+	<areaDetector>/configure/CONFIG_SITE.local.linux-x86
+	<areaDetector>/configure/CONFIG_SITE.local.linux-x86_64
+	
+====================
+Downloads
+====================
+SZIP
+	http://www.hdfgroup.org/doc_resource/SZIP
+	Click on **SZIP Source** and download the release that appears.
+    
+HDF5
+	http://www.hdfgroup.org/HDF5
+	Click on Downloads, then Current Release, then HDF5 Software, then Source 
+	Code, then latest release.

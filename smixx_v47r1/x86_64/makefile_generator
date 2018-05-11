@@ -1,0 +1,38 @@
+#
+include makefile_common
+
+SDIR = ./src/generator
+CFLAGS += -I$(SMIDIR)/smixx
+GEN_EXTRALIBS =
+
+ifeq ($(OS),SunOS)
+	CFLAGS += -Dsunos 
+endif
+ifeq ($(OS),Solaris)
+	CFLAGS += -Dsolaris 
+	GEN_EXTRALIBS = -lpthread -lposix4 -lsocket -lnsl
+endif
+ifeq ($(OS),HP-UX)
+	CFLAGS += -Dhpux
+endif
+ifeq ($(OS),OSF1)
+	CFLAGS += -Dosf
+endif
+ifeq ($(OS),AIX)
+	CFLAGS += -Dunix -D_BSD -Daix
+endif
+ifeq ($(OS),Linux)
+	CFLAGS += -Dunix -Dlinux
+	GEN_EXTRALIBS = -lpthread
+endif
+
+all:	clean $(ODIR)/smiGen
+
+$(ODIR)/smiGen: $(SDIR)/generator.c
+	$(CC) $(CFLAGS) $(SDIR)/generator.c -o $(ODIR)/smiGen -L$(DIMDIR)/$(ODIR) -ldim $(GEN_EXTRALIBS)
+
+$(ODIR)/smiMake: $(SDIR)/smimake.c
+	$(CC) $(CFLAGS) $(SDIR)/smimake.c -o $(ODIR)/smiMake
+
+clean:
+	rm -f $(ODIR)/*.o $(ODIR)/smiGen $(ODIR)/smiMake
